@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Catch UP</string>
+    <string name="loading">Chargement</string>
+    <string name ="auth_failed">Echec de l'authentification </string>
+</resources>

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "351360933779",
+    "firebase_url": "https://catchup-b9136.firebaseio.com",
+    "project_id": "catchup-b9136",
+    "storage_bucket": "catchup-b9136.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:351360933779:android:52007feccc1c8c24",
+        "android_client_info": {
+          "package_name": "fr.nectarlab.catchup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "351360933779-6agbiukcv5tfakv8lbvht4oi54l9l0jd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fr.nectarlab.catchup",
+            "certificate_hash": "aed30d1cc5c954f7ddf26830aca37d1f42911bd6"
+          }
+        },
+        {
+          "client_id": "351360933779-jbjukjp8dlqf15snmgdgg94jus7reh9h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAACOiXNYDrVLSeOb6AyW5lD937YTuCG6o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "351360933779-jbjukjp8dlqf15snmgdgg94jus7reh9h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
