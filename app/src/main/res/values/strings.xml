@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Catch UP</string>
     <string name="loading">Chargement</string>
-    <string name ="auth_failed">Echec de l'authentification </string>
+    <string name ="auth_failed">Echec de l\'authentification </string>
+    <string name ="emailpassword_status_fmt">Email User: %1§s</string>
+    <string name ="firebase_status_fmt">Firebase User: %s</string>
+    <string name ="signed_out">Signed Out</string>
+
 </resources>
