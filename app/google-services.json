@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "351360933779-5p55asp6r1ev1d8tk913eed3vvqidsco.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fr.nectarlab.catchup",
+            "certificate_hash": "92ca701abb38c53af0ac8b6721a2838cb875d4e4"
+          }
+        },
+        {
           "client_id": "351360933779-6agbiukcv5tfakv8lbvht4oi54l9l0jd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
