@@ -5,5 +5,10 @@
     <string name ="emailpassword_status_fmt">Email User: %1§s</string>
     <string name ="firebase_status_fmt">Firebase User: %s</string>
     <string name ="signed_out">Signed Out</string>
-
+    <string name="sign_in_button">Sign In</string>
+    <string name ="create_account_button">Create Account</string>
+    <string name = "sign_out_button">Sign Out</string>
+    <string name = "verify_email_button">Verify Email</string>
+    <string name ="email_hint">Email</string>
+    <string name ="password_hint">Password</string>
 </resources>
