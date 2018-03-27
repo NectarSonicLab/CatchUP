@@ -104,8 +104,8 @@ public class SignUpActivity extends BaseActivity implements
                             //Penser a rajouter un Username
                             updateUI(user);
                             DatabaseReference myRef = mDatabase.getReference("Users");//Creer le repertoire Users s'il n'existe pas
-                            myRef.child("ID").setValue(user.getUid());
-                            myRef.child("ID").child("EMAIL").setValue(user.getEmail());
+                            myRef.child(user.getUid());
+                            myRef.child(user.getUid()).child("EMAIL").setValue(user.getEmail());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -141,8 +141,8 @@ public class SignUpActivity extends BaseActivity implements
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                             DatabaseReference myRef = mDatabase.getReference("Users");//Creer le repertoire Users s'il n'existe pas
-                            myRef.child("ID").setValue(user.getUid());
-                            myRef.child("ID").child("EMAIL").setValue(user.getEmail());
+                            myRef.child(user.getUid());
+                            myRef.child(user.getUid()).child("EMAIL").setValue(user.getEmail());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
