@@ -44,7 +44,7 @@ public class SignUpActivity extends BaseActivity implements
     private FirebaseAuth mAuth;
     // [END declare_auth]
     //declaration de la FirebaseDatabase
-    private DatabaseReference mDatabase;
+    private FirebaseDatabase mDatabase;
     //fin de la declaration de la FirebaseDatabase
 
     @Override
@@ -68,7 +68,7 @@ public class SignUpActivity extends BaseActivity implements
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
         //Initialisation de la Database
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance();
 
 
     }
@@ -101,7 +101,7 @@ public class SignUpActivity extends BaseActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            mDatabase.setValue("Succes");
+
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -136,6 +136,8 @@ public class SignUpActivity extends BaseActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            DatabaseReference myRef = mDatabase.getReference("Users");
+                            myRef.setValue("Hello");
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
