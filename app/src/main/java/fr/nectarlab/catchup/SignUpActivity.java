@@ -137,7 +137,7 @@ public class SignUpActivity extends BaseActivity implements
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             DatabaseReference myRef = mDatabase.getReference("Users");
-                            myRef.setValue("Hello");//Issues here
+                            myRef.setValue("Hello");//Issues here...
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
