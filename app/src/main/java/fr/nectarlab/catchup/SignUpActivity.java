@@ -251,4 +251,13 @@ public class SignUpActivity extends BaseActivity implements
             sendEmailVerification();
         }
     }
+
+    public void sendDB(View v){
+        DatabaseReference myRef = mDatabase.getReference("Users");//Creer le repertoire Users s'il n'existe pas
+        myRef.child("UserA").child("ID").setValue(1231);//Creer UserA, puis creer un fils de UserA avec un nom ID et une valeur
+        myRef.child("UserA").child("email").setValue("Email@email");//Creer un fils de UserA avec un nom email et une valeur
+        myRef.child("UserB").setValue("Test2");//Creer un fils de Users, avec un nom de UserB et une valeur
+        myRef.child("UserC").setValue("Test3");//idem
+
+    }
 }
