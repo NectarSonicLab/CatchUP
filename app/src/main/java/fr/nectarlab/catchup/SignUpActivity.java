@@ -101,8 +101,11 @@ public class SignUpActivity extends BaseActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-
+                            //Penser a rajouter un Username
                             updateUI(user);
+                            DatabaseReference myRef = mDatabase.getReference("Users");//Creer le repertoire Users s'il n'existe pas
+                            myRef.child("ID").setValue(user.getUid());
+                            myRef.child("ID").child("EMAIL").setValue(user.getEmail());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -136,9 +139,10 @@ public class SignUpActivity extends BaseActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            DatabaseReference myRef = mDatabase.getReference("Users");
-                            myRef.setValue("Hello");//Issues here...
                             updateUI(user);
+                            DatabaseReference myRef = mDatabase.getReference("Users");//Creer le repertoire Users s'il n'existe pas
+                            myRef.child("ID").setValue(user.getUid());
+                            myRef.child("ID").child("EMAIL").setValue(user.getEmail());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -177,7 +181,6 @@ public class SignUpActivity extends BaseActivity implements
                         // [START_EXCLUDE]
                         // Re-enable button
                         findViewById(R.id.verify_email_button).setEnabled(true);
-
                         if (task.isSuccessful()) {
                             Toast.makeText(SignUpActivity.this,
                                     "Verification email sent to " + user.getEmail(),
@@ -254,7 +257,7 @@ public class SignUpActivity extends BaseActivity implements
 
     public void sendDB(View v){
         DatabaseReference myRef = mDatabase.getReference("Users");//Creer le repertoire Users s'il n'existe pas
-        myRef.child("UserA").child("ID").setValue(1231);//Creer UserA, puis creer un fils de UserA avec un nom ID et une valeur
+        myRef.child("UserA").child("ID").setValue(1231);//Dans Users, Creer UserA, puis creer un fils de UserA avec un nom ID et une valeur
         myRef.child("UserA").child("email").setValue("Email@email");//Creer un fils de UserA avec un nom email et une valeur
         myRef.child("UserB").setValue("Test2");//Creer un fils de Users, avec un nom de UserB et une valeur
         myRef.child("UserC").setValue("Test3");//idem
