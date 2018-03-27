@@ -66,6 +66,7 @@ public class SignUpActivity extends BaseActivity implements
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
+        Log.d(TAG, "OnStart currentUser: "+currentUser);
     }
     // [END on_start_check_user]
 
