@@ -19,6 +19,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DatabaseError;
+
+
 /**
  * Created by ThomasPiaczinski on 24/03/18.
  */
@@ -36,6 +43,9 @@ public class SignUpActivity extends BaseActivity implements
     // [START declare_auth]
     private FirebaseAuth mAuth;
     // [END declare_auth]
+    //declaration de la FirebaseDatabase
+    private DatabaseReference mDatabase;
+    //fin de la declaration de la FirebaseDatabase
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +67,10 @@ public class SignUpActivity extends BaseActivity implements
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
+        //Initialisation de la Database
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
     }
 
     // [START on_start_check_user]
@@ -87,6 +101,7 @@ public class SignUpActivity extends BaseActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            mDatabase.setValue("Succes");
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
