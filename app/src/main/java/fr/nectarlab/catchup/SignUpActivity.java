@@ -225,8 +225,7 @@ public class SignUpActivity extends BaseActivity implements
 
             findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
             findViewById(R.id.email_password_fields).setVisibility(View.GONE);
-            findViewById(R.id.signed_in_buttons).setVisibility(View.VISIBLE);//faire un intent pour lancer prochaine activite
-
+            findViewById(R.id.signed_in_buttons).setVisibility(View.VISIBLE);
             findViewById(R.id.verify_email_button).setEnabled(!user.isEmailVerified());
         } else {
             mStatusTextView.setText(R.string.signed_out);
@@ -235,6 +234,12 @@ public class SignUpActivity extends BaseActivity implements
             findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
             findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
             findViewById(R.id.signed_in_buttons).setVisibility(View.GONE);//
+        }
+        if (user.isEmailVerified()){
+            findViewById(R.id.ready_to_continue).setVisibility(View.VISIBLE);
+        }
+        else{
+            findViewById(R.id.ready_to_continue).setVisibility(View.GONE);
         }
     }
 
@@ -253,11 +258,12 @@ public class SignUpActivity extends BaseActivity implements
     }
 
     public void sendDB(View v){
+        /* pour tester l'insertion de donnees dans la base au debut du developpement
         DatabaseReference myRef = mDatabase.getReference("Users");//Creer le repertoire Users s'il n'existe pas
         myRef.child("UserA").child("ID").setValue(1231);//Dans Users, Creer UserA, puis creer un fils de UserA avec un nom ID et une valeur
         myRef.child("UserA").child("email").setValue("Email@email");//Creer un fils de UserA avec un nom email et une valeur
         myRef.child("UserB").setValue("Test2");//Creer un fils de Users, avec un nom de UserB et une valeur
         myRef.child("UserC").setValue("Test3");//idem
-
+        */
     }
 }
