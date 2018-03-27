@@ -205,18 +205,22 @@ public class SignUpActivity extends BaseActivity implements
                     user.getEmail(), user.isEmailVerified()));
             mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
 
-            findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
-            findViewById(R.id.email_password_fields).setVisibility(View.GONE);
-            findViewById(R.id.signed_in_buttons).setVisibility(View.VISIBLE);
+            //findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
+            findViewById(R.id.email_sign_in_button).setVisibility(View.GONE);
+            //findViewById(R.id.email_password_fields).setVisibility(View.GONE);
+            findViewById(R.id.email_create_account_button).setVisibility(View.GONE);
+            findViewById(R.id.signed_in_buttons).setVisibility(View.VISIBLE);//faire un intent pour lancer prochaine activite
 
             findViewById(R.id.verify_email_button).setEnabled(!user.isEmailVerified());
         } else {
             mStatusTextView.setText(R.string.signed_out);
             mDetailTextView.setText(null);
 
-            findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
-            findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
-            findViewById(R.id.signed_in_buttons).setVisibility(View.GONE);
+            //findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
+            findViewById(R.id.email_sign_in_button).setVisibility(View.VISIBLE);
+            //findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
+            findViewById(R.id.email_create_account_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.signed_in_buttons).setVisibility(View.GONE);//
         }
     }
 
