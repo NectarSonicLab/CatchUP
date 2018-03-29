@@ -22,11 +22,13 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:contentScrim="?attr/colorPrimary"
             app:toolbarId="@+id/toolbar"
             app:layout_scrollFlags="exitUntilCollapsed|scroll"
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleMarginEnd="64dp"
-            app:contentScrim="?attr/colorPrimary">
+            android:background="@drawable/ILQC-Beeple-Remix-Miky-Diamond"
+            >
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
