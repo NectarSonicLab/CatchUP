@@ -4,14 +4,14 @@ package fr.nectarlab.catchup.model;
  * Created by ThomasPiaczinski on 03/04/18.
  */
 
-public class Users {
+public class Friend extends Users {
     private String Id;
     private String EMAIL;
-    private String username;
 
-    public Users (){}
+    public Friend(){}
 
-    public Users (String mId, String mEmail){
+    public Friend(String mId, String mEmail) {
+        super(mId, mEmail);
         this.Id = mId;
         this.EMAIL = mEmail;
     }

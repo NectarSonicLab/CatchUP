@@ -93,6 +93,7 @@ public class RegisteredUsersActivity extends AppCompatActivity {
              */
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                //Au lieu de Users utiliser l'objet Friend
                 Users u = dataSnapshot.getValue(Users.class);
                 if (u != null)
                     Log.i("retrieveUsers_Found", ""+u.getEmail());
