@@ -50,14 +50,15 @@ public class RegisteredUsersActivity extends AppCompatActivity {
 
         setContentView(R.layout.registered_users);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabase = FirebaseDatabase.getInstance().getReference("Users");
 
         namesFound = getNameEmailDetails();//Lancer sur un thread different
 
     }
 
     public void retrieveUsers(String email ) {
-        Query mQuery=mDatabase.orderByChild("email").equalTo(email).limitToFirst(1);
+        Log.i ("retrieveUsers", "Start");
+        Query mQuery=mDatabase.orderByChild("EMAIL").equalTo(email).limitToFirst(1);
 
         if(FirebaseDatabase.getInstance()!=null)
         assert mQuery != null;
@@ -67,7 +68,7 @@ public class RegisteredUsersActivity extends AppCompatActivity {
 
                 Users u = dataSnapshot.getValue(Users.class);
                 if (u != null)
-                    Log.e("test", u.getEmail());
+                    Log.i("retrieveUsers_Found", ""+u.getEmail());
                 allUsers.add(u);
             }
 
@@ -92,6 +93,7 @@ public class RegisteredUsersActivity extends AppCompatActivity {
             }
 
         });
+        Log.i("retrieveUsers", "End");
         }
 
     public ArrayList<String> getNameEmailDetails(){

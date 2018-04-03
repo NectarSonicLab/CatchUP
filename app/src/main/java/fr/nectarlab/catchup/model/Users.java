@@ -6,16 +6,15 @@ package fr.nectarlab.catchup.model;
 
 public class Users {
     private String Id;
-    private String email;
+    private String EMAIL;
     private String username;
 
-    public Users (String mId, String mEmail, String mUsername){
+    public Users (String mId, String mEmail){
         this.Id = mId;
-        this.email = mEmail;
-        this.username = mUsername;
+        this.EMAIL = mEmail;
     }
 
     public String getEmail (){
-        return this.email;
+        return this.EMAIL;
     }
 }
