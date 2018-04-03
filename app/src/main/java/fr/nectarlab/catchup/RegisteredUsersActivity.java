@@ -23,10 +23,15 @@ import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 
-import static android.R.attr.id;
+
 
 /**
  * Created by ThomasPiaczinski on 03/04/18.
+ * Nous cherchons à determiner si parmi les contacts de l'utilisateur certains font partie des
+ * utilisateurs enregistrés sur le serveur. Si oui, ils font partie des amis de l'utilisateur.
+ * Sinon on écoute le serveur et pour chaque nouvel utilisateur on détermine si celui-ci fait
+ * partie des contacts de l'utilisateur.
+ * Une fois un ami trouvé, on lui créé une View pour pouvoir interagir avec lui(chat, invitation).
  */
 
 public class RegisteredUsersActivity extends AppCompatActivity {
@@ -42,30 +47,52 @@ public class RegisteredUsersActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /**
+        *READ_CONTACTS fait partie des "dangerous permissions", elle doit explicitement etre
+         * demandee a l'utilisateur. Nous faisons donc une "request permission".
+         * Peut etre explicitee (avant la "requestPermissions()") avec la methode
+         * shouldShowRequestPermissionRationale() qui propose un explication a l'user sur le
+         * besoin de cette permission.
+         */
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)!=PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String []{Manifest.permission.READ_CONTACTS}, 0 );
         }
-
-
-
+        //TODO Prevoir le cas ou l'user refuse la permission
         setContentView(R.layout.registered_users);
-
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
-
-        namesFound = getNameEmailDetails();//Lancer sur un thread different
-
+        /**getNameEmailDetails() est la fonction qui cherche dans les Contacts les noms et
+         * emails de tous les contacts de l'utilisateur. S'ils possedent un email alors
+         * on teste s'ils sont egalement inscrits sur le serveur. Cette methode fait appel
+         * à retrieveUsers qui prend en argument l'email trouvé dans la fiche de contacts
+         */
+        namesFound = getNameEmailDetails();
+        //TODO Ne pas relancer la requête à chaque onCreate. La lancer la permière fois sur un thread different.
+        // Les fois suivantes "matcher" entre chaque nouvel utilisateur et la totalité des contacts.
     }
 
     public void retrieveUsers(String email ) {
         Log.i ("retrieveUsers", "Start");
         Query mQuery=mDatabase.orderByChild("EMAIL").equalTo(email).limitToFirst(1);
-
         if(FirebaseDatabase.getInstance()!=null)
         assert mQuery != null;
         mQuery.addChildEventListener(new ChildEventListener() {
+
+            /**
+             * Fonctionne bien quand on ajoute un contact sur le serveur quand l'activité
+             * est active et que le nouvel utilisateur est également un contact (mais doit
+             * repasser par un onCreate...moyen...a vérifier)
+             * tester si
+             * 1)Si c'est la premiere fois que la requête tourne,
+             * est-ce que la fonction trouve un ami déjà enregistré sur le serveur
+             * 2)Que se passe t-il si aucun child n'est plus jamais ajouté?
+             * Conclusion: onChildAdded idéal pour tester si un nouvel utilisateur est également
+             * dans les contacts du terminal (Meme recuperer son email et le tester avec les contacts
+             * plutot que tester tous les users du serveur avec tous les contacts!)
+             * Pour la premiere fois on est obligé de confronter tous les contacts du serveur
+             * avec ceux du terminal.
+             */
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
                 Users u = dataSnapshot.getValue(Users.class);
                 if (u != null)
                     Log.i("retrieveUsers_Found", ""+u.getEmail());
@@ -74,12 +101,12 @@ public class RegisteredUsersActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+            //Reverifier si l'email correspond toujours
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+            //Enlever l'ami des contacts dans l'app
             }
 
             @Override
@@ -99,6 +126,8 @@ public class RegisteredUsersActivity extends AppCompatActivity {
     public ArrayList<String> getNameEmailDetails(){
         Log.i("getNameEmailDetails", "Start");
         ArrayList<String> names = new ArrayList<String>();
+        //getContentResolver() est une methode de la classe android.content.ContextWrapper
+        //et implémente une méthode de la classe android.content.Context
         ContentResolver cr = getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,null, null, null, null);
         if (cur.getCount() > 0) {
