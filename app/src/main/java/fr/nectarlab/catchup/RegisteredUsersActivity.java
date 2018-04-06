@@ -62,21 +62,28 @@ public class RegisteredUsersActivity extends AppCompatActivity {
         //TODO Prevoir le cas ou l'user refuse la permission
         setContentView(R.layout.registered_users);
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
+    }
         /**getNameEmailDetails() est la fonction qui cherche dans les Contacts les noms et
          * emails de tous les contacts de l'utilisateur. S'ils possedent un email alors
          * on teste s'ils sont egalement inscrits sur le serveur. Cette methode fait appel
          * à retrieveUsers qui prend en argument l'email trouvé dans la fiche de contacts
          */
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                namesFound = getNameEmailDetails();
-            }
-        }).start();
-        //namesFound = getNameEmailDetails();
+        public void onResume(){
+            Log.i("Register", "onResumeStart");
+            super.onResume();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                //namesFound = getNameEmailDetails();
+                }
+            }).start();
+            namesFound = getNameEmailDetails();
+            Log.i("Register", "onResumeEnd");
+        }
+
         //TODO Ne pas relancer la requête à chaque onCreate. La lancer la permière fois sur un thread different.
         // Les fois suivantes "matcher" entre chaque nouvel utilisateur et la totalité des contacts.
-    }
+
 
     public void retrieveUsers(String email ) {
         Log.i ("retrieveUsers", "Start");
