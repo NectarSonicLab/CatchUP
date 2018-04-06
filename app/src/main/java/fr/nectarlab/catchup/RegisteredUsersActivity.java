@@ -74,10 +74,10 @@ public class RegisteredUsersActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                //namesFound = getNameEmailDetails();
+                namesFound = getNameEmailDetails();
                 }
             }).start();
-            namesFound = getNameEmailDetails();
+            //namesFound = getNameEmailDetails();
             Log.i("Register", "onResumeEnd");
         }
 
