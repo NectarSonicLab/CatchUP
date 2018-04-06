@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import fr.nectarlab.catchup.BackgroundTasks.FindingFriendsRunnable;
 import fr.nectarlab.catchup.model.Users;
 
 import com.google.firebase.database.ChildEventListener;
