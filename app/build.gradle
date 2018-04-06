@@ -39,6 +39,8 @@ dependencies {
     })
 //Warning sur support apres import de ViewModel,LiveData Room et Paging sur un probleme de View...
     compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:support-v13:26.1.0'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.google.firebase:firebase-auth:10.0.1'
@@ -49,7 +51,16 @@ dependencies {
 
 }
 
-
+configurations.all{
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if(requested.group == 'com.android.support'){
+            if(!requested.name.startsWith("multidex")){
+                details.useVersion'26.1.0'
+            }
+        }
+    }
+}
 
 
 
