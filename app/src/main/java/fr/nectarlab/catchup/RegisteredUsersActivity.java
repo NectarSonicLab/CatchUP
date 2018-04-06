@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import fr.nectarlab.catchup.BackgroundTasks.FindingFriendsRunnable;
+import fr.nectarlab.catchup.Database.AppDatabase;
 import fr.nectarlab.catchup.model.Users;
 
 import com.google.firebase.database.ChildEventListener;
@@ -66,7 +67,13 @@ public class RegisteredUsersActivity extends AppCompatActivity {
          * on teste s'ils sont egalement inscrits sur le serveur. Cette methode fait appel
          * à retrieveUsers qui prend en argument l'email trouvé dans la fiche de contacts
          */
-        namesFound = getNameEmailDetails();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                namesFound = getNameEmailDetails();
+            }
+        }).start();
+        //namesFound = getNameEmailDetails();
         //TODO Ne pas relancer la requête à chaque onCreate. La lancer la permière fois sur un thread different.
         // Les fois suivantes "matcher" entre chaque nouvel utilisateur et la totalité des contacts.
     }
@@ -94,11 +101,12 @@ public class RegisteredUsersActivity extends AppCompatActivity {
              */
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                //Au lieu de Users utiliser l'objet Friend
+                //Au lieu de Users utiliser l'objet FriendDB
                 Users u = dataSnapshot.getValue(Users.class);
                 if (u != null)
                     Log.i("retrieveUsers_Found", ""+u.getEmail());
                 allUsers.add(u);
+                //Proceder a l'insertion dans la BD ici
             }
 
             @Override

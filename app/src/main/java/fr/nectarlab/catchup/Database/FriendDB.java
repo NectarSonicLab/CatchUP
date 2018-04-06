@@ -8,7 +8,7 @@ import android.arch.persistence.room.PrimaryKey;
  * Created by ThomasPiaczinski on 06/04/18.
  */
 @Entity
-public class Friend {
+public class FriendDB {
 
     @PrimaryKey
     private String EMAIL;
