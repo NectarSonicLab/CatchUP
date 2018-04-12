@@ -14,11 +14,14 @@ import java.util.List;
 @Dao
 public interface FriendDao {
     @Insert
-    public void insertNewFriend(FriendDB...friendDB);
+    public void insertNewFriend(FriendDB friendDB);
 
     @Delete
-    public void deletedFriend(FriendDB...friendDB);
+    public void deletedFriend(FriendDB friendDB);
 
     @Query("SELECT * FROM FriendDB")
     List<FriendDB> getAll();
+
+    @Query("SELECT COUNT (EMAIL) FROM FriendDB")
+    public int numberOfFriends ();
 }
