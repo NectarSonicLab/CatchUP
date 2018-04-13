@@ -1,14 +1,19 @@
 package fr.nectarlab.catchup;
 
 import android.Manifest;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
@@ -20,9 +25,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.nectarlab.catchup.Database.AppDatabase;
-import fr.nectarlab.catchup.Database.FriendDB;
+import fr.nectarlab.catchup.Database.RegisteredFriendsDB;
+import fr.nectarlab.catchup.model.RegFriendsModel;
 import fr.nectarlab.catchup.model.Users;
 
 
@@ -41,15 +48,16 @@ public class RegisteredUsersActivity_test extends AppCompatActivity {
     AppDatabase roomDB;
     RecyclerView allUserRecycle;
     ArrayList<Users> allUsers =new ArrayList<>();
-    ArrayList<FriendDB>listedFriends = new ArrayList();
+    ArrayList<RegisteredFriendsDB>listedFriends = new ArrayList();
     ArrayList<String> namesFound = new ArrayList<String>();
 
 
-
+    private RegFriendsModel mRegFriendModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("OnCreate", "Debut");
         /**
         *READ_CONTACTS fait partie des "dangerous permissions", elle doit explicitement etre
          * demandee a l'utilisateur. Nous faisons donc une "request permission".
@@ -61,9 +69,25 @@ public class RegisteredUsersActivity_test extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String []{Manifest.permission.READ_CONTACTS}, 0 );
         }
         //TODO Prevoir le cas ou l'user refuse la permission
-        setContentView(R.layout.registered_users);
+        setContentView(R.layout.friends_show_activity);
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        final FriendsListAdapter adapter = new FriendsListAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mRegFriendModel = ViewModelProviders.of(this).get(RegFriendsModel.class);
+        mRegFriendModel.getAllFriends().observe(this, new Observer<List<RegisteredFriendsDB>>(){
+            @Override
+            public void onChanged(@Nullable final List<RegisteredFriendsDB> mRegisteredFriendsDB){
+                adapter.setFriends(mRegisteredFriendsDB);
+            }
+        });
+
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
-        roomDB.getInstance(this);
+        roomDB.getInstance(getApplicationContext());
+        if(roomDB.getInstance(this)==null){
+            Log.i("Catch", "Error: Instance is Null");
+        }
     }
         /**getNameEmailDetails() est la fonction qui cherche dans les Contacts les noms et
          * emails de tous les contacts de l'utilisateur. S'ils possedent un email alors
@@ -111,14 +135,22 @@ public class RegisteredUsersActivity_test extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //Au lieu de Users utiliser l'objet FriendDB
-                Users u = dataSnapshot.getValue(Users.class);
-                //FriendDB u = new FriendDB();
+                //Users u = dataSnapshot.getValue(Users.class);
+                RegisteredFriendsDB u = dataSnapshot.getValue(RegisteredFriendsDB.class);
                 if (u != null)
-                    Log.i("retrieveUsers_Found", ""+u.getEmail());
-                //String mail = u.getEmail();
-                allUsers.add(u);
+                    Log.i("retrieveUsers_Found", ""+u.getEMAIL());
+                String mail = u.getEMAIL();
+                listedFriends.add(u);
+                RegisteredFriendsDB friend = new RegisteredFriendsDB(mail);
                 //Proceder a l'insertion dans la BD ici
-                //roomDB.friendDao().insertNewFriend(new FriendDB(mail, "ID", "TOTO", "lal@gmail.com", "123" ));
+                //A l'interieur de cette methode roomDB est reconnue comme null (pb de contexte?)
+                try{
+                    roomDB.mRegisteredFriendsDAO().insert(friend);
+                }
+                catch (NullPointerException npe){
+                    Log.i("Catch", "Error: "+friend.getEMAIL());
+                    Log.i("Catch", "listedFriends size: "+listedFriends.size());
+                }
             }
 
             @Override
