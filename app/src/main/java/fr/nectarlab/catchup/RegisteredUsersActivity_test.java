@@ -108,7 +108,7 @@ public class RegisteredUsersActivity_test extends AppCompatActivity {
         Log.i ("retrieveUsers", "Start");
         Query mQuery=mDatabase.orderByChild("EMAIL").equalTo(email).limitToFirst(1);
         if(FirebaseDatabase.getInstance()!=null)
-        assert mQuery != null;
+        assert mQuery != null;//
         mQuery.addChildEventListener(new ChildEventListener() {
 
            /**
