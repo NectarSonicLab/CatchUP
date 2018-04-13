@@ -122,10 +122,10 @@ public class RegisteredUsersActivity_test extends AppCompatActivity {
                     Log.i("retrieveUsers_Found", ""+u.getEMAIL());
                 String mail = u.getEMAIL();
                 listedFriends.add(u);
-                if (listedFriends.size()>mRegFriendModel.getNumFriends()) {
+                //if (listedFriends.size()>mRegFriendModel.getNumFriends()) {
                     RegisteredFriendsDB friend = new RegisteredFriendsDB(mail);
                     mRegFriendModel.insert(friend);//Conflit avec @Unique a
-                }
+                //}
             }
 
             @Override

@@ -19,7 +19,7 @@ public class AppRepository {
         AppDatabase appDatabase = AppDatabase.getInstance(application);
         mRegisteredFriendsDAO = appDatabase.mRegisteredFriendsDAO();
         mAllFriends = mRegisteredFriendsDAO.getAllFriends();
-        numFriends = mRegisteredFriendsDAO.getNumberOfFriends();
+        //numFriends = mRegisteredFriendsDAO.getNumberOfFriends();
     }
 
     public LiveData<List<RegisteredFriendsDB>> getAllFriends(){
@@ -30,9 +30,9 @@ public class AppRepository {
         new insertAsyncTask(mRegisteredFriendsDAO).execute(registeredFriendsDB);
     }
 
-    public int getNumFriends(){
+    /*public int getNumFriends(){
         return this.numFriends;
-    }
+    }*/
 
     private static class insertAsyncTask extends AsyncTask<RegisteredFriendsDB, Void, Void>{
         private RegisteredFriendsDAO mAsyncTaskDAO;
