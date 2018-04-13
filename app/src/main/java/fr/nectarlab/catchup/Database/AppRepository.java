@@ -13,11 +13,13 @@ import java.util.List;
 public class AppRepository {
     private RegisteredFriendsDAO mRegisteredFriendsDAO;
     private LiveData<List<RegisteredFriendsDB>> mAllFriends;
+    private int numFriends;
 
     public AppRepository(Application application){
         AppDatabase appDatabase = AppDatabase.getInstance(application);
         mRegisteredFriendsDAO = appDatabase.mRegisteredFriendsDAO();
         mAllFriends = mRegisteredFriendsDAO.getAllFriends();
+        numFriends = mRegisteredFriendsDAO.getNumberOfFriends();
     }
 
     public LiveData<List<RegisteredFriendsDB>> getAllFriends(){
@@ -26,6 +28,10 @@ public class AppRepository {
 
     public void insert (RegisteredFriendsDB registeredFriendsDB){
         new insertAsyncTask(mRegisteredFriendsDAO).execute(registeredFriendsDB);
+    }
+
+    public int getNumFriends(){
+        return this.numFriends;
     }
 
     private static class insertAsyncTask extends AsyncTask<RegisteredFriendsDB, Void, Void>{

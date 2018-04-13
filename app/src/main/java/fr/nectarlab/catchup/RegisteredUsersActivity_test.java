@@ -47,11 +47,8 @@ public class RegisteredUsersActivity_test extends AppCompatActivity {
     DatabaseReference mDatabase;
     AppDatabase roomDB;
     RecyclerView allUserRecycle;
-    ArrayList<Users> allUsers =new ArrayList<>();
     ArrayList<RegisteredFriendsDB>listedFriends = new ArrayList();
     ArrayList<String> namesFound = new ArrayList<String>();
-
-
     private RegFriendsModel mRegFriendModel;
 
     @Override
@@ -85,9 +82,6 @@ public class RegisteredUsersActivity_test extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
         roomDB.getInstance(getApplicationContext());
-        if(roomDB.getInstance(this)==null){
-            Log.i("Catch", "Error: Instance is Null");
-        }
     }
         /**getNameEmailDetails() est la fonction qui cherche dans les Contacts les noms et
          * emails de tous les contacts de l'utilisateur. S'ils possedent un email alors
@@ -103,11 +97,10 @@ public class RegisteredUsersActivity_test extends AppCompatActivity {
                 namesFound = getNameEmailDetails();
                 }
             }).start();
-            //namesFound = getNameEmailDetails();
             Log.i("Register", "onResumeEnd");
         }
 
-        //TODO Ne pas relancer la requête à chaque onCreate. La lancer la permière fois sur un thread different.
+        //TODO Ne pas relancer la requête à chaque onResume.
         // Les fois suivantes "matcher" entre chaque nouvel utilisateur et la totalité des contacts.
 
 
@@ -118,38 +111,20 @@ public class RegisteredUsersActivity_test extends AppCompatActivity {
         assert mQuery != null;
         mQuery.addChildEventListener(new ChildEventListener() {
 
-            /**
-             * Fonctionne bien quand on ajoute un contact sur le serveur quand l'activité
-             * est active et que le nouvel utilisateur est également un contact (mais doit
-             * repasser par un onCreate...moyen...a vérifier)
-             * tester si
-             * 1)Si c'est la premiere fois que la requête tourne,
-             * est-ce que la fonction trouve un ami déjà enregistré sur le serveur
-             * 2)Que se passe t-il si aucun child n'est plus jamais ajouté?
-             * Conclusion: onChildAdded idéal pour tester si un nouvel utilisateur est également
-             * dans les contacts du terminal (Meme recuperer son email et le tester avec les contacts
-             * plutot que tester tous les users du serveur avec tous les contacts!)
+           /**
              * Pour la premiere fois on est obligé de confronter tous les contacts du serveur
              * avec ceux du terminal.
              */
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                //Au lieu de Users utiliser l'objet FriendDB
-                //Users u = dataSnapshot.getValue(Users.class);
                 RegisteredFriendsDB u = dataSnapshot.getValue(RegisteredFriendsDB.class);
                 if (u != null)
                     Log.i("retrieveUsers_Found", ""+u.getEMAIL());
                 String mail = u.getEMAIL();
                 listedFriends.add(u);
-                RegisteredFriendsDB friend = new RegisteredFriendsDB(mail);
-                //Proceder a l'insertion dans la BD ici
-                //A l'interieur de cette methode roomDB est reconnue comme null (pb de contexte?)
-                try{
-                    roomDB.mRegisteredFriendsDAO().insert(friend);
-                }
-                catch (NullPointerException npe){
-                    Log.i("Catch", "Error: "+friend.getEMAIL());
-                    Log.i("Catch", "listedFriends size: "+listedFriends.size());
+                if (listedFriends.size()>mRegFriendModel.getNumFriends()) {
+                    RegisteredFriendsDB friend = new RegisteredFriendsDB(mail);
+                    mRegFriendModel.insert(friend);//Conflit avec @Unique a
                 }
             }
 
@@ -180,8 +155,9 @@ public class RegisteredUsersActivity_test extends AppCompatActivity {
     public ArrayList<String> getNameEmailDetails(){
         Log.i("getNameEmailDetails", "Start");
         ArrayList<String> names = new ArrayList<String>();
-        //getContentResolver() est une methode de la classe android.content.ContextWrapper
-        //et implémente une méthode de la classe android.content.Context
+        /**getContentResolver() est une methode de la classe android.content.ContextWrapper
+         *et implémente une méthode de la classe android.content.Context
+         **/
         ContentResolver cr = getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,null, null, null, null);
         if (cur.getCount() > 0) {
