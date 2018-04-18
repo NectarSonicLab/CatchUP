@@ -1,12 +1,15 @@
 package fr.nectarlab.catchup;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Application;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -28,9 +31,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.nectarlab.catchup.Database.AppDatabase;
+
+import fr.nectarlab.catchup.Database.AppRepository;
+import fr.nectarlab.catchup.Database.RegisteredFriendsDAO;
 import fr.nectarlab.catchup.Database.RegisteredFriendsDB;
+import fr.nectarlab.catchup.Database.ResponseListener;
 import fr.nectarlab.catchup.model.RegFriendsModel;
-import fr.nectarlab.catchup.model.Users;
+import static fr.nectarlab.catchup.Database.AppRepository.getNumFriendsAsyncTask;
+
+import static java.security.AccessController.getContext;
 
 
 /**
@@ -42,7 +51,8 @@ import fr.nectarlab.catchup.model.Users;
  * Une fois un ami trouvé, on lui créé une View pour pouvoir interagir avec lui(chat, invitation).
  */
 
-public class RegisteredUsersActivity_test extends AppCompatActivity {
+public class RegisteredUsersActivity_test extends AppCompatActivity implements getNumFriendsAsyncTask.ResponseListener{
+    private static final String TAG = "CatchUP_RegUsers_test";
     ArrayList<ContactsContract.Contacts> allContact = new ArrayList<>();
     DatabaseReference mDatabase;
     AppDatabase roomDB;
@@ -50,11 +60,20 @@ public class RegisteredUsersActivity_test extends AppCompatActivity {
     ArrayList<RegisteredFriendsDB>listedFriends = new ArrayList();
     ArrayList<String> namesFound = new ArrayList<String>();
     private RegFriendsModel mRegFriendModel;
+    public int registeredFriends;
+    private static RegisteredUsersActivity_test RUAInstance;
+
+
+
+   public static RegisteredUsersActivity_test getInstance(Context context){
+       //Log.i(TAG, "Objet Instance = "+ context.toString());
+       return RegisteredUsersActivity_test.RUAInstance;
+   }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("OnCreate", "Debut");
+        Log.i(TAG, "OnCreate: Debut");
         /**
         *READ_CONTACTS fait partie des "dangerous permissions", elle doit explicitement etre
          * demandee a l'utilisateur. Nous faisons donc une "request permission".
@@ -72,32 +91,55 @@ public class RegisteredUsersActivity_test extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
         mRegFriendModel = ViewModelProviders.of(this).get(RegFriendsModel.class);
+        //mRegFriendModel.getNumFriends();//lance la requete pour obtenir le nombre d'amis enregistres
         mRegFriendModel.getAllFriends().observe(this, new Observer<List<RegisteredFriendsDB>>(){
             @Override
             public void onChanged(@Nullable final List<RegisteredFriendsDB> mRegisteredFriendsDB){
                 adapter.setFriends(mRegisteredFriendsDB);
             }
         });
-
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
         roomDB.getInstance(getApplicationContext());
+        /**
+         * ......................................Logique pour recuperer l'info depuis l'async task de la classe AppRepository via une interface
+         */
+        getNumFriendsAsyncTask.ResponseListener listener = new getNumFriendsAsyncTask.ResponseListener() {
+            @Override
+            public void onResponseReceive(int result) {
+                Log.i(TAG, "onResponseReceive "+result);
+                registeredFriends = result;
+            }
+        };
+        getNumFriendsAsyncTask asyncTask = new getNumFriendsAsyncTask(mRegFriendModel.getmRepository().getmRegisteredFriendsDAO(), listener);
+        asyncTask.execute();
+        Log.i(TAG, "OnCreate: Fin");
+
     }
         /**getNameEmailDetails() est la fonction qui cherche dans les Contacts les noms et
          * emails de tous les contacts de l'utilisateur. S'ils possedent un email alors
          * on teste s'ils sont egalement inscrits sur le serveur. Cette methode fait appel
          * à retrieveUsers qui prend en argument l'email trouvé dans la fiche de contacts
          */
+
+
         public void onResume(){
-            Log.i("Register", "onResumeStart");
             super.onResume();
+            Log.i(TAG, "onResume: Debut");
+            /**
+             *
+             * Ne faire la recherche que la premiere fois (avoir une variable dans sharedPref qui nous
+             * indique si la requete a deja tourne une fois
+             */
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+
                 namesFound = getNameEmailDetails();
                 }
             }).start();
-            Log.i("Register", "onResumeEnd");
+            Log.i(TAG, "onResume: Fin");
         }
 
         //TODO Ne pas relancer la requête à chaque onResume.
@@ -118,14 +160,17 @@ public class RegisteredUsersActivity_test extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 RegisteredFriendsDB u = dataSnapshot.getValue(RegisteredFriendsDB.class);
+
                 if (u != null)
                     Log.i("retrieveUsers_Found", ""+u.getEMAIL());
                 String mail = u.getEMAIL();
                 listedFriends.add(u);
-                //if (listedFriends.size()>mRegFriendModel.getNumFriends()) {
+                Log.i(TAG, "listedFriends: "+listedFriends.size()+" registeredFriends: "+registeredFriends);
+                if (listedFriends.size()>registeredFriends) {
                     RegisteredFriendsDB friend = new RegisteredFriendsDB(mail);
                     mRegFriendModel.insert(friend);//Conflit avec @Unique a
-                //}
+                    //registeredFriends=mRegFriendModel.getNumFriends();
+               }
             }
 
             @Override
@@ -185,6 +230,24 @@ public class RegisteredUsersActivity_test extends AppCompatActivity {
             Log.i("getNameEmailDetails", "End");
         }
         return names;
+    }
+    public void setFriendListener(int numFriends){
+        Log.i(TAG, "FriendListener :"+numFriends);
+        this.registeredFriends = numFriends;
+    }
+    public int getFriendListener(RegisteredUsersActivity_test RUA){
+        Log.i(TAG, "getFriendListener>>>: "+RUA.registeredFriends);
+        return RUA.registeredFriends;
+    }
+
+    @Override
+    public void onResponseReceive(int result) {
+        Log.i(TAG, "onResponseReceive");
+        this.registeredFriends = result;
+        setRegisteredFriends(result);
+    }
+    public void setRegisteredFriends(int value){
+        this.registeredFriends = value;
     }
 }
 

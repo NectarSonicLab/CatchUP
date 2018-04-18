@@ -21,18 +21,11 @@ import fr.nectarlab.catchup.ExecutionThreads.AppExecutors;
 public abstract class AppDatabase extends RoomDatabase {
     public static final String DATABASE_NAME = "CatchUP_DB";
     private static AppDatabase DBInstance;
-    private Boolean isDatabaseCreated;
 
     public abstract FriendDao friendDao();//autre DAO a creer
     public abstract RegisteredFriendsDAO mRegisteredFriendsDAO();
-/*
-    private AppDatabase() {
 
-    }
-*/
-
-
-    public static AppDatabase getInstance(final Context context) {//Creer le pool de thread
+    public static AppDatabase getInstance(final Context context) {
         if (DBInstance == null) {
             synchronized (AppDatabase.class) {
                 if (DBInstance == null) {
@@ -77,17 +70,18 @@ public abstract class AppDatabase extends RoomDatabase {
         }
         @Override
         protected Void doInBackground(final Void... params){
+
             mRegisteredFriendsDAO.deleteAll();
+            /*
             RegisteredFriendsDB Friend1 = new RegisteredFriendsDB("toto@email.com");
             mRegisteredFriendsDAO.insert(Friend1);
             RegisteredFriendsDB Friend2 = new RegisteredFriendsDB("Alberto@email.com");
             mRegisteredFriendsDAO.insert(Friend2);
             RegisteredFriendsDB Friend3 = new RegisteredFriendsDB("jojo@email.com");
             mRegisteredFriendsDAO.insert(Friend3);
+            */
             return null;
         }
     }
-
-
 }
 

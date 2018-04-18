@@ -18,6 +18,6 @@ public interface RegisteredFriendsDAO {
     LiveData<List<RegisteredFriendsDB>>getAllFriends();
     @Query("DELETE FROM RegisteredFriendsDB")
     void deleteAll();
-    /*@Query("SELECT COUNT (EMAIL) FROM RegisteredFriendsDB")
-    public int getNumberOfFriends ();*/
+    @Query("SELECT COUNT (EMAIL) FROM RegisteredFriendsDB")
+    int getNumberOfFriends ();
 }
