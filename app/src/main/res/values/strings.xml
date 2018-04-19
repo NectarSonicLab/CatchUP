@@ -16,4 +16,5 @@
     <string name="groups">Boite à souvenirs</string>
     <string name="properties">Propriétés</string>
     <string name="ajouterEvenement">Ajouter un évènement</string>
+    <string name="locationauth">L\'app a besoin des donnees GPS pour pouvoir proposer des points de RDV a vos amis</string>
 </resources>
