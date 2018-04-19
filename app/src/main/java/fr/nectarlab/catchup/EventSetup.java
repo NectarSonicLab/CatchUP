@@ -22,7 +22,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 public class EventSetup extends AppCompatActivity{
     private final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
     int PLACE_PICKER_REQUEST = 1;
-    TextView retrievePlace;
+    TextView retrievePlace;//
     @Override
     public void onCreate (Bundle b){
         super.onCreate(b);
