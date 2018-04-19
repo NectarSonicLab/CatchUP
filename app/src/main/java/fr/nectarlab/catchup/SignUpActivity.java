@@ -1,6 +1,7 @@
 package fr.nectarlab.catchup;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -253,6 +254,11 @@ public class SignUpActivity extends BaseActivity implements
         } else if (i == R.id.verify_email_button) {
             sendEmailVerification();
         }
+    }
+
+    public void goToHome(View v){
+        Intent i = new Intent(this, Home.class);
+        startActivity(i);
     }
 
     public void sendDB(View v){

@@ -52,16 +52,18 @@ import static java.security.AccessController.getContext;
  */
 
 public class RegisteredUsersActivity_test extends AppCompatActivity implements getNumFriendsAsyncTask.ResponseListener{
-    private static final String TAG = "CatchUP_RegUsers_test";
+    private final String TAG = "CatchUP_RegUsers_test";
     ArrayList<ContactsContract.Contacts> allContact = new ArrayList<>();
     DatabaseReference mDatabase;
     AppDatabase roomDB;
     RecyclerView allUserRecycle;
     ArrayList<RegisteredFriendsDB>listedFriends = new ArrayList();
+    ArrayList<RegisteredFriendsDB>listedFriendsOnline = new ArrayList();
     ArrayList<String> namesFound = new ArrayList<String>();
     private RegFriendsModel mRegFriendModel;
     public int registeredFriends;
     private static RegisteredUsersActivity_test RUAInstance;
+    private boolean hasRanOnce;
 
 
 
@@ -71,9 +73,15 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle b) {
+        super.onCreate(b);
         Log.i(TAG, "OnCreate: Debut");
+
+        if (b!=null){
+            hasRanOnce = b.getBoolean("HasRanOnce");
+            Log.i(TAG, "SavedBoolean: hasRanOnce value "+hasRanOnce);
+        }
+
         /**
         *READ_CONTACTS fait partie des "dangerous permissions", elle doit explicitement etre
          * demandee a l'utilisateur. Nous faisons donc une "request permission".
@@ -117,34 +125,43 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         Log.i(TAG, "OnCreate: Fin");
 
     }
-        /**getNameEmailDetails() est la fonction qui cherche dans les Contacts les noms et
-         * emails de tous les contacts de l'utilisateur. S'ils possedent un email alors
-         * on teste s'ils sont egalement inscrits sur le serveur. Cette methode fait appel
-         * à retrieveUsers qui prend en argument l'email trouvé dans la fiche de contacts
-         */
 
 
-        public void onResume(){
+        @Override
+        public void onPause(){
+            super.onPause();
+            Log.i(TAG, "onPause: Debut");
+            listedFriends.clear();
+            Log.i(TAG, "onPause: Fin");
+        }
+        @Override
+        public void onSaveInstanceState(Bundle b){
+            super.onSaveInstanceState(b);
+            Log.i(TAG, "onSaveInstanceState: Debut");
+            b.putBoolean("HasRanOnce", true);
+            Log.i(TAG, "onSaveInstanceState: Fin");
+        }
+        @Override
+        public void onResume() {
             super.onResume();
             Log.i(TAG, "onResume: Debut");
             /**
              *
-             * Ne faire la recherche que la premiere fois (avoir une variable dans sharedPref qui nous
-             * indique si la requete a deja tourne une fois
+             * Ne faire la recherche qu'apres un premier OnCreate (Variable dans bundle (HasRanOnce) qui nous
+             * indique si la requete a deja tourne une fois)
+             * hasRanOnce sera false apres que l'app soit passee par un OnDestroy, donc la requete tournera
              */
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+            if (!hasRanOnce){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
 
-                namesFound = getNameEmailDetails();
-                }
-            }).start();
+                        namesFound = getNameEmailDetails();
+                    }
+                }).start();
+             }
             Log.i(TAG, "onResume: Fin");
         }
-
-        //TODO Ne pas relancer la requête à chaque onResume.
-        // Les fois suivantes "matcher" entre chaque nouvel utilisateur et la totalité des contacts.
-
 
     public void retrieveUsers(String email ) {
         Log.i ("retrieveUsers", "Start");
@@ -168,7 +185,9 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
                 Log.i(TAG, "listedFriends: "+listedFriends.size()+" registeredFriends: "+registeredFriends);
                 if (listedFriends.size()>registeredFriends) {
                     RegisteredFriendsDB friend = new RegisteredFriendsDB(mail);
-                    mRegFriendModel.insert(friend);//Conflit avec @Unique a
+                    listedFriendsOnline.add(friend);
+                    //mRegFriendModel.insert(friend);//Conflit avec @Unique sauf si insert avec le dernier de l'array
+                    mRegFriendModel.insert(listedFriendsOnline.get(listedFriendsOnline.size()-1));
                     //registeredFriends=mRegFriendModel.getNumFriends();
                }
             }
@@ -197,6 +216,12 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         Log.i("retrieveUsers", "End");
         }
 
+
+    /**getNameEmailDetails() est la fonction qui cherche dans les Contacts les noms et
+     * emails de tous les contacts de l'utilisateur. S'ils possedent un email alors
+     * on teste s'ils sont egalement inscrits sur le serveur. Cette methode fait appel
+     * à retrieveUsers qui prend en argument l'email trouvé dans la fiche de contacts
+     */
     public ArrayList<String> getNameEmailDetails(){
         Log.i("getNameEmailDetails", "Start");
         ArrayList<String> names = new ArrayList<String>();
@@ -222,6 +247,9 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
                     if(email!=null){
                         names.add(name);
                         Log.i("getNameEmailDetails", ""+email);
+                        /**
+                         * Ici on confronte les emails trouves dans les contacts avec ceux de Firebase
+                         */
                         retrieveUsers (email);
                     }
                 }

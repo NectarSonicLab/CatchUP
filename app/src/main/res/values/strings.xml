@@ -13,4 +13,7 @@
     <string name ="email_hint">Email</string>
     <string name ="password_hint">Password</string>
     <string name="details">details</string>
+    <string name="groups">Boite à souvenirs</string>
+    <string name="properties">Propriétés</string>
+    <string name="ajouterEvenement">Ajouter un évènement</string>
 </resources>

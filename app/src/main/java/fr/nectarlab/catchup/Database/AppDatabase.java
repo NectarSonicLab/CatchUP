@@ -31,6 +31,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (DBInstance == null) {
                     DBInstance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, DATABASE_NAME)
                             .addCallback(sAppDatabaseCallback).build();
+                             // .build();
                 }
             }
         }
@@ -71,7 +72,7 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(final Void... params){
 
-            mRegisteredFriendsDAO.deleteAll();
+            //mRegisteredFriendsDAO.deleteAll();
             /*
             RegisteredFriendsDB Friend1 = new RegisteredFriendsDB("toto@email.com");
             mRegisteredFriendsDAO.insert(Friend1);
