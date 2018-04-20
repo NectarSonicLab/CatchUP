@@ -1,7 +1,9 @@
 package fr.nectarlab.catchup;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -35,12 +37,15 @@ public class SignUpActivity extends BaseActivity implements
         View.OnClickListener {
 
     private static final String TAG = "EmailPassword";
+    private final String SHAREDPREF_ID = "User_ID";
+    private final String SHAREDPREF_EMAIL = "User_EMAIL";
+    private final String SHAREDPREF_USERNAME = "User_USERNAME";
 
     private TextView mStatusTextView;
     private TextView mDetailTextView;
+    private EditText mUsernameField;
     private EditText mEmailField;
     private EditText mPasswordField;
-
     // [START declare_auth]
     private FirebaseAuth mAuth;
     // [END declare_auth]
@@ -56,6 +61,7 @@ public class SignUpActivity extends BaseActivity implements
         // Views
         mStatusTextView = findViewById(R.id.status);
         mDetailTextView = findViewById(R.id.detail);
+        mUsernameField = findViewById(R.id.field_username);
         mEmailField = findViewById(R.id.field_email);
         mPasswordField = findViewById(R.id.field_password);
 
@@ -86,10 +92,13 @@ public class SignUpActivity extends BaseActivity implements
     // [END on_start_check_user]
 
     private void createAccount(String email, String password) {
+
         Log.d(TAG, "createAccount:" + email);
         if (!validateForm()) {
             return;
         }
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPref.edit();
 
         showProgressDialog();
 
@@ -102,11 +111,15 @@ public class SignUpActivity extends BaseActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            //Penser a rajouter un Username
                             updateUI(user);
                             DatabaseReference myRef = mDatabase.getReference("Users");//Creer le repertoire Users s'il n'existe pas
                             myRef.child(user.getUid());
                             myRef.child(user.getUid()).child("EMAIL").setValue(user.getEmail());
+                            myRef.child(user.getUid()).child("USERNAME").setValue(getUsername());
+                            editor.putString(SHAREDPREF_ID,user.getUid());
+                            editor.putString(SHAREDPREF_EMAIL, user.getEmail());
+                            editor.putString(SHAREDPREF_USERNAME, getUsername());
+                            editor.apply();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -198,6 +211,14 @@ public class SignUpActivity extends BaseActivity implements
     private boolean validateForm() {
         boolean valid = true;
 
+        String username = mUsernameField.getText().toString();
+        if(TextUtils.isEmpty(username)) {
+            mUsernameField.setError("Required");
+            valid = false;
+        }  else{
+                mUsernameField.setError(null);
+        }
+
         String email = mEmailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
             mEmailField.setError("Required.");
@@ -224,22 +245,21 @@ public class SignUpActivity extends BaseActivity implements
                     user.getEmail(), user.isEmailVerified()));
             mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
 
-            findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
-            findViewById(R.id.email_password_fields).setVisibility(View.GONE);
+            findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);//bouton signIn visible
             findViewById(R.id.signed_in_buttons).setVisibility(View.VISIBLE);
+            findViewById(R.id.ready_to_continue).setVisibility(View.VISIBLE);
+            findViewById(R.id.field_usernameLayout).setVisibility(View.GONE);
+            findViewById(R.id.createAccountLayout).setVisibility(View.GONE);
+            findViewById(R.id.ready_to_continue).setEnabled(user.isEmailVerified());
             findViewById(R.id.verify_email_button).setEnabled(!user.isEmailVerified());
-            if (user.isEmailVerified()){
-                findViewById(R.id.ready_to_continue).setVisibility(View.VISIBLE);
-            }
         } else {
             mStatusTextView.setText(R.string.signed_out);
             mDetailTextView.setText(null);
-
-            findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
+            findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
             findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
             findViewById(R.id.signed_in_buttons).setVisibility(View.GONE);
-            findViewById(R.id.ready_to_continue).setVisibility(View.GONE);
         }
+
     }
 
     @Override
@@ -252,7 +272,7 @@ public class SignUpActivity extends BaseActivity implements
         } else if (i == R.id.sign_out_button) {
             signOut();
         } else if (i == R.id.verify_email_button) {
-            sendEmailVerification();
+            sendEmailVerification();//pourrait aller avec createAccountButton
         }
     }
 
@@ -262,6 +282,14 @@ public class SignUpActivity extends BaseActivity implements
     }
 
     public void sendDB(View v){
+        /*pour tester la copie dans sharedPref>>>>Ok
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        String ID = sharedPref.getString(SHAREDPREF_ID, "Key not saved");
+        Log.i(TAG, "Shared ID: "+ID);
+        String EMAIL = sharedPref.getString(SHAREDPREF_EMAIL, "Key not saved");
+        Log.i(TAG, "Shared EMAIL: "+EMAIL);
+        String USERNAME = sharedPref.getString(SHAREDPREF_USERNAME, "Key not saved");
+        Log.i(TAG, "Shared USERNAME: "+USERNAME);
         /* pour tester l'insertion de donnees dans la base au debut du developpement
         DatabaseReference myRef = mDatabase.getReference("Users");//Creer le repertoire Users s'il n'existe pas
         myRef.child("UserA").child("ID").setValue(1231);//Dans Users, Creer UserA, puis creer un fils de UserA avec un nom ID et une valeur
@@ -269,5 +297,9 @@ public class SignUpActivity extends BaseActivity implements
         myRef.child("UserB").setValue("Test2");//Creer un fils de Users, avec un nom de UserB et une valeur
         myRef.child("UserC").setValue("Test3");//idem
         */
+    }
+
+    public String getUsername(){
+        return mUsernameField.getText().toString();
     }
 }

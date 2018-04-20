@@ -179,12 +179,13 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
                 RegisteredFriendsDB u = dataSnapshot.getValue(RegisteredFriendsDB.class);
 
                 if (u != null)
-                    Log.i("retrieveUsers_Found", ""+u.getEMAIL());
+                    Log.i("retrieveUsers_Found", ""+u.getEMAIL()+" Username: "+u.getUSERNAME());
                 String mail = u.getEMAIL();
+                String username = u.getUSERNAME();
                 listedFriends.add(u);
                 Log.i(TAG, "listedFriends: "+listedFriends.size()+" registeredFriends: "+registeredFriends);
                 if (listedFriends.size()>registeredFriends) {
-                    RegisteredFriendsDB friend = new RegisteredFriendsDB(mail);
+                    RegisteredFriendsDB friend = new RegisteredFriendsDB(mail, username);
                     listedFriendsOnline.add(friend);
                     //mRegFriendModel.insert(friend);//Conflit avec @Unique sauf si insert avec le dernier de l'array
                     mRegFriendModel.insert(listedFriendsOnline.get(listedFriendsOnline.size()-1));

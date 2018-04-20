@@ -1,0 +1,275 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "d2f93332ae231244e65093af80d167cd",
+    "entities": [
+      {
+        "tableName": "UserDB",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`EMAIL` TEXT NOT NULL, `ID` TEXT, `USERNAME` TEXT, PRIMARY KEY(`EMAIL`))",
+        "fields": [
+          {
+            "fieldPath": "EMAIL",
+            "columnName": "EMAIL",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ID",
+            "columnName": "ID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "USERNAME",
+            "columnName": "USERNAME",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "EMAIL"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "FriendDB",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`EMAIL` TEXT NOT NULL, `ID` TEXT, `USERNAME` TEXT, `user_email` TEXT, PRIMARY KEY(`EMAIL`), FOREIGN KEY(`user_email`) REFERENCES `UserDB`(`EMAIL`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "EMAIL",
+            "columnName": "EMAIL",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ID",
+            "columnName": "ID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "USERNAME",
+            "columnName": "USERNAME",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userEMAIL",
+            "columnName": "user_email",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "EMAIL"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "UserDB",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "user_email"
+            ],
+            "referencedColumns": [
+              "EMAIL"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "GroupDB",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`groupID` TEXT NOT NULL, `adminEMAIL` TEXT, `groupName` TEXT, `ref_eventID` TEXT, PRIMARY KEY(`groupID`), FOREIGN KEY(`adminEMAIL`) REFERENCES `UserDB`(`EMAIL`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ref_eventID`) REFERENCES `EventDB`(`eventID`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "groupID",
+            "columnName": "groupID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "adminEMAIL",
+            "columnName": "adminEMAIL",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "groupName",
+            "columnName": "groupName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ref_eventID",
+            "columnName": "ref_eventID",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "groupID"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "UserDB",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "adminEMAIL"
+            ],
+            "referencedColumns": [
+              "EMAIL"
+            ]
+          },
+          {
+            "table": "EventDB",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ref_eventID"
+            ],
+            "referencedColumns": [
+              "eventID"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Group_Friend_AssocDB",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ref_group_ID` TEXT NOT NULL, `ref_friend_email` TEXT NOT NULL, PRIMARY KEY(`ref_group_ID`), FOREIGN KEY(`ref_group_ID`) REFERENCES `GroupDB`(`groupID`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ref_friend_email`) REFERENCES `FriendDB`(`EMAIL`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "ref_group_ID",
+            "columnName": "ref_group_ID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ref_friend_email",
+            "columnName": "ref_friend_email",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "ref_group_ID"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "GroupDB",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ref_group_ID"
+            ],
+            "referencedColumns": [
+              "groupID"
+            ]
+          },
+          {
+            "table": "FriendDB",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ref_friend_email"
+            ],
+            "referencedColumns": [
+              "EMAIL"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "EventDB",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventID` TEXT NOT NULL, `eventType` TEXT, `ref_groupID` TEXT, PRIMARY KEY(`eventID`), FOREIGN KEY(`ref_groupID`) REFERENCES `GroupDB`(`groupID`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "eventID",
+            "columnName": "eventID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "eventType",
+            "columnName": "eventType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ref_groupeID",
+            "columnName": "ref_groupID",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "eventID"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "GroupDB",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ref_groupID"
+            ],
+            "referencedColumns": [
+              "groupID"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "RegisteredFriendsDB",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`EMAIL` TEXT NOT NULL, `USERNAME` TEXT, PRIMARY KEY(`EMAIL`))",
+        "fields": [
+          {
+            "fieldPath": "EMAIL",
+            "columnName": "EMAIL",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "USERNAME",
+            "columnName": "USERNAME",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "EMAIL"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"d2f93332ae231244e65093af80d167cd\")"
+    ]
+  }
+}

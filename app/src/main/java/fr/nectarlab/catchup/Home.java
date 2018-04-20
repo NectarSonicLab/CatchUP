@@ -54,6 +54,10 @@ public class Home extends AppCompatActivity {
             launchSplashScreen();
         }
         Log.i(TAG, "onCreate: Fin");
+        /**
+         * I/Home: onCreate: Fin
+         04-20 08:57:43.797 6326-6326/fr.nectarlab.catchup I/Choreographer: Skipped 30 frames!  The application may be doing too much work on its main thread.
+         */
     }
     @Override
     public void onStart(){

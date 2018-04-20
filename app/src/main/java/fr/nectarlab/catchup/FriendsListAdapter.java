@@ -2,6 +2,7 @@ package fr.nectarlab.catchup;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,12 @@ import fr.nectarlab.catchup.Database.RegisteredFriendsDB;
 public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.FriendsViewHolder>{
     class FriendsViewHolder extends RecyclerView.ViewHolder{
         private final TextView friendItemView;
+        private final TextView friendUsernameView;
 
         private FriendsViewHolder(View itemView){
             super(itemView);
             friendItemView = itemView.findViewById(R.id.FriendsListAdapter_item_tv);
+            friendUsernameView = itemView.findViewById(R.id.FriendsListAdapter_itemUsername_tv);
         }
     }
 
@@ -41,6 +44,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         if(mRegFriends != null){
             RegisteredFriendsDB current = mRegFriends.get(pos);
             holder.friendItemView.setText(current.getEMAIL());
+            //holder.friendItemView.setText(current.getUSERNAME());//fonctione que si le Layout est HorizontaL????
+            holder.friendUsernameView.setText(current.getUSERNAME());
+
+            Log.i("FriendListAdapter", ""+current.getUSERNAME());
         }
         else{
             holder.friendItemView.setText("No Friend");

@@ -8,8 +8,8 @@ import android.database.DatabaseUtils;
 
 public class UtilDB {
     public static void addFriend(final AppDatabase db, final String email, final String friendID,
-                                 String friendUsername, String fUsername, String fRefGroupId){
-        FriendDB fDB = new FriendDB(email, friendID, friendUsername, fUsername, fRefGroupId);
+                                 String friendUsername, String fUsername){
+        FriendDB fDB = new FriendDB(email, friendID, friendUsername, fUsername);
         db.friendDao().insertNewFriend(fDB);
     }
 

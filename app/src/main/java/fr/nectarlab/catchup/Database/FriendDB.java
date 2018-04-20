@@ -13,9 +13,6 @@ import android.support.annotation.NonNull;
         @ForeignKey(entity = UserDB.class,
         parentColumns = "EMAIL",
         childColumns = "user_email"),
-        @ForeignKey(entity = GroupDB.class,
-        parentColumns = "groupID",
-        childColumns = "ref_group_ID")
 })
 public class FriendDB {
 
@@ -31,18 +28,17 @@ public class FriendDB {
     @ColumnInfo(name="user_email")
     private String userEMAIL;
 
-    @ColumnInfo(name="ref_group_ID")
-    private String refGroupID;
+
 
     public FriendDB(){}
 
     //POJO
-    public FriendDB (String EMAIL,String ID, String USERNAME, String userEMAIL, String refGroupID){
+    public FriendDB (String EMAIL,String ID, String USERNAME, String userEMAIL){
         this.EMAIL = EMAIL;
         this.ID = ID;
         this.USERNAME = USERNAME;
         this.userEMAIL = userEMAIL;
-        this.refGroupID = refGroupID;
+
     }
     //getters and setters
     public String getEMAIL() {
@@ -73,15 +69,8 @@ public class FriendDB {
         return userEMAIL;
     }
 
-    public String getRefGroupID() {
-        return refGroupID;
-    }
-
     public void setUserEMAIL(String userEMAIL) {
         this.userEMAIL = userEMAIL;
     }
 
-    public void setRefGroupID(String refGroupID) {
-        this.refGroupID = refGroupID;
-    }
-}
+   }

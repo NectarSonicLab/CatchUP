@@ -7,6 +7,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/FriendsListAdapter_item_tv"
+        android:layout_weight="0.5"
+        style="@style/FriendsEmail"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/FriendsListAdapter_itemUsername_tv"
+        android:layout_weight="0.5"
         style="@style/FriendsEmail"
         />
 

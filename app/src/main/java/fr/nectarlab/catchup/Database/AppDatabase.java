@@ -7,6 +7,7 @@ import android.arch.persistence.room.DatabaseConfiguration;
 import android.arch.persistence.room.InvalidationTracker;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Process;
@@ -64,6 +65,14 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE RegisteredFriendsDB "
+                    + " ADD COLUMN USERNAME TEXT");
+        }
+    };
+
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
         private final RegisteredFriendsDAO mRegisteredFriendsDAO;
         PopulateDbAsync(AppDatabase appDB){
@@ -72,7 +81,7 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(final Void... params){
 
-            //mRegisteredFriendsDAO.deleteAll();
+            mRegisteredFriendsDAO.deleteAll();
             /*
             RegisteredFriendsDB Friend1 = new RegisteredFriendsDB("toto@email.com");
             mRegisteredFriendsDAO.insert(Friend1);
