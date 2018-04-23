@@ -89,6 +89,8 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
          * shouldShowRequestPermissionRationale() qui propose un explication a l'user sur le
          * besoin de cette permission.
          */
+
+        //TODO plante à la premiere utilisation, la recherche de contact se fait alors que l'user n'a pas repondu
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)!=PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String []{Manifest.permission.READ_CONTACTS}, 0 );
         }

@@ -22,12 +22,12 @@
         android:id="@+id/navHeader_email_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Email" />
+        android:text="@string/User_EMAIL" />
 
     <TextView
         android:id="@+id/navHeader_username_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Username" />
+        android:text="@string/User_USERNAME" />
 
 </LinearLayout>

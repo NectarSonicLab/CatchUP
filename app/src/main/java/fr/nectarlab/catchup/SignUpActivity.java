@@ -282,7 +282,7 @@ public class SignUpActivity extends BaseActivity implements
     }
 
     public void sendDB(View v){
-        /*pour tester la copie dans sharedPref>>>>Ok
+        //pour tester la copie dans sharedPref>>>>Ok
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         String ID = sharedPref.getString(SHAREDPREF_ID, "Key not saved");
         Log.i(TAG, "Shared ID: "+ID);
@@ -290,6 +290,7 @@ public class SignUpActivity extends BaseActivity implements
         Log.i(TAG, "Shared EMAIL: "+EMAIL);
         String USERNAME = sharedPref.getString(SHAREDPREF_USERNAME, "Key not saved");
         Log.i(TAG, "Shared USERNAME: "+USERNAME);
+
         /* pour tester l'insertion de donnees dans la base au debut du developpement
         DatabaseReference myRef = mDatabase.getReference("Users");//Creer le repertoire Users s'il n'existe pas
         myRef.child("UserA").child("ID").setValue(1231);//Dans Users, Creer UserA, puis creer un fils de UserA avec un nom ID et une valeur

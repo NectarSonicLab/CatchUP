@@ -7,6 +7,8 @@
     <string name ="signed_out">Signed Out</string>
     <string name="sign_in_button">Sign In</string>
     <string name = "signed_in_TV">Utilisateur enregistré avec succès, continuer</string>
+    <string name ="User_EMAIL">Email: %s</string>
+    <string name ="User_USERNAME">Nom d\'utilisateur: %s</string>
     <string name ="create_account_button">Create Account</string>
     <string name = "sign_out_button">Sign Out</string>
     <string name = "verify_email_button">Verify Email</string>
@@ -18,4 +20,7 @@
     <string name="properties">Propriétés</string>
     <string name="ajouterEvenement">Ajouter un évènement</string>
     <string name="locationauth">L\'app a besoin des donnees GPS pour pouvoir proposer des points de RDV a vos amis</string>
+    <string name="SharefPrefUSERNAME">User_USERNAME</string>
+    <string name="SharefPrefUserEMAIL">User_EMAIL</string>
+    <string name="SharefPrefUSERID">User_ID</string>
 </resources>

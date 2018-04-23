@@ -1,9 +1,12 @@
 package fr.nectarlab.catchup;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -25,6 +28,7 @@ public class Home extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private FloatingActionButton mFabMain,mFabExpand;
     private TextView fabDescription;
+    private NavigationView mNavigationView;
     Animation fabOpen, fabClose, fabRClock, fabRAntiClock;
     private boolean isFabOpen = false;
 
@@ -44,11 +48,23 @@ public class Home extends AppCompatActivity {
         mFabMain = findViewById(R.id.home_mainFab_fab);
         mFabExpand = findViewById(R.id.home_fabGroup_fab);
         fabDescription = findViewById(R.id.home_fabGroupDescription_fab);
+        /**
+         * Tentative pour recuperer la textView contenue dans la NavigationView et la mettre a jour avec le contenu de sharedPref (user login email, username)
+         * tv is a null object reference
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mNavigationView = findViewById(R.id.nav_view);
+        TextView tv = mNavigationView.findViewById(R.id.navHeader_username_tv);
+        SharedPreferences sharedPref  = this.getPreferences(Context.MODE_PRIVATE);
+        String username = sharedPref.getString(getString(R.string.SharefPrefUSERNAME), "default");
+        tv.setText(username);
+         */
 
         fabOpen = AnimationUtils.loadAnimation(this, R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(this, R.anim.fab_close);
         fabRClock= AnimationUtils.loadAnimation(this, R.anim.rotate_clockwise);
         fabRAntiClock = AnimationUtils.loadAnimation(this, R.anim.rotate_anticlockwise);
+
+
 
         if(b==null){
             launchSplashScreen();
