@@ -44,7 +44,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         if(mRegFriends != null){
             RegisteredFriendsDB current = mRegFriends.get(pos);
             holder.friendItemView.setText(current.getEMAIL());
-            //holder.friendItemView.setText(current.getUSERNAME());//fonctione que si le Layout est HorizontaL????
             holder.friendUsernameView.setText(current.getUSERNAME());
 
             Log.i("FriendListAdapter", ""+current.getUSERNAME());

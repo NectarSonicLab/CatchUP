@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -97,7 +99,7 @@ public class SignUpActivity extends BaseActivity implements
         if (!validateForm()) {
             return;
         }
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor editor = sharedPref.edit();
 
         showProgressDialog();
@@ -119,7 +121,7 @@ public class SignUpActivity extends BaseActivity implements
                             editor.putString(SHAREDPREF_ID,user.getUid());
                             editor.putString(SHAREDPREF_EMAIL, user.getEmail());
                             editor.putString(SHAREDPREF_USERNAME, getUsername());
-                            editor.apply();
+                            editor.commit();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -283,13 +285,18 @@ public class SignUpActivity extends BaseActivity implements
 
     public void sendDB(View v){
         //pour tester la copie dans sharedPref>>>>Ok
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("test", "TOM");
+        editor.apply();
+        editor.commit();
         String ID = sharedPref.getString(SHAREDPREF_ID, "Key not saved");
         Log.i(TAG, "Shared ID: "+ID);
         String EMAIL = sharedPref.getString(SHAREDPREF_EMAIL, "Key not saved");
         Log.i(TAG, "Shared EMAIL: "+EMAIL);
         String USERNAME = sharedPref.getString(SHAREDPREF_USERNAME, "Key not saved");
         Log.i(TAG, "Shared USERNAME: "+USERNAME);
+        Log.i(TAG, "Shared test " + sharedPref.getString("test", "default"));
 
         /* pour tester l'insertion de donnees dans la base au debut du developpement
         DatabaseReference myRef = mDatabase.getReference("Users");//Creer le repertoire Users s'il n'existe pas

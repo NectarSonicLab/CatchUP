@@ -1,16 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent">
-    <Button
-        android:id="@+id/eventSetup_btn"
+
+    <EditText
+        android:id="@+id/eventSetup_eventName_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:ems="10"
+        android:hint="@string/eventSetup"
+        android:inputType="text"
+        android:maxLength="35" />
+
+    <ImageButton
+        android:id="@+id/eventSetup_placePicker_imgButton"
+        android:layout_below="@id/eventSetup_eventName_et"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_pin_drop_black"
+        android:onClick="pickPlace"/>
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="pick a place"
-        android:onClick="pickPlace"/>
+        android:text="@string/eventSetup_PickPlace"
+        android:layout_alignStart="@id/eventSetup_placePicker_imgButton"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="130dp"
+        android:layout_alignBaseline="@id/eventSetup_placePicker_imgButton"
+       />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/eventSetup_btn"
-        android:id="@+id/eventSetup_retrievePlace_tv"/>
+        android:layout_below="@id/eventSetup_placePicker_imgButton"
+        android:id="@+id/eventSetup_retrieveName_tv"
+        android:hint="@string/eventSetup_nameHint"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eventSetup_retrieveName_tv"
+        android:id="@+id/eventSetup_retrievePlace_tv"
+        android:hint="@string/eventSetup_hint"/>
+
+
+
+
+    <ImageButton
+        android:id="@+id/eventSetUp_datePicker_imgButton"
+        android:src="@drawable/ic_access_time_black"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="200dp"
+        android:onClick="pickDate"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/eventSetup_PickDate"
+        android:layout_alignStart="@id/eventSetUp_datePicker_imgButton"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="250dp"
+        android:layout_alignBaseline="@id/eventSetUp_datePicker_imgButton"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eventSetUp_datePicker_imgButton"
+        android:hint="@string/eventSetup_DateHint"
+        android:id="@+id/eventSetUp_day_tv"/>
+
+
+    <ImageButton
+        android:id="@+id/eventSetUp_eventType_imgButton"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="320dp"
+        android:src="@drawable/ic_event_black"
+        android:onClick="chooseEventType"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/eventSetUp_eventType_imgButton"
+        android:layout_alignBaseline="@id/eventSetUp_eventType_imgButton"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="370dp"
+        android:text="@string/eventSetup_chooseEvent"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eventSetUp_eventType_imgButton"
+        android:hint="@string/eventSetup_eventHint"
+        android:id="@+id/eventSetup_eventType_tv"/>
+
+    <ImageButton
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_person_add_black"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="440dp"
+        android:onClick="pickFriends"
+        android:id="@+id/eventSetUp_FriendsPicker_imgButton"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/eventSetUp_FriendsPicker_imgButton"
+        android:layout_alignBaseline="@id/eventSetUp_FriendsPicker_imgButton"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="490dp"
+        android:text="@string/eventSetup_pickFriends"/>
+
+
+
 
 </RelativeLayout>

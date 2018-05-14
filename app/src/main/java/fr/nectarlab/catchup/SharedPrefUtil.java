@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
 public class SharedPrefUtil {
     private final String SHAREDPREF_ID = "User_ID";
     private final String SHAREDPREF_EMAIL = "User_EMAIL";
-    private final String SHAREDPREF_USERNAME = "User_USERNAME";
+    private final static String SHAREDPREF_USERNAME = "User_USERNAME";
 
     private SharedPreferences sharedPref;
 
@@ -27,7 +27,7 @@ public class SharedPrefUtil {
         return SHAREDPREF_EMAIL;
     }
 
-    public String getSHAREDPREF_USERNAME() {
+    public static String getSHAREDPREF_USERNAME() {
         return SHAREDPREF_USERNAME;
     }
 
