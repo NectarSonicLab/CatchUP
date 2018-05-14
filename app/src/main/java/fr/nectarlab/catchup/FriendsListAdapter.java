@@ -21,6 +21,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         private final TextView friendItemView;
         private final TextView friendUsernameView;
 
+
         private FriendsViewHolder(View itemView){
             super(itemView);
             friendItemView = itemView.findViewById(R.id.FriendsListAdapter_item_tv);
@@ -35,6 +36,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
     @Override
     public FriendsViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        Log.i("FriendsListAdapter", "OnCreateViewHolder: Start");
         final View view = mInflater.inflate(R.layout.recyclerview_item, parent, false);
         return new FriendsViewHolder(view);
     }
@@ -42,6 +44,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     @Override
     public void onBindViewHolder(FriendsViewHolder holder, int pos){
         if(mRegFriends != null){
+            Log.i("FriendsListAdapter", "onBindViewHolder: Start");
             RegisteredFriendsDB current = mRegFriends.get(pos);
             holder.friendItemView.setText(current.getEMAIL());
             holder.friendUsernameView.setText(current.getUSERNAME());
@@ -50,10 +53,12 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         }
         else{
             holder.friendItemView.setText("No Friend");
+            Log.i("FriendsListAdapter", "onBindViewHolder: no friend listed");
         }
     }
 
     void setFriends(List<RegisteredFriendsDB>RegisteredFriends){
+        Log.i("FriendsListAdapter", "setFriends: Start");
         this.mRegFriends = RegisteredFriends;
         notifyDataSetChanged();
     }
@@ -61,6 +66,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     @Override
     public int getItemCount(){
         if (mRegFriends !=null){
+            Log.i("FriendsListAdapter", "getItemCount: "+mRegFriends.size());
             return mRegFriends.size();
         }
         else return 0;

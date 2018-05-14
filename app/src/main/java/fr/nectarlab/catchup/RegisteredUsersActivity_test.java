@@ -96,6 +96,8 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         }
         //TODO Prevoir le cas ou l'user refuse la permission
         setContentView(R.layout.friends_show_activity);
+        mRegFriendModel = ViewModelProviders.of(this).get(RegFriendsModel.class);
+        /**
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         final FriendsListAdapter adapter = new FriendsListAdapter(this);
         recyclerView.setAdapter(adapter);
@@ -107,9 +109,11 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         mRegFriendModel.getAllFriends().observe(this, new Observer<List<RegisteredFriendsDB>>(){
             @Override
             public void onChanged(@Nullable final List<RegisteredFriendsDB> mRegisteredFriendsDB){
+                Log.i(TAG, "onChanged");
                 adapter.setFriends(mRegisteredFriendsDB);
             }
         });
+         */
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
         roomDB.getInstance(getApplicationContext());
         /**
@@ -157,11 +161,25 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
                         namesFound = getNameEmailDetails();
+                        Log.i(TAG, "ThreadStart");
                     }
                 }).start();
              }
+
+            RecyclerView recyclerView = findViewById(R.id.recyclerview);
+            final FriendsListAdapter adapter = new FriendsListAdapter(this);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+            //mRegFriendModel.getNumFriends();//lance la requete pour obtenir le nombre d'amis enregistres
+            mRegFriendModel.getAllFriends().observe(this, new Observer<List<RegisteredFriendsDB>>(){
+                @Override
+                public void onChanged(@Nullable final List<RegisteredFriendsDB> mRegisteredFriendsDB){
+                    Log.i(TAG, "onChanged");
+                    adapter.setFriends(mRegisteredFriendsDB);
+                }
+            });
             Log.i(TAG, "onResume: Fin");
         }
 

@@ -176,7 +176,11 @@ public class EventSetup extends AppCompatActivity{
     public void pickFriends (View v){
         Intent i = new Intent (this, RegisteredUsersActivity_test.class);
         startActivityForResult(i, FRIENDS_PICKER_REQUEST);
-        //pb avec l'affichage des amis, oblige de revenir pour les voir s'afficher
+        //pb avec l'affichage des amis au premier lancement (apres installation de l'PAK), oblige de revenir pour les voir s'afficher
+        /**
+        *05-14 09:10:51.170 8564-8564/fr.nectarlab.catchup I/FriendsListAdapter: getItemCount: 3
+         05-14 09:10:51.470 8564-8564/fr.nectarlab.catchup I/FriendsListAdapter: getItemCount: 0 >>>>>>Comment il passe de 3 a 0?????
+         */
     }
 
     @Override
