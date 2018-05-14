@@ -260,7 +260,7 @@ public class SignUpActivity extends BaseActivity implements
             findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
             findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
             findViewById(R.id.signed_in_buttons).setVisibility(View.GONE);
-            findViewById(R.id.ready_to_continue).setVisibility(View.GONE);
+            findViewById(R.id.ready_to_continue).setVisibility(View.GONE);//if email verified...
             findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
         }
 
