@@ -7,6 +7,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -19,6 +20,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +40,8 @@ import fr.nectarlab.catchup.Database.RegisteredFriendsDAO;
 import fr.nectarlab.catchup.Database.RegisteredFriendsDB;
 import fr.nectarlab.catchup.Database.ResponseListener;
 import fr.nectarlab.catchup.model.RegFriendsModel;
+
+import static android.widget.Toast.LENGTH_SHORT;
 import static fr.nectarlab.catchup.Database.AppRepository.getNumFriendsAsyncTask;
 
 import static java.security.AccessController.getContext;
@@ -57,7 +62,7 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
     DatabaseReference mDatabase;
     AppDatabase roomDB;
     RecyclerView allUserRecycle;
-    ArrayList<RegisteredFriendsDB>listedFriends = new ArrayList();
+    ArrayList<RegisteredFriendsDB>listedFriends = new ArrayList<>();
     ArrayList<RegisteredFriendsDB>listedFriendsOnline = new ArrayList();
     ArrayList<String> namesFound = new ArrayList<String>();
     private RegFriendsModel mRegFriendModel;
@@ -90,13 +95,15 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
          * besoin de cette permission.
          */
 
-        //TODO plante à la premiere utilisation, la recherche de contact se fait alors que l'user n'a pas repondu
+        //TODO plante à la premiere utilisation, la recherche de contacts se fait alors que l'user n'a pas repondu
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)!=PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String []{Manifest.permission.READ_CONTACTS}, 0 );
         }
         //TODO Prevoir le cas ou l'user refuse la permission
         setContentView(R.layout.friends_show_activity);
         mRegFriendModel = ViewModelProviders.of(this).get(RegFriendsModel.class);
+
+
         /**
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         final FriendsListAdapter adapter = new FriendsListAdapter(this);
@@ -113,6 +120,10 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
                 adapter.setFriends(mRegisteredFriendsDB);
             }
         });
+         */
+
+        /**
+         * Reference aux Users inscrits dans Firebase
          */
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
         roomDB.getInstance(getApplicationContext());
@@ -153,9 +164,9 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
             Log.i(TAG, "onResume: Debut");
             /**
              *
-             * Ne faire la recherche qu'apres un premier OnCreate (Variable dans bundle (HasRanOnce) qui nous
+             * Ne faire la recherche qu'apres le premier OnCreate (Variable dans bundle (HasRanOnce) qui nous
              * indique si la requete a deja tourne une fois)
-             * hasRanOnce sera false apres que l'app soit passee par un OnDestroy, donc la requete tournera
+             * la requete ne sera pas relancee a chaque changement d'orientation
              */
             if (!hasRanOnce){
                 new Thread(new Runnable() {
@@ -203,7 +214,7 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
                 String mail = u.getEMAIL();
                 String username = u.getUSERNAME();
                 listedFriends.add(u);
-                Log.i(TAG, "listedFriends: "+listedFriends.size()+" registeredFriends: "+registeredFriends);
+                Log.i(TAG, "listedFriends: "+listedFriends.size()+" new registeredFriends: "+registeredFriends);
                 if (listedFriends.size()>registeredFriends) {
                     RegisteredFriendsDB friend = new RegisteredFriendsDB(mail, username);
                     listedFriendsOnline.add(friend);
@@ -280,6 +291,8 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         }
         return names;
     }
+
+    /* Inutile>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     public void setFriendListener(int numFriends){
         Log.i(TAG, "FriendListener :"+numFriends);
         this.registeredFriends = numFriends;
@@ -288,6 +301,7 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         Log.i(TAG, "getFriendListener>>>: "+RUA.registeredFriends);
         return RUA.registeredFriends;
     }
+    */
 
     @Override
     public void onResponseReceive(int result) {
@@ -297,6 +311,30 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
     }
     public void setRegisteredFriends(int value){
         this.registeredFriends = value;
+    }
+
+    public void saveEvent(View v){
+        ArrayList <String> savedFriends = FriendsListHelper.getPickedFriends();
+        switch (v.getId()){
+            case R.id.friends_show_activity_save_btn:{
+                if(savedFriends.size()!=0){
+                    //Intent de retour vers EventSetup avec la liste des amis choisis
+                    Intent intent = new Intent();
+                    intent.putStringArrayListExtra("savedFriends", savedFriends);
+                    this.setResult(RESULT_OK, intent);
+                    this.finish();
+                    break;
+                }
+                else{
+                    Toast.makeText(this, R.string.ToastNoFriends ,LENGTH_SHORT ).show();
+                }
+                break;
+            }
+            case R.id.friends_show_activity_cancel_btn:{
+                this.finish();
+            }
+        }
+
     }
 }
 

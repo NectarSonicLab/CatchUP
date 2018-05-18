@@ -20,6 +20,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -43,16 +44,22 @@ public class EventSetup extends AppCompatActivity{
 
     private boolean eventTypeSaved;
 
-    private TextView retrievePlace, retrieveName, retrieveEventType, retrieveDay;
+    private TextView retrievePlace, retrieveName, retrieveEventType, retrieveDay, retrieveFriends;
     //private TextView retrieveDay;
     @Override
     public void onCreate (Bundle b){
         super.onCreate(b);
+        /**
+         * Remise a zero de la liste d'amis (statique) sauvegardee puis renvoyee a cette activite
+         * sinon s'incremente a chaque instanciation de l'activite RegisteredUsersActivity
+         */
+        FriendsListHelper.setPickedFriends();
         setContentView(R.layout.event_setup);
         retrievePlace = findViewById(R.id.eventSetup_retrievePlace_tv);
         retrieveName = findViewById(R.id.eventSetup_retrieveName_tv);
         retrieveDay = findViewById(R.id.eventSetUp_day_tv);
         retrieveEventType = findViewById(R.id.eventSetup_eventType_tv);
+        retrieveFriends = findViewById(R.id.eventSetUp_friendsPicked_tv);
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -95,7 +102,9 @@ public class EventSetup extends AppCompatActivity{
             Log.i(TAG, "onCreate savedDate: "+b.getString("date"));
             //pour le type d'evenement
             retrieveEventType.setText(b.getString("type"));
-            Log.i(TAG, "onCreate savedText: "+b.getString("type"));
+            Log.i(TAG, "onCreate savedEvent: "+b.getString("type"));
+            retrieveFriends.setText(b.getString("savedFriends"));
+            Log.i(TAG, "onCreate savedFriends: "+b.getString("savedFriends"));
         }
     }
 
@@ -103,9 +112,6 @@ public class EventSetup extends AppCompatActivity{
     public void onSaveInstanceState (Bundle b){
         super.onSaveInstanceState(b);
         Log.i(TAG, "onSaveInstanceState: Debut");
-        /**
-         * Mettre dans le bundle les elements qui ont ete sauvegardes par l'utilisateur CAD: place.getName, place.getAddress, mYear, mMonth, mDay et choiceSaved
-         */
 
         /**
          * Sauvegarde de l'endroit
@@ -132,6 +138,13 @@ public class EventSetup extends AppCompatActivity{
         Log.i(TAG, "onSave eventTypeSaved: "+eventType);
 
         Log.i(TAG, "onSaveInstanceState: Fin");
+
+        /**
+         * Sauvegarde de la liste d'amis
+         */
+        String savedFriends = (String) retrieveFriends.getText();
+        b.putString("savedFriends", savedFriends);
+        Log.i(TAG, "onSave savedFriends: "+savedFriends);
     }
 
     /**
@@ -176,7 +189,8 @@ public class EventSetup extends AppCompatActivity{
     public void pickFriends (View v){
         Intent i = new Intent (this, RegisteredUsersActivity_test.class);
         startActivityForResult(i, FRIENDS_PICKER_REQUEST);
-        //pb avec l'affichage des amis au premier lancement (apres installation de l'PAK), oblige de revenir pour les voir s'afficher
+        //pb avec l'affichage des amis au premier lancement (apres installation de l'APK), oblige de revenir pour les voir s'afficher
+        //Cf pb d'ordre d'execution des requetes dans RegisteredUsersActivity
         /**
         *05-14 09:10:51.170 8564-8564/fr.nectarlab.catchup I/FriendsListAdapter: getItemCount: 3
          05-14 09:10:51.470 8564-8564/fr.nectarlab.catchup I/FriendsListAdapter: getItemCount: 0 >>>>>>Comment il passe de 3 a 0?????
@@ -235,6 +249,24 @@ public class EventSetup extends AppCompatActivity{
                 choiceSaved = data.getStringExtra("eventChoosen");
                 retrieveEventType = findViewById(R.id.eventSetup_eventType_tv);
                 retrieveEventType.setText(choiceSaved);
+            }
+        }
+
+        if(requestCode == FRIENDS_PICKER_REQUEST){
+            if(resultCode==RESULT_OK){
+                ArrayList<String>pickedFriends = data.getStringArrayListExtra("savedFriends");//Ne pas coder en dur
+                StringBuilder sb = new StringBuilder();
+                for (int i=0; i<pickedFriends.size(); i++){
+                    if(i!=pickedFriends.size()-1) {
+                        sb.append(pickedFriends.get(i));
+                        sb.append(", ");
+                    }
+                    else{
+                        sb.append(pickedFriends.get(i));
+                    }
+                }
+                String savedFriends = sb.toString();
+                retrieveFriends.setText(savedFriends);
             }
         }
     }

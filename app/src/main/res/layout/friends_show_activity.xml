@@ -3,6 +3,44 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/registered_users"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <include
+                layout="@layout/registered_users"
+                android:layout_width="match_parent" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="11"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/friends_show_activity_save_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="saveEvent"
+            android:text="@string/FriendsPick_SavePickedFriends" />
+
+        <Button
+            android:id="@+id/friends_show_activity_cancel_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="saveEvent"
+            android:text="@string/FriendsPick_CancelPickedFriends" />
+    </LinearLayout>
 
 </LinearLayout>

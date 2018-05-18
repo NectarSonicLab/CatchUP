@@ -113,7 +113,12 @@
         android:layout_marginStart="100dp"
         android:layout_marginTop="490dp"
         android:text="@string/eventSetup_pickFriends"/>
-
+    <TextView
+        android:id="@+id/eventSetUp_friendsPicked_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eventSetUp_FriendsPicker_imgButton"
+        android:hint="@string/eventSetup_friendsHint"/>
 
 
 
