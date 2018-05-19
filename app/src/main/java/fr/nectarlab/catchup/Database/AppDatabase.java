@@ -31,8 +31,8 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (AppDatabase.class) {
                 if (DBInstance == null) {
                     DBInstance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, DATABASE_NAME)
-                            .addCallback(sAppDatabaseCallback).build();
-                             // .build();
+                            //.addCallback(sAppDatabaseCallback).build();
+                             .build();
                 }
             }
         }

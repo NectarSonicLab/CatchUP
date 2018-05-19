@@ -1,5 +1,6 @@
 package fr.nectarlab.catchup;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.nectarlab.catchup.Database.RegisteredFriendsDB;
+import fr.nectarlab.catchup.model.RegFriendsModel;
 
 /**
  * Displays the data in a RecyclerView
@@ -92,25 +94,4 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         }
         else return 0;
     }
-/*
-    public class FriendsListHelper{
-        ArrayList<String> pickedFriends = new ArrayList<String>();
-
-        private void addChoosenFriend(String newFriend){
-            pickedFriends.add(newFriend);
-            Log.i(TAG, "FriendsListHelper, pickedFriends: "+pickedFriends);
-        }
-
-       private void removeChoosenFriend(String newFriend){
-            if(pickedFriends.size()>0) {
-                for (int i = 0;i<pickedFriends.size(); i++){
-                    if(newFriend.equals(pickedFriends.get(i))){
-                        pickedFriends.remove(i);
-                    }
-                }
-            }
-            Log.i(TAG, "FriendsListHelper, pickedFriends: "+pickedFriends);
-        }
-    }
-    */
 }

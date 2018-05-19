@@ -26,7 +26,9 @@ public class RegFriendsModel extends AndroidViewModel {
         allFriends = mRepository.getAllFriends();
     }
 
-    public LiveData<List<RegisteredFriendsDB>> getAllFriends(){return allFriends;}
+    public LiveData<List<RegisteredFriendsDB>> getAllFriends(){
+        return allFriends;
+    }
     public void insert (RegisteredFriendsDB registeredFriendsDB){mRepository.insert(registeredFriendsDB);}
     public void getNumFriends(){
         mRepository.getNumFriendsQuery();

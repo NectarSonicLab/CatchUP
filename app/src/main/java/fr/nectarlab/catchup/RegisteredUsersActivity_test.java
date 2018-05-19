@@ -104,7 +104,8 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         mRegFriendModel = ViewModelProviders.of(this).get(RegFriendsModel.class);
 
 
-        /**
+        /*
+         * Logique pour adapter le layout en fonction des Friends enrgistres dans la DB
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         final FriendsListAdapter adapter = new FriendsListAdapter(this);
         recyclerView.setAdapter(adapter);
@@ -126,9 +127,9 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
          * Reference aux Users inscrits dans Firebase
          */
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
-        roomDB.getInstance(getApplicationContext());
-        /**
-         * ......................................Logique pour recuperer l'info depuis l'async task de la classe AppRepository via une interface
+        //roomDB.getInstance(getApplicationContext());
+        /*
+         * ......................................Logique pour recuperer le nombre d'amis enrgistres dans la DB depuis l'async task de la classe AppRepository via une interface
          */
         getNumFriendsAsyncTask.ResponseListener listener = new getNumFriendsAsyncTask.ResponseListener() {
             @Override
@@ -207,6 +208,7 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
              */
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.i(TAG, "onChildAdded: Start");
                 RegisteredFriendsDB u = dataSnapshot.getValue(RegisteredFriendsDB.class);
 
                 if (u != null)
@@ -214,8 +216,9 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
                 String mail = u.getEMAIL();
                 String username = u.getUSERNAME();
                 listedFriends.add(u);
-                Log.i(TAG, "listedFriends: "+listedFriends.size()+" new registeredFriends: "+registeredFriends);
+                Log.i(TAG, "listedFriends: "+listedFriends.size()+" DB registeredFriends: "+registeredFriends);
                 if (listedFriends.size()>registeredFriends) {
+                    Log.i(TAG, "if (listedFriends.size()>registeredFriends)");
                     RegisteredFriendsDB friend = new RegisteredFriendsDB(mail, username);
                     listedFriendsOnline.add(friend);
                     //mRegFriendModel.insert(friend);//Conflit avec @Unique sauf si insert avec le dernier de l'array

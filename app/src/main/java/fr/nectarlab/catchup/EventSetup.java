@@ -190,7 +190,7 @@ public class EventSetup extends AppCompatActivity{
         Intent i = new Intent (this, RegisteredUsersActivity_test.class);
         startActivityForResult(i, FRIENDS_PICKER_REQUEST);
         //pb avec l'affichage des amis au premier lancement (apres installation de l'APK), oblige de revenir pour les voir s'afficher
-        //Cf pb d'ordre d'execution des requetes dans RegisteredUsersActivity
+        //Cf pb d'ordre d'execution des requetes dans RegisteredUsersActivity??
         /**
         *05-14 09:10:51.170 8564-8564/fr.nectarlab.catchup I/FriendsListAdapter: getItemCount: 3
          05-14 09:10:51.470 8564-8564/fr.nectarlab.catchup I/FriendsListAdapter: getItemCount: 0 >>>>>>Comment il passe de 3 a 0?????

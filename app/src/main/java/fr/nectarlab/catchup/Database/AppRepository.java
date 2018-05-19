@@ -62,6 +62,7 @@ public class AppRepository {
         }
         @Override
         protected Void doInBackground(final RegisteredFriendsDB...params){
+            Log.i(TAG, "insertAsyncTask doInBackground "+params[0]);
             mAsyncTaskDAO.insert(params[0]);
             return null;
         }
@@ -97,6 +98,7 @@ public class AppRepository {
         protected void onPostExecute(Integer result){
             res=result;
             recordingEvent(res);
+            Log.i("GetNumFriendsAsyncTask", "onPostexecute: resultat: "+res);
         }
     }
     public RegisteredUsersActivity_test getmRegisteredUsersActivity_test() {
