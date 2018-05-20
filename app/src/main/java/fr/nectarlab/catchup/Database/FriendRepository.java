@@ -5,6 +5,7 @@ import android.arch.persistence.room.Room;
 
 
 /**
+ * non encore implantee
  * Cette classe fait les liens entre Firebase et Room
  */
 

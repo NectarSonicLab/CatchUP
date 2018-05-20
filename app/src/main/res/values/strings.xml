@@ -36,6 +36,8 @@
     <string name="eventSetup_eventHint">Aucun événement choisi</string>
     <string name="eventSetup_pickFriends">Inviter des amis</string>
     <string name="eventSetup_friendsHint">Aucun ami choisi</string>
+    <string name="eventSetup_save">Sauvegarder</string>
+    <string name="eventSetUp_cancel">Annuler</string>
     <string name="ToastNoFriends">Vous devez choisir au moins un ami pour créer un groupe!</string>
     <string name="FriendsPick_SavePickedFriends">Sauvegarder</string>
     <string name="FriendsPick_CancelPickedFriends">Annuler</string>
@@ -49,5 +51,6 @@
     <string name="eventChooser_surprise">Surprise!</string>
     <string name="eventChooser_save">Sauvegarder</string>
     <string name="eventChooser_cancel">Annuler</string>
+    <string name="eventListAdapter_type">Type d\'événement</string>
 
 </resources>

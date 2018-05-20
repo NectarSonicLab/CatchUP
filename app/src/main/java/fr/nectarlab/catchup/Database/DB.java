@@ -1,6 +1,7 @@
 package fr.nectarlab.catchup.Database;
 
 /**
+ * Non implante
  * Created by ThomasPiaczinski on 09/04/18.
  */
 

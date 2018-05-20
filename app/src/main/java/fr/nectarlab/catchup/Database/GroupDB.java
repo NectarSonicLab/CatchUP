@@ -7,7 +7,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 /**
- * Created by ThomasPiaczinski on 09/04/18.
+ * Schema representant un groupe, finalement remplace par event, peut etre efface
  */
 @Entity (foreignKeys = {
         @ForeignKey(entity = UserDB.class,

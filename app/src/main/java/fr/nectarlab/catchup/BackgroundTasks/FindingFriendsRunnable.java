@@ -4,6 +4,7 @@ package fr.nectarlab.catchup.BackgroundTasks;
 import android.os.Process;
 
 /**
+ * Non implante
  * Created by ThomasPiaczinski on 03/04/18.
  */
 

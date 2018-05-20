@@ -1,7 +1,8 @@
 package fr.nectarlab.catchup.Database;
 
 /**
- * Created by ThomasBene on 4/17/2018.
+ * ResponseListener
+ * Interface utilisee par AppRepository
  */
 
 public interface ResponseListener {

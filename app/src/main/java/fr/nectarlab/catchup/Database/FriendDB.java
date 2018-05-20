@@ -7,7 +7,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 /**
- * Created by ThomasPiaczinski on 06/04/18.
+ * FriendDB
+ * Schema SQL representant un ami de l'utilisateur
  */
 @Entity (foreignKeys = {
         @ForeignKey(entity = UserDB.class,

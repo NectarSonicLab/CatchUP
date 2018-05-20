@@ -9,7 +9,9 @@ import android.widget.DatePicker;
 import android.widget.TabHost;
 
 /**
- * Created by ThomasBene on 5/7/2018.
+ * DateChooser
+ * Activite repondant a un Intent
+ * Elle doit renvoyer sous la forme de String le jour, le mois et l'annee choisie pour l'evenement
  */
 
 public class DateChooser extends AppCompatActivity implements DatePicker.OnDateChangedListener {
@@ -48,6 +50,10 @@ public class DateChooser extends AppCompatActivity implements DatePicker.OnDateC
     }
 
 
+    /*
+     * Methode de l'interface OnDateChangeListener
+     * Rien de particulier ici
+     */
     @Override
     public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         Log.i(TAG, "Year picked: "+year);
@@ -55,6 +61,9 @@ public class DateChooser extends AppCompatActivity implements DatePicker.OnDateC
         Log.i (TAG, "Day picked: "+dayOfMonth);
     }
 
+    /*
+     * Retour a l'activite appelante avec la date choisie
+     */
     public void update (View v){
         year = mDatePicker.getYear();
         month = mDatePicker.getMonth();

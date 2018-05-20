@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,7 +49,7 @@ import static java.security.AccessController.getContext;
 
 
 /**
- * Created by ThomasPiaczinski on 03/04/18.
+ * RegisteredUsersActivity_test
  * Nous cherchons à determiner si parmi les contacts de l'utilisateur certains font partie des
  * utilisateurs enregistrés sur le serveur. Si oui, ils font partie des amis de l'utilisateur.
  * Sinon on écoute le serveur et pour chaque nouvel utilisateur on détermine si celui-ci fait
@@ -59,19 +60,28 @@ import static java.security.AccessController.getContext;
 public class RegisteredUsersActivity_test extends AppCompatActivity implements getNumFriendsAsyncTask.ResponseListener{
     private final String TAG = "CatchUP_RegUsers_test";
     ArrayList<ContactsContract.Contacts> allContact = new ArrayList<>();
+    //Reference a la DB de Firebase
     DatabaseReference mDatabase;
     AppDatabase roomDB;
     RecyclerView allUserRecycle;
+    //Reference aux amis enregistres sur la DB locale
     ArrayList<RegisteredFriendsDB>listedFriends = new ArrayList<>();
+    //Reference aux amis enregistres sur Firebase
     ArrayList<RegisteredFriendsDB>listedFriendsOnline = new ArrayList();
+    //Array contenant les noms des contacts de l'user
     ArrayList<String> namesFound = new ArrayList<String>();
+    //Reference a l'objet RegFriendsModel
     private RegFriendsModel mRegFriendModel;
+    //Champ servant a recuperer le nombre d'amis enregistres dans la DB
     public int registeredFriends;
     private static RegisteredUsersActivity_test RUAInstance;
     private boolean hasRanOnce;
 
 
 
+    /*
+     * Inutile
+     */
    public static RegisteredUsersActivity_test getInstance(Context context){
        //Log.i(TAG, "Objet Instance = "+ context.toString());
        return RegisteredUsersActivity_test.RUAInstance;
@@ -82,6 +92,9 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         super.onCreate(b);
         Log.i(TAG, "OnCreate: Debut");
 
+        /*
+         *Logique pour ne pas relancer le cursor a chaque changement d'orientation
+         */
         if (b!=null){
             hasRanOnce = b.getBoolean("HasRanOnce");
             Log.i(TAG, "SavedBoolean: hasRanOnce value "+hasRanOnce);
@@ -123,13 +136,13 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         });
          */
 
-        /**
+        /*
          * Reference aux Users inscrits dans Firebase
          */
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
-        //roomDB.getInstance(getApplicationContext());
+
         /*
-         * ......................................Logique pour recuperer le nombre d'amis enrgistres dans la DB depuis l'async task de la classe AppRepository via une interface
+         * Logique pour recuperer le nombre d'amis enrgistres dans la DB depuis l'async task de la classe AppRepository via une interface
          */
         getNumFriendsAsyncTask.ResponseListener listener = new getNumFriendsAsyncTask.ResponseListener() {
             @Override
@@ -140,6 +153,7 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         };
         getNumFriendsAsyncTask asyncTask = new getNumFriendsAsyncTask(mRegFriendModel.getmRepository().getmRegisteredFriendsDAO(), listener);
         asyncTask.execute();
+
         Log.i(TAG, "OnCreate: Fin");
 
     }
@@ -149,6 +163,7 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         public void onPause(){
             super.onPause();
             Log.i(TAG, "onPause: Debut");
+            //clear de l'array listed friends incremente dans onChildAdded pour repartir de zero
             listedFriends.clear();
             Log.i(TAG, "onPause: Fin");
         }
@@ -156,6 +171,7 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         public void onSaveInstanceState(Bundle b){
             super.onSaveInstanceState(b);
             Log.i(TAG, "onSaveInstanceState: Debut");
+            //logique pour garder dans le bundle le fait que la requete a tourne une fois
             b.putBoolean("HasRanOnce", true);
             Log.i(TAG, "onSaveInstanceState: Fin");
         }
@@ -163,8 +179,7 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         public void onResume() {
             super.onResume();
             Log.i(TAG, "onResume: Debut");
-            /**
-             *
+            /*
              * Ne faire la recherche qu'apres le premier OnCreate (Variable dans bundle (HasRanOnce) qui nous
              * indique si la requete a deja tourne une fois)
              * la requete ne sera pas relancee a chaque changement d'orientation
@@ -179,6 +194,9 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
                 }).start();
              }
 
+            /*
+             * MAJ de l'affichage
+             */
             RecyclerView recyclerView = findViewById(R.id.recyclerview);
             final FriendsListAdapter adapter = new FriendsListAdapter(this);
             recyclerView.setAdapter(adapter);
@@ -195,6 +213,11 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
             Log.i(TAG, "onResume: Fin");
         }
 
+    /*
+     * Confrontation des emails recuperes depuis les contacts
+         * avec ceux enregistres dans Firebase
+         * Si ca match, on enregistre dans la DB locale un nouvel objet RegisteredFriendDB
+     */
     public void retrieveUsers(String email ) {
         Log.i ("retrieveUsers", "Start");
         Query mQuery=mDatabase.orderByChild("EMAIL").equalTo(email).limitToFirst(1);
@@ -202,10 +225,6 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         assert mQuery != null;//
         mQuery.addChildEventListener(new ChildEventListener() {
 
-           /**
-             * Pour la premiere fois on est obligé de confronter tous les contacts du serveur
-             * avec ceux du terminal.
-             */
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Log.i(TAG, "onChildAdded: Start");
@@ -306,17 +325,31 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
     }
     */
 
+    /*
+     * Methode abstraite de l'interface ResponseListener
+     * qui renvoit de l'AsyncTask (AppRepository getNumFriendsAsyncTask)
+     * le nombre d'amis sauves dans la DB locale
+     */
     @Override
     public void onResponseReceive(int result) {
         Log.i(TAG, "onResponseReceive");
         this.registeredFriends = result;
         setRegisteredFriends(result);
     }
+    //Setter pour le champ registeredFriends
     public void setRegisteredFriends(int value){
         this.registeredFriends = value;
     }
 
+    /*
+     * Renvoit via un Intent a l'activite appelante (EventSetup)
+     * les amis invites pour l'evenement
+     */
     public void saveEvent(View v){
+        /*
+         * savedFriends recoit un array correspondant aux amis coches via les
+         * CheckBox de la RecyclerView
+         */
         ArrayList <String> savedFriends = FriendsListHelper.getPickedFriends();
         switch (v.getId()){
             case R.id.friends_show_activity_save_btn:{

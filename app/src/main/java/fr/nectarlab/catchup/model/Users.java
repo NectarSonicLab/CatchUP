@@ -1,7 +1,7 @@
 package fr.nectarlab.catchup.model;
 
 /**
- * Created by ThomasPiaczinski on 03/04/18.
+ * Non implante
  */
 
 public class Users {

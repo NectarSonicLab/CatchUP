@@ -120,6 +120,23 @@
         android:layout_below="@id/eventSetUp_FriendsPicker_imgButton"
         android:hint="@string/eventSetup_friendsHint"/>
 
+    <Button
+        android:id="@+id/eventSetUp_saveEvent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/eventSetup_save"
+        android:onClick="saveToDB"/>
+
+    <Button
+        android:id="@+id/eventSetUp_cancelEvent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/eventSetUp_cancel"
+        android:onClick="cancelEvent"/>
 
 
 </RelativeLayout>

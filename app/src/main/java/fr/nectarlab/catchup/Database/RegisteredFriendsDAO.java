@@ -11,7 +11,8 @@ import static android.arch.persistence.room.OnConflictStrategy.IGNORE;
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
 /**
- * Created by ThomasPiaczinski on 12/04/18.
+ * RegisteredFriendsDAO
+ * Interface gerant les requetes du schema RegisteredFriendsDB
  */
 @Dao
 public interface RegisteredFriendsDAO {

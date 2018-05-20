@@ -32,6 +32,7 @@
         <activity android:name=".EventSetup"></activity>
         <activity android:name=".DateChooser"></activity>
         <activity android:name=".EventChooser"></activity>
+        <activity android:name=".Insights"></activity>
 
 
     </application>

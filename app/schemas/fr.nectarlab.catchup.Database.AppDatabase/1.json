@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d2f93332ae231244e65093af80d167cd",
+    "identityHash": "2fef1ca2eddc8083aaec29d3a0f260fb",
     "entities": [
       {
         "tableName": "UserDB",
@@ -148,12 +148,12 @@
         ]
       },
       {
-        "tableName": "Group_Friend_AssocDB",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ref_group_ID` TEXT NOT NULL, `ref_friend_email` TEXT NOT NULL, PRIMARY KEY(`ref_group_ID`), FOREIGN KEY(`ref_group_ID`) REFERENCES `GroupDB`(`groupID`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ref_friend_email`) REFERENCES `FriendDB`(`EMAIL`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "tableName": "Event_Friend_AssocDB",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ref_event_ID` TEXT NOT NULL, `ref_friend_email` TEXT NOT NULL, PRIMARY KEY(`ref_event_ID`), FOREIGN KEY(`ref_event_ID`) REFERENCES `EventDB`(`eventID`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ref_friend_email`) REFERENCES `RegisteredFriendsDB`(`EMAIL`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
-            "fieldPath": "ref_group_ID",
-            "columnName": "ref_group_ID",
+            "fieldPath": "ref_event_ID",
+            "columnName": "ref_event_ID",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -166,25 +166,42 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "ref_group_ID"
+            "ref_event_ID"
           ],
           "autoGenerate": false
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_Event_Friend_AssocDB_ref_event_ID",
+            "unique": false,
+            "columnNames": [
+              "ref_event_ID"
+            ],
+            "createSql": "CREATE  INDEX `index_Event_Friend_AssocDB_ref_event_ID` ON `${TABLE_NAME}` (`ref_event_ID`)"
+          },
+          {
+            "name": "index_Event_Friend_AssocDB_ref_friend_email",
+            "unique": false,
+            "columnNames": [
+              "ref_friend_email"
+            ],
+            "createSql": "CREATE  INDEX `index_Event_Friend_AssocDB_ref_friend_email` ON `${TABLE_NAME}` (`ref_friend_email`)"
+          }
+        ],
         "foreignKeys": [
           {
-            "table": "GroupDB",
+            "table": "EventDB",
             "onDelete": "NO ACTION",
             "onUpdate": "NO ACTION",
             "columns": [
-              "ref_group_ID"
+              "ref_event_ID"
             ],
             "referencedColumns": [
-              "groupID"
+              "eventID"
             ]
           },
           {
-            "table": "FriendDB",
+            "table": "RegisteredFriendsDB",
             "onDelete": "NO ACTION",
             "onUpdate": "NO ACTION",
             "columns": [
@@ -198,7 +215,7 @@
       },
       {
         "tableName": "EventDB",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventID` TEXT NOT NULL, `eventType` TEXT, `ref_groupID` TEXT, PRIMARY KEY(`eventID`), FOREIGN KEY(`ref_groupID`) REFERENCES `GroupDB`(`groupID`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventID` TEXT NOT NULL, `admin` TEXT, `eventName` TEXT, `date` TEXT, `debutTime` TEXT, `eventType` TEXT, `location` TEXT, PRIMARY KEY(`eventID`))",
         "fields": [
           {
             "fieldPath": "eventID",
@@ -207,14 +224,38 @@
             "notNull": true
           },
           {
+            "fieldPath": "admin",
+            "columnName": "admin",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "eventName",
+            "columnName": "eventName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "debutTime",
+            "columnName": "debutTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "eventType",
             "columnName": "eventType",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "ref_groupeID",
-            "columnName": "ref_groupID",
+            "fieldPath": "location",
+            "columnName": "location",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -226,19 +267,7 @@
           "autoGenerate": false
         },
         "indices": [],
-        "foreignKeys": [
-          {
-            "table": "GroupDB",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "ref_groupID"
-            ],
-            "referencedColumns": [
-              "groupID"
-            ]
-          }
-        ]
+        "foreignKeys": []
       },
       {
         "tableName": "RegisteredFriendsDB",
@@ -265,11 +294,179 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "Media",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mediaID` TEXT NOT NULL, `timeStamp` TEXT, `contenu` TEXT, `ref_user_EMAIL` TEXT, `ref_event_ID` TEXT, PRIMARY KEY(`mediaID`), FOREIGN KEY(`ref_user_EMAIL`) REFERENCES `UserDB`(`EMAIL`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ref_event_ID`) REFERENCES `EventDB`(`eventID`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "mediaID",
+            "columnName": "mediaID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timeStamp",
+            "columnName": "timeStamp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contenu",
+            "columnName": "contenu",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ref_user_EMAIL",
+            "columnName": "ref_user_EMAIL",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ref_event_ID",
+            "columnName": "ref_event_ID",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "mediaID"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_Media_ref_user_EMAIL",
+            "unique": false,
+            "columnNames": [
+              "ref_user_EMAIL"
+            ],
+            "createSql": "CREATE  INDEX `index_Media_ref_user_EMAIL` ON `${TABLE_NAME}` (`ref_user_EMAIL`)"
+          },
+          {
+            "name": "index_Media_ref_event_ID",
+            "unique": false,
+            "columnNames": [
+              "ref_event_ID"
+            ],
+            "createSql": "CREATE  INDEX `index_Media_ref_event_ID` ON `${TABLE_NAME}` (`ref_event_ID`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "UserDB",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ref_user_EMAIL"
+            ],
+            "referencedColumns": [
+              "EMAIL"
+            ]
+          },
+          {
+            "table": "EventDB",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ref_event_ID"
+            ],
+            "referencedColumns": [
+              "eventID"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Message",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`messageID` TEXT NOT NULL, `timeStamp` TEXT, `contenu` TEXT, `ref_user_EMAIL` TEXT, `ref_event_ID` TEXT, PRIMARY KEY(`messageID`), FOREIGN KEY(`ref_user_EMAIL`) REFERENCES `UserDB`(`EMAIL`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ref_event_ID`) REFERENCES `EventDB`(`eventID`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "messageID",
+            "columnName": "messageID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timeStamp",
+            "columnName": "timeStamp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contenu",
+            "columnName": "contenu",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ref_user_EMAIL",
+            "columnName": "ref_user_EMAIL",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ref_event_ID",
+            "columnName": "ref_event_ID",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "messageID"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_Message_ref_user_EMAIL",
+            "unique": false,
+            "columnNames": [
+              "ref_user_EMAIL"
+            ],
+            "createSql": "CREATE  INDEX `index_Message_ref_user_EMAIL` ON `${TABLE_NAME}` (`ref_user_EMAIL`)"
+          },
+          {
+            "name": "index_Message_ref_event_ID",
+            "unique": false,
+            "columnNames": [
+              "ref_event_ID"
+            ],
+            "createSql": "CREATE  INDEX `index_Message_ref_event_ID` ON `${TABLE_NAME}` (`ref_event_ID`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "UserDB",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ref_user_EMAIL"
+            ],
+            "referencedColumns": [
+              "EMAIL"
+            ]
+          },
+          {
+            "table": "EventDB",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ref_event_ID"
+            ],
+            "referencedColumns": [
+              "eventID"
+            ]
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"d2f93332ae231244e65093af80d167cd\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2fef1ca2eddc8083aaec29d3a0f260fb\")"
     ]
   }
 }

@@ -7,7 +7,8 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 
 /**
- * Created by ThomasPiaczinski on 09/04/18.
+ * Tentative de creation d'un pool de Thread...
+ * Non implante, inutile
  */
 
 public class AppExecutors {

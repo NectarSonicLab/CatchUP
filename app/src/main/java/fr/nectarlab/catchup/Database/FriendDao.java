@@ -8,7 +8,8 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 /**
- * Created by ThomasPiaczinski on 06/04/18.
+ * FriendDAO
+ * Interface gerant les requetes du schema FriendDB
  */
 
 @Dao

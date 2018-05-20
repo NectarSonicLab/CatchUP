@@ -8,6 +8,11 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+/**
+ * EventChooser
+ * Activite repondant a un Intent
+ * Doit renvoyer le type d'evenement choisi (Resto, Expo, Concert...)
+ */
 
 public class EventChooser extends AppCompatActivity {
     private final String TAG = "EventChooser";
@@ -26,6 +31,9 @@ public class EventChooser extends AppCompatActivity {
      * Bouton pour sauvegarder lequel des RB est choisi et le renvoyer a l'activite appelante
      */
 
+    /*
+     * Methode pour recuperer l'info selon le bouton coche
+     */
     public void onRadioButtonClicked(View v){
         switch (v.getId()){
             case R.id.ec_resto_rb:
@@ -94,6 +102,9 @@ public class EventChooser extends AppCompatActivity {
         return this.choice;
     }
 
+    /*
+     * Retour a l'activite appelante avec le choix final
+     */
     public void saveChoice (View v){
         String savedChoice = getChoice();
         Intent i = new Intent();
@@ -102,6 +113,9 @@ public class EventChooser extends AppCompatActivity {
         finish();
     }
 
+    /*
+     * L'utilisateur annule son choix
+     */
     public void cancelChoice(View v){
         finish();
     }

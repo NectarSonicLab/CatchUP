@@ -6,7 +6,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 /**
- * Created by ThomasPiaczinski on 09/04/18.
+ * UserDB
+ * Schema representant l'utilisateur
  */
 @Entity
 public class UserDB {
@@ -19,6 +20,15 @@ public class UserDB {
 
     @ColumnInfo (name="USERNAME")
     private String USERNAME;
+
+    //Constructeurs
+    UserDB(){}
+    UserDB(String email, String ID, String username){
+        this.EMAIL = email;
+        this.ID = ID;
+        this.USERNAME=username;
+    }
+
     //getters and setters
     public String getEMAIL() {
         return EMAIL;

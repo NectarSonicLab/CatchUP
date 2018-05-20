@@ -6,44 +6,89 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     >
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/splash_image_img"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/catchup_splashscreen"
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
-        android:visibility="gone">
-    </LinearLayout>
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimaryDark">
+        android:layout_height="match_parent">
 
-    </android.support.v7.widget.Toolbar>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimaryDark"></android.support.v7.widget.Toolbar>
 
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Test" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:layout_marginTop="55dp">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:clickable="true"
-        android:focusable="true"
-        app:fabSize="mini"
-        app:srcCompat="@android:drawable/ic_menu_add" />
-</LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    layout="@layout/event_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </ScrollView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/home_fabGroup_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="124dp"
+            android:layout_gravity="bottom|end"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="launchEventCreation"
+            app:fabSize="normal"
+            app:elevation="8dp"
+            app:pressedTranslationZ="12dp"
+            android:src="@drawable/ic_group_black_24dp"
+            android:backgroundTint="@color/expandingFab"
+            android:visibility="invisible"/>
+        <TextView
+            android:id="@+id/home_fabGroupDescription_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="124dp"
+            android:layout_marginBottom="140dp"
+            app:elevation="8dp"
+            android:text="@string/ajouterEvenement"
+            android:visibility="invisible"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/home_mainFab_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:layout_gravity="bottom|end"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="fabPressed"
+            app:fabSize="normal"
+            app:elevation="8dp"
+            app:pressedTranslationZ="12dp"
+            app:srcCompat="@android:drawable/ic_input_add" />
+
+
+        <LinearLayout
+            android:id="@+id/splash_image_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/catchup_splashscreen"
+            android:orientation="vertical"
+            android:visibility="gone">
+        </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

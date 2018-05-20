@@ -8,7 +8,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 /**
- * Created by ThomasPiaczinski on 12/04/18.
+ * RegisteredFriendsDB
+ * Schema SQL representant un ami de l'user reference sur le serveur
  */
 @Entity
 public class RegisteredFriendsDB {

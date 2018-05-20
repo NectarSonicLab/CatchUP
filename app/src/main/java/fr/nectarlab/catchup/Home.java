@@ -1,5 +1,7 @@
 package fr.nectarlab.catchup;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,12 +9,15 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Layout;
 import android.util.Log;
@@ -23,6 +28,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.HeaderViewListAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.List;
+
+import fr.nectarlab.catchup.Database.EventDB;
+import fr.nectarlab.catchup.model.EventModel;
 
 
 /**
@@ -37,12 +47,25 @@ public class Home extends AppCompatActivity {
     private NavigationView mNavigationView;
     Animation fabOpen, fabClose, fabRClock, fabRAntiClock;
     private boolean isFabOpen = false;
+    private EventModel mEventModel;
 
     @Override
     public void onCreate (Bundle b){
         super.onCreate(b);
         Log.i(TAG, "onCreate: Debut");
-        setContentView(R.layout.home_test);
+        setContentView(R.layout.home);
+
+        mEventModel = ViewModelProviders.of(this).get(EventModel.class);
+        RecyclerView recyclerView = findViewById(R.id.eventRecycler_RV);
+        final EventListAdapter adapter = new EventListAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mEventModel.getAllEvents().observe(this, new Observer<List<EventDB>>() {
+            @Override
+            public void onChanged(@Nullable List<EventDB> eventDBS) {
+                adapter.setEvents(eventDBS);
+            }
+        });
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
         Toolbar toolbar = findViewById(R.id.toolbar);

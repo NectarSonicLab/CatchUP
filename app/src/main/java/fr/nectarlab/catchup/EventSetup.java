@@ -1,6 +1,7 @@
 package fr.nectarlab.catchup;
 
 import android.Manifest;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -17,12 +18,17 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+
+import fr.nectarlab.catchup.Database.EventDB;
+import fr.nectarlab.catchup.model.EventModel;
 
 /**
  * Created by ThomasBene on 4/19/2018.
@@ -42,9 +48,12 @@ public class EventSetup extends AppCompatActivity{
 
     private String choiceSaved;
 
+    private FirebaseAuth mAuth;
+    private EventModel mEventModel;
+
     private boolean eventTypeSaved;
 
-    private TextView retrievePlace, retrieveName, retrieveEventType, retrieveDay, retrieveFriends;
+    private TextView retrievePlace, retrieveName, retrieveEventType, retrieveDay, retrieveFriends, retrieveEventDescription;
     //private TextView retrieveDay;
     @Override
     public void onCreate (Bundle b){
@@ -55,11 +64,14 @@ public class EventSetup extends AppCompatActivity{
          */
         FriendsListHelper.setPickedFriends();
         setContentView(R.layout.event_setup);
+        retrieveEventDescription = findViewById(R.id.eventSetup_eventName_et);
         retrievePlace = findViewById(R.id.eventSetup_retrievePlace_tv);
         retrieveName = findViewById(R.id.eventSetup_retrieveName_tv);
         retrieveDay = findViewById(R.id.eventSetUp_day_tv);
         retrieveEventType = findViewById(R.id.eventSetup_eventType_tv);
         retrieveFriends = findViewById(R.id.eventSetUp_friendsPicked_tv);
+
+        mEventModel = ViewModelProviders.of(this).get(EventModel.class);
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -270,4 +282,39 @@ public class EventSetup extends AppCompatActivity{
             }
         }
     }
+    public String setEventID (){
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        String userId = user.getUid();
+        Log.i(TAG, "EventSetup: userID: "+userId);
+        final String ID = (userId+System.currentTimeMillis()).hashCode()+"";
+        Log.i(TAG, "EventSetup: userID_hashCode: "+ID);
+        return ID;
+    }
+    public void saveToDB (View v){
+        //S'assurer que tous les champs soient remplis
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        final String ID = setEventID();
+        //String email = user.getEmail();
+        String email = "testEmail";
+        String eventName = retrieveEventDescription.getText().toString();
+        String date = retrieveDay.getText().toString();
+        String debutTime = "";//Gerer l'horaire
+        String eventType = retrieveEventType.getText().toString();
+        String location = retrievePlace.getText().toString();
+        EventDB myEvent = new EventDB(ID, email, eventName, date, debutTime,eventType, location);
+        mEventModel.insert(myEvent);
+        sendNotification();
+        sendToFirebase();
+        finish();
+
+    }
+    public void cancelEvent(View v){
+
+    }
+    public void sendNotification(){
+    }
+    public void sendToFirebase(){}
 }

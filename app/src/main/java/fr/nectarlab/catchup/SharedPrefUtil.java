@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
- * Created by ThomasPiaczinski on 24/03/18.
+ * SharedPrefUtil
+ * Consigne les cles utilise par le dictionnaire
+ * permettant de sauvegarder des valeurs dans SharedPref
  */
 
 public class SharedPrefUtil {

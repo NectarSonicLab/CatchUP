@@ -12,7 +12,8 @@ import fr.nectarlab.catchup.Database.RegisteredFriendsDB;
 import fr.nectarlab.catchup.RegisteredUsersActivity_test;
 
 /**
- * Created by ThomasPiaczinski on 12/04/18.
+ * RegFriendModel
+ * Objet Java faisant le lien entre la DB et l'affichage
  */
 
 public class RegFriendsModel extends AndroidViewModel {
@@ -25,11 +26,19 @@ public class RegFriendsModel extends AndroidViewModel {
         mRepository = new AppRepository(application);
         allFriends = mRepository.getAllFriends();
     }
-
+    /*
+     * Methode pour recuperer tous les amis enregistres dans la DB
+     * sert pour l'affichage via FriendsListAdapter
+     */
     public LiveData<List<RegisteredFriendsDB>> getAllFriends(){
         return allFriends;
     }
+
+    /*
+     * Methode pour inserer un nouvel ami
+     */
     public void insert (RegisteredFriendsDB registeredFriendsDB){mRepository.insert(registeredFriendsDB);}
+
     public void getNumFriends(){
         mRepository.getNumFriendsQuery();
         //return mRepository.callBack();

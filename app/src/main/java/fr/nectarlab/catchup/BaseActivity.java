@@ -8,7 +8,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 /**
- * Created by ThomasPiaczinski on 24/03/18.
+ * BaseActivity
+ * Contient des methodes pour afficher des ProgressDialog
  */
 
 public class BaseActivity extends AppCompatActivity {

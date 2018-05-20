@@ -32,7 +32,8 @@ import com.google.firebase.database.DatabaseError;
 
 
 /**
- * Created by ThomasPiaczinski on 24/03/18.
+ * SignUpActivity
+ * Permet le login ou le signUp a l'app
  */
 
 public class SignUpActivity extends BaseActivity implements
@@ -115,9 +116,11 @@ public class SignUpActivity extends BaseActivity implements
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
                             DatabaseReference myRef = mDatabase.getReference("Users");//Creer le repertoire Users s'il n'existe pas
+                            //Insertion dans firebase de element recuperes
                             myRef.child(user.getUid());
                             myRef.child(user.getUid()).child("EMAIL").setValue(user.getEmail());
                             myRef.child(user.getUid()).child("USERNAME").setValue(getUsername());
+                            //Insertion dans les SharedPref des memes elements pour avoir une copie locale
                             editor.putString(SHAREDPREF_ID,user.getUid());
                             editor.putString(SHAREDPREF_EMAIL, user.getEmail());
                             editor.putString(SHAREDPREF_USERNAME, getUsername());
