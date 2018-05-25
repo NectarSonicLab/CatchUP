@@ -55,6 +55,7 @@ public class SignUpActivity extends BaseActivity implements
     //declaration de la FirebaseDatabase
     private FirebaseDatabase mDatabase;
     //fin de la declaration de la FirebaseDatabase
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,9 +79,23 @@ public class SignUpActivity extends BaseActivity implements
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
         //Initialisation de la Database
+
         mDatabase = FirebaseDatabase.getInstance();
-
-
+        //mDatabase.setPersistenceEnabled(true);
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d("EmailPassword onCreate", "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d("EmailPassword onCreate", "onAuthStateChanged:signed_out");
+                }
+                // ...
+            }
+        };
     }
 
     // [START on_start_check_user]
@@ -88,11 +103,21 @@ public class SignUpActivity extends BaseActivity implements
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
+        mAuth.addAuthStateListener(mAuthListener);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
         Log.d(TAG, "OnStart currentUser: "+currentUser);
     }
     // [END on_start_check_user]
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
 
     private void createAccount(String email, String password) {
 

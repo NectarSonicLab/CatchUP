@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2fef1ca2eddc8083aaec29d3a0f260fb",
+    "identityHash": "93c963fb8d6ae284ec38e7e51ca57883",
     "entities": [
       {
         "tableName": "UserDB",
@@ -149,7 +149,7 @@
       },
       {
         "tableName": "Event_Friend_AssocDB",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ref_event_ID` TEXT NOT NULL, `ref_friend_email` TEXT NOT NULL, PRIMARY KEY(`ref_event_ID`), FOREIGN KEY(`ref_event_ID`) REFERENCES `EventDB`(`eventID`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ref_friend_email`) REFERENCES `RegisteredFriendsDB`(`EMAIL`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ref_event_ID` TEXT NOT NULL, `ref_friend_email` TEXT NOT NULL, PRIMARY KEY(`ref_event_ID`))",
         "fields": [
           {
             "fieldPath": "ref_event_ID",
@@ -188,30 +188,7 @@
             "createSql": "CREATE  INDEX `index_Event_Friend_AssocDB_ref_friend_email` ON `${TABLE_NAME}` (`ref_friend_email`)"
           }
         ],
-        "foreignKeys": [
-          {
-            "table": "EventDB",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "ref_event_ID"
-            ],
-            "referencedColumns": [
-              "eventID"
-            ]
-          },
-          {
-            "table": "RegisteredFriendsDB",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "ref_friend_email"
-            ],
-            "referencedColumns": [
-              "EMAIL"
-            ]
-          }
-        ]
+        "foreignKeys": []
       },
       {
         "tableName": "EventDB",
@@ -466,7 +443,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2fef1ca2eddc8083aaec29d3a0f260fb\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"93c963fb8d6ae284ec38e7e51ca57883\")"
     ]
   }
 }

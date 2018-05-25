@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical">
+
+      <ImageView
+          android:id="@+id/Media_photo_iv"
+          android:layout_width="match_parent"
+          android:layout_height="200dp"
+          android:scaleType="centerCrop"
+          android:paddingVertical="8dp"
+          android:paddingHorizontal="8dp"
+          />
+
+          <!--android:src="@drawable/spectrol"-->
+
+      <TextView
+          android:id="@+id/Media_item_tv"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="?android:selectableItemBackground"
+          android:fontFamily="sans-serif"
+          android:padding="20dp"
+          android:text=""
+          android:textColor="#333"
+          android:textSize="18sp" />
+
+   </LinearLayout>
+</android.support.v7.widget.CardView>

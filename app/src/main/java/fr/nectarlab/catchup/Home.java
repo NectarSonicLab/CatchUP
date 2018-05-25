@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Process;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -29,6 +30,15 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+
 import java.util.List;
 
 import fr.nectarlab.catchup.Database.EventDB;
@@ -48,6 +58,12 @@ public class Home extends AppCompatActivity {
     Animation fabOpen, fabClose, fabRClock, fabRAntiClock;
     private boolean isFabOpen = false;
     private EventModel mEventModel;
+    private static int itemCount;
+    private int serverEventCount;
+    DatabaseReference databaseReference;
+    private FirebaseAuth mAuth;
+    private Query mQuery;
+    private ChildEventListener mChildEventListener;
 
     @Override
     public void onCreate (Bundle b){
@@ -64,6 +80,8 @@ public class Home extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<EventDB> eventDBS) {
                 adapter.setEvents(eventDBS);
+                itemCount = adapter.getItemCount();
+                Log.i(TAG, "onCreate: itemCount: "+itemCount);
             }
         });
 
@@ -77,12 +95,12 @@ public class Home extends AppCompatActivity {
         mFabMain = findViewById(R.id.home_mainFab_fab);
         mFabExpand = findViewById(R.id.home_fabGroup_fab);
         fabDescription = findViewById(R.id.home_fabGroupDescription_fab);
-        /**
+        /*
          * Tentative pour recuperer la textView contenue dans la NavigationView et la mettre a jour avec le contenu de sharedPref (user login email, username)
          */
         mNavigationView = findViewById(R.id.nav_view);
         View mHeaderView = mNavigationView.getHeaderView(0);
-        /**
+        /*
          * Reference aux textView pour pouvoir y inserer les noms et Username enregistres dans les SharedPref
          */
         TextView tvUsername = mHeaderView.findViewById(R.id.navHeader_username_tv);
@@ -104,10 +122,10 @@ public class Home extends AppCompatActivity {
 
 
         if(b==null){
-            launchSplashScreen();
+           // launchSplashScreen();
         }
         Log.i(TAG, "onCreate: Fin");
-        /**
+        /*
          * I/Home: onCreate: Fin
          04-20 08:57:43.797 6326-6326/fr.nectarlab.catchup I/Choreographer: Skipped 30 frames!  The application may be doing too much work on its main thread.
          */
@@ -123,11 +141,18 @@ public class Home extends AppCompatActivity {
     public void onRestart(){
         super.onRestart();
         Log.i(TAG, "onRestart: Debut");
+        serverEventCount=0;
         fabPressed (mFabMain);
-        //findViewById(R.id.splash_image_img).setVisibility(View.GONE);//pas necessaire
         Log.i(TAG, "onRestart: Fin");
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        CacheTask task = new CacheTask();
+        CacheFromFirebase cacheFromFirebase = new CacheFromFirebase(task);
+        cacheFromFirebase.start();
+    }
 
     @Override
     public void onSaveInstanceState(Bundle b){
@@ -186,5 +211,93 @@ public class Home extends AppCompatActivity {
     public void launchEventCreation(View v){
         Intent i = new Intent (this, EventSetup.class);
         startActivity(i);
+    }
+
+    private class CacheFromFirebase extends Thread{
+        private Runnable task;
+        public CacheFromFirebase(Runnable runnable){
+            this.task=runnable;
+        }
+
+    }
+    private class CacheTask implements Runnable{
+        public CacheTask(){
+            run();
+        }
+        @Override
+        public void run(){
+            Log.i(TAG, "Runnable run()");
+            mAuth = FirebaseAuth.getInstance();
+            FirebaseUser user = mAuth.getCurrentUser();
+            try{
+                String email = user.getEmail();
+                Log.i(TAG, email);
+                android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+                databaseReference = FirebaseDatabase.getInstance().getReference("EVENT");
+
+                mQuery=databaseReference.orderByChild("admin").equalTo(email);//.limitToFirst(1)
+                if(FirebaseDatabase.getInstance()!=null)
+                    assert mQuery != null;//
+                mQuery.addChildEventListener(mChildEventListener = new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        Log.i(TAG, "onChildAdded: Start");
+                        EventDB eventDB = dataSnapshot.getValue(EventDB.class);
+                        String token = databaseReference.getKey();
+                        if(eventDB!=null){
+                            Log.i(TAG, "onChildAdded: newEventRecorded "+eventDB.getEventID()+" ,"+eventDB.getAdmin()+" token: "+token);
+                            /*
+                             * Faire le cache entre la DB et Firebase au cas ou l'user reinstalle l'app:
+                             * Il perd ses events en local mais ils restent sur Firebase donc on va les recuperer ici
+                             */
+                            serverEventCount++;
+                            Log.i(TAG, "events en local: "+itemCount+", events sur serveur: "+serverEventCount);
+                            if(serverEventCount>itemCount) {
+                                String eventID, admin, eventName, date, debutTime, eventType, location;
+                                eventID = eventDB.getEventID();
+                                admin = eventDB.getAdmin();
+                                eventName = eventDB.getEventName();
+                                date = eventDB.getDate();
+                                debutTime = eventDB.getDebutTime();
+                                eventType = eventDB.getEventType();
+                                location = eventDB.getLocation();
+                                EventDB cachedEvent = new EventDB(eventID, admin, eventName, date, debutTime, eventType, location);
+                                mEventModel.insert(cachedEvent);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+            catch (NullPointerException NPE){
+                Log.i(TAG, "CacheTask Exception");
+            }
+
+        }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mQuery.removeEventListener(mChildEventListener);
     }
 }

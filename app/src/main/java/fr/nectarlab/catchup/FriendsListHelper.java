@@ -2,6 +2,7 @@ package fr.nectarlab.catchup;
 
 import android.util.Log;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * FriendsListHelper
@@ -13,13 +14,16 @@ import java.util.ArrayList;
 public class FriendsListHelper {
     private static final String TAG = "FriendsListHelper";
     private static ArrayList<String> pickedFriends = new ArrayList<String>();
+    private static HashMap <String, String> friends = new HashMap<String, String>();
 
     /*
      * Logique pour dynamiquement remplir un array en fonction des checkBox cochees
      */
-    public static void addChoosenFriend(String newFriend){
+    public static void addChoosenFriend(String newFriend, String username){
         pickedFriends.add(newFriend);
         Log.i(TAG, "FriendsListHelper, pickedFriends: "+pickedFriends);
+        friends.put(newFriend, username);
+        Log.i(TAG, "addChosenHASH"+friends);
     }
 
     public static void removeChoosenFriend(String newFriend){
@@ -27,6 +31,8 @@ public class FriendsListHelper {
             for (int i = 0;i<pickedFriends.size(); i++){
                 if(newFriend.equals(pickedFriends.get(i))){
                     pickedFriends.remove(i);
+                    friends.remove(newFriend);
+                    Log.i(TAG, "removeChosenHASH"+friends);
                 }
             }
         }
@@ -40,6 +46,10 @@ public class FriendsListHelper {
 
     public static void setPickedFriends() {
         pickedFriends.clear();
+    }
+
+    public static HashMap<String, String> getFriends() {
+        return friends;
     }
 }
 

@@ -1,6 +1,6 @@
 package fr.nectarlab.catchup;
 
-import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.List;
 
 import fr.nectarlab.catchup.Database.EventDB;
@@ -30,7 +31,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
      * Classe interne gardant en reference les itemsView
      * necessaires a l'affichage
      */
-    class EventsViewHolder extends RecyclerView.ViewHolder {
+    class EventsViewHolder extends RecyclerView.ViewHolder implements Serializable {
         TextView displayName, displayDate, displayNbFriends;
         ImageButton dots;
 
@@ -38,7 +39,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
             super(itemView);
             this.displayName = itemView.findViewById(R.id.eventItem_name);
             this.displayDate = itemView.findViewById(R.id.eventItem_date);
-            this.displayNbFriends = itemView.findViewById(R.id.eventItem_nbFriends);
+            this.displayNbFriends = itemView.findViewById(R.id.eventItem_nbFriends);//a modifier, initialement pour montrer le nb d'amis
             this.dots = itemView.findViewById(R.id.eventItem_dots_iv);
         }
     }
@@ -63,7 +64,8 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
     @Override
     public void onBindViewHolder(EventsViewHolder holder, int position) {
         if (mEvents != null) {
-            EventDB current = mEvents.get(position);
+            final EventDB current = mEvents.get(position);
+
             Log.i(TAG, current.toString() );
             holder.displayName.setText(current.getEventName());
             holder.displayDate.setText(current.getDate());
@@ -72,6 +74,10 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent (context, Insights.class);
+                    //.putExtra(IntentUtils.getEventAdapter_displayName(), current.getEventName());
+                    //i.putExtra(IntentUtils.getEventAdapter_displayDate(), current.getDate());
+                   // i.putExtra(IntentUtils.getEventAdapter_DisplayEventType(), current.getEventType());
+                    i.putExtra(IntentUtils.getEventAdapter_CurrentObject(), current);
                     context.startActivity(i);
                 }
             });

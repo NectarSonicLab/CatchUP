@@ -1,34 +1,52 @@
 package fr.nectarlab.catchup;
 
 import android.Manifest;
+import android.app.Service;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 
-import java.net.URI;
-import java.text.SimpleDateFormat;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import java.util.HashMap;
 
 import fr.nectarlab.catchup.Database.EventDB;
+import fr.nectarlab.catchup.Database.Event_Friend_AssocDB;
 import fr.nectarlab.catchup.model.EventModel;
+import fr.nectarlab.catchup.model.Friend;
+import fr.nectarlab.catchup.server_side.FirebaseFriendsByEvent;
+import fr.nectarlab.catchup.server_side.FirebaseHelper;
+import fr.nectarlab.catchup.server_side.ServerUtil;
 
 /**
  * Created by ThomasBene on 4/19/2018.
@@ -42,28 +60,33 @@ public class EventSetup extends AppCompatActivity{
     private int EVENT_TYPE_REQUEST = 3;
     private int FRIENDS_PICKER_REQUEST = 4;
 
-    private int mYear;
-    private int mMonth;
-    private int mDay;
-
-    private String choiceSaved;
-
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mReference;
     private FirebaseAuth mAuth;
+
     private EventModel mEventModel;
+    String token;
 
-    private boolean eventTypeSaved;
-
+    //private boolean eventTypeSaved;
+    ArrayList<String>pickedFriends;
+    HashMap<String, String> registeredFriends;
     private TextView retrievePlace, retrieveName, retrieveEventType, retrieveDay, retrieveFriends, retrieveEventDescription;
     //private TextView retrieveDay;
     @Override
     public void onCreate (Bundle b){
         super.onCreate(b);
-        /**
+        /*
          * Remise a zero de la liste d'amis (statique) sauvegardee puis renvoyee a cette activite
          * sinon s'incremente a chaque instanciation de l'activite RegisteredUsersActivity
          */
         FriendsListHelper.setPickedFriends();
         setContentView(R.layout.event_setup);
+
+
+
+        mDatabase = FirebaseDatabase.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
         retrieveEventDescription = findViewById(R.id.eventSetup_eventName_et);
         retrievePlace = findViewById(R.id.eventSetup_retrievePlace_tv);
         retrieveName = findViewById(R.id.eventSetup_retrieveName_tv);
@@ -100,7 +123,7 @@ public class EventSetup extends AppCompatActivity{
         } else {
             // Permission has already been granted
         }
-        /**
+        /*
          * Recuperation des infos en cas de changement d'orientation
          */
         if (b!=null){
@@ -120,12 +143,79 @@ public class EventSetup extends AppCompatActivity{
         }
     }
 
+
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        Log.i(TAG, "onStart: debut");
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        mReference = FirebaseDatabase.getInstance().getReference();
+        String test = mReference.child(ServerUtil.getFirebaseServer_Event_Friend_Asso()).getKey();
+        Log.i(TAG, "Reference au serveur: "+test);
+        Query query = mReference.child(ServerUtil.getFirebaseServer_Event_Friend_Asso());
+        HashMap<String, String> userNameEmail = new HashMap<>();
+        HashMap<String, HashMap> listedFriends = new HashMap<>();
+        final FirebaseFriendsByEvent firebaseFriendsByEvent = new FirebaseFriendsByEvent(listedFriends, userNameEmail);
+        if (mDatabase!=null)
+            assert query != null;
+
+            query.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    //String v = dataSnapshot.getChildren().iterator().next().getKey();
+                    long nbChildren = dataSnapshot.getChildrenCount();
+                    Log.i(TAG, "onChildAdded: nbChilder: " + nbChildren);
+                    FirebaseFriendsByEvent friend = dataSnapshot.getValue(FirebaseFriendsByEvent.class);
+                    for (DataSnapshot child: dataSnapshot.getChildren()) {
+                        String newRef = child.getKey();
+
+                       //String v = dataSnapshot.getChildren().iterator().next().getKey();
+                      // String newRef = dataSnapshot.child(v).toString();
+                       Log.i(TAG, "onChildAdded: Friend's email: " + firebaseFriendsByEvent.getListedFriends());
+                      // Log.i(TAG, "onChildAdded: FirebaseFriends " + v);
+                       Log.i(TAG, "onChildAdded: newRef: "+newRef);
+                       Log.i(TAG, "onChildAdded: child: "+child);
+
+                   }
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+
+
     @Override
     public void onSaveInstanceState (Bundle b){
         super.onSaveInstanceState(b);
         Log.i(TAG, "onSaveInstanceState: Debut");
 
-        /**
+        /*
          * Sauvegarde de l'endroit
          */
         String savedAddress = (String) retrievePlace.getText();
@@ -135,14 +225,14 @@ public class EventSetup extends AppCompatActivity{
         Log.i(TAG, "onSave AddressSaved: "+savedAddress);
         Log.i(TAG, "onSave PlaceSaved: "+savedPlaceName);
 
-        /**
+        /*
          * Sauvegarde de la date
          */
         String savedDate = (String) retrieveDay.getText();
         b.putString ("date", savedDate);
         Log.i(TAG, "onSave DateSaved: "+savedDate);
 
-        /**
+        /*
          * Sauvegarde du type d'event
          */
         String eventType = (String) retrieveEventType.getText();
@@ -151,7 +241,7 @@ public class EventSetup extends AppCompatActivity{
 
         Log.i(TAG, "onSaveInstanceState: Fin");
 
-        /**
+        /*
          * Sauvegarde de la liste d'amis
          */
         String savedFriends = (String) retrieveFriends.getText();
@@ -163,6 +253,7 @@ public class EventSetup extends AppCompatActivity{
      * Intent pour lancer Google places API et recuperer des infos sur l'endroit choisi
      * @param v :Bouton qui lance l'intent
      */
+
     public void pickPlace(View v){
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
@@ -201,16 +292,14 @@ public class EventSetup extends AppCompatActivity{
     public void pickFriends (View v){
         Intent i = new Intent (this, RegisteredUsersActivity_test.class);
         startActivityForResult(i, FRIENDS_PICKER_REQUEST);
-        //pb avec l'affichage des amis au premier lancement (apres installation de l'APK), oblige de revenir pour les voir s'afficher
-        //Cf pb d'ordre d'execution des requetes dans RegisteredUsersActivity??
-        /**
-        *05-14 09:10:51.170 8564-8564/fr.nectarlab.catchup I/FriendsListAdapter: getItemCount: 3
-         05-14 09:10:51.470 8564-8564/fr.nectarlab.catchup I/FriendsListAdapter: getItemCount: 0 >>>>>>Comment il passe de 3 a 0?????
-         */
     }
 
     @Override
     public void onActivityResult (int requestCode, int resultCode, Intent data){
+        int mYear;
+        int mMonth;
+        int mDay;
+        String choiceSaved;
         if(requestCode == PLACE_PICKER_REQUEST){
             if(resultCode == RESULT_OK){
                 Place place = PlacePicker.getPlace(this, data);
@@ -231,7 +320,7 @@ public class EventSetup extends AppCompatActivity{
                 //Date date = SimpleDateFormat.parse(mDay+"-"+mMonth+"-"+mYear);   //parse est une methode non statique qui ne peut pas etre appelee dans ce contexte
 
                 //retrieveDay.setText(String.format("%d",mDay));                      //quickFix
-                /**
+                /*
                  * QuickFix
                  * Meilleure solution: Utiliser dateFormat et locale pour pouvoir avoir un format de date correspondant au pays ou l'app est utilisee...
                  */
@@ -257,7 +346,7 @@ public class EventSetup extends AppCompatActivity{
 
         if (requestCode == EVENT_TYPE_REQUEST){
             if (resultCode == RESULT_OK){
-                eventTypeSaved = true;
+                //boolean eventTypeSaved = true;
                 choiceSaved = data.getStringExtra("eventChoosen");
                 retrieveEventType = findViewById(R.id.eventSetup_eventType_tv);
                 retrieveEventType.setText(choiceSaved);
@@ -266,7 +355,11 @@ public class EventSetup extends AppCompatActivity{
 
         if(requestCode == FRIENDS_PICKER_REQUEST){
             if(resultCode==RESULT_OK){
-                ArrayList<String>pickedFriends = data.getStringArrayListExtra("savedFriends");//Ne pas coder en dur
+                pickedFriends = data.getStringArrayListExtra("savedFriends");//Ne pas coder en dur
+                registeredFriends = (HashMap<String, String>) data.getSerializableExtra("Friends_EMAIL");
+
+                Log.i (TAG, "registeredFriends: "+registeredFriends);
+                Log.i(TAG, "pickedFriends_size" +pickedFriends.size());
                 StringBuilder sb = new StringBuilder();
                 for (int i=0; i<pickedFriends.size(); i++){
                     if(i!=pickedFriends.size()-1) {
@@ -297,24 +390,172 @@ public class EventSetup extends AppCompatActivity{
         FirebaseUser user = mAuth.getCurrentUser();
 
         final String ID = setEventID();
-        //String email = user.getEmail();
-        String email = "testEmail";
+        String email = user.getEmail();
+        //String email = "testEmail";
         String eventName = retrieveEventDescription.getText().toString();
         String date = retrieveDay.getText().toString();
         String debutTime = "";//Gerer l'horaire
         String eventType = retrieveEventType.getText().toString();
         String location = retrievePlace.getText().toString();
         EventDB myEvent = new EventDB(ID, email, eventName, date, debutTime,eventType, location);
+        //Insertion dans la DB locale
         mEventModel.insert(myEvent);
-        sendNotification();
-        sendToFirebase();
+        //sendNotification("Hey!!!", myEvent);
+        //Insertion sur le serveur
+        SaveFriendsBackTask backTask = new SaveFriendsBackTask(ID, pickedFriends);
+        //SaveEventBackTask eventBackTask = new SaveEventBackTask(ID, email, eventName, date, debutTime, eventType, location);
+        SaveEventBackTask eventBackTask = new SaveEventBackTask(myEvent, ID);
+        Sender sender = new Sender(backTask);
+        Sender sender2 = new Sender(eventBackTask);
+        sender.start();
+        sender2.start();
+        //sendToFirebase(myEvent, ID);
+        //sendToFirebase(ID, email, eventName, date, debutTime, eventType, location);
+        //sendToFirebase(ID, pickedFriends);
+       // sendNotification();
         finish();
 
     }
     public void cancelEvent(View v){
+        finish();
+    }
 
+
+    /*
+     * Thread
+     */
+    private class Sender extends Thread {
+        private Runnable runnable;
+        private Sender (Runnable task){
+            this.runnable=task;
+        }
     }
-    public void sendNotification(){
+
+    /*
+     * Runnable
+     */
+    private class SaveEventBackTask implements Runnable{
+        private EventDB mEvent;
+        private String eventId;
+
+        private SaveEventBackTask (EventDB eventDB, String ID){
+            this.mEvent = eventDB;
+            this.eventId = ID;
+            run();
+        }
+        @Override
+        public void run() {
+            Log.i(TAG, "SaveEventBackTask run()");
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+            sendToFirebase(mEvent, eventId);
+        }
     }
-    public void sendToFirebase(){}
+
+    private class SaveFriendsBackTask implements Runnable{
+        private String eventID;
+        private ArrayList<String> choosenFriends;
+
+        private SaveFriendsBackTask (String ID, ArrayList<String> pickedFriends){
+            this.eventID = ID;
+            this.choosenFriends = pickedFriends;
+            run();
+        }
+        @Override
+        public void run() {
+            Log.i(TAG, "SaveFriendsBackTask run()");
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+            sendToFirebase(eventID, choosenFriends);
+        }
+    }
+
+
+    /*
+     * Methodes a transmettre aux runnables
+     */
+    public void sendToFirebase(String ID, ArrayList<String> pickedFriends){
+        FirebaseHelper firebaseHelper = new FirebaseHelper(mDatabase);
+        FirebaseDatabase firebaseDB = firebaseHelper.getmDatabase();
+        if (null!=firebaseDB){
+            DatabaseReference myRef = firebaseDB.getReference(ServerUtil.getFirebaseServer_Event_Friend_Asso());
+                for (String key:registeredFriends.keySet()) {
+                    myRef.child(ID);
+                    //myRef.push().child(key).setValue(registeredFriends.get(key));
+                    String randomID = myRef.child(ID).push().getKey();
+                    myRef.child(ID).child(randomID).child("EMAIL").setValue(key);
+                    myRef.child(ID).child(randomID).child("USERNAME").setValue(registeredFriends.get(key));
+                    Log.i(TAG, "Reference key: "+randomID);
+                    Log.i(TAG, "key: "+key+" value: "+ registeredFriends.get(key));
+                }
+        }
+        else{
+            Toast.makeText(this, getString(R.string.FirebaseErrorToast), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void sendToFirebase(EventDB eventDB, String ID){
+        FirebaseHelper firebaseHelper = new FirebaseHelper(mDatabase);
+        FirebaseDatabase firebaseDB = firebaseHelper.getmDatabase();
+        if (firebaseDB!=null) {
+            DatabaseReference myRef = firebaseDB.getReference(ServerUtil.getFirebaseServer_Event()); //Creer le repertoire Event s'il n'existe pas
+            myRef.push();
+            myRef.child(ID).setValue(eventDB);
+        }
+        else{
+            Toast.makeText(this, getString(R.string.FirebaseErrorToast), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    /*
+     * Error Prone...
+
+    public void sendToFirebase(String ID, String email, String eventName, String date, String debutTime, String eventType, String location){
+        FirebaseHelper firebaseHelper = new FirebaseHelper(mDatabase);
+        FirebaseDatabase firebaseDB = firebaseHelper.getmDatabase();
+        if (firebaseDB!=null) {
+            DatabaseReference myRef = firebaseDB.getReference(ServerUtil.getFirebaseServer_Event()); //Creer le repertoire Event s'il n'existe pas
+            myRef.push();
+            // old version
+            myRef.child(ID);
+            myRef.child(ID).child(ServerUtil.getEMAIL()).setValue(email);
+            myRef.child(ID).child(ServerUtil.getEventName()).setValue(eventName);
+            myRef.child(ID).child(ServerUtil.getDATE()).setValue(date);
+            myRef.child(ID).child(ServerUtil.getDebutTime()).setValue(debutTime);
+            myRef.child(ID).child(ServerUtil.getEventType()).setValue(eventType);
+            myRef.child(ID).child(ServerUtil.getLOCATION()).setValue(location);
+        }
+        else{
+            Toast.makeText(this, getString(R.string.FirebaseErrorToast), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    */
+
+
+/*
+
+    private class SaveEventBackTask implements Runnable{
+        String ID, email, eventName, date, debutTime, eventType, location;
+        private SaveEventBackTask (String ID, String email, String eventName, String date, String debutTime, String eventType, String location){
+            Log.i(TAG, "SaveEventBackTask created");
+            this.ID=ID;
+            this.email=email;
+            this.eventName=eventName;
+            this.date=date;
+            this.debutTime=debutTime;
+            this.eventType=eventType;
+            this.location=location;
+            run();
+        }
+
+        @Override
+        public void run() {
+            Log.i(TAG, "SaveEventBackTask run()");
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+            sendToFirebase(ID, email, eventName, date, debutTime, eventType, location);
+        }
+    }
+    */
+
 }

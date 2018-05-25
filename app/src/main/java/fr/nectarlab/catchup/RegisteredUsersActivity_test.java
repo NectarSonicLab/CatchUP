@@ -32,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import fr.nectarlab.catchup.Database.AppDatabase;
@@ -179,6 +180,7 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         public void onResume() {
             super.onResume();
             Log.i(TAG, "onResume: Debut");
+            FriendsListHelper.setPickedFriends();
             /*
              * Ne faire la recherche qu'apres le premier OnCreate (Variable dans bundle (HasRanOnce) qui nous
              * indique si la requete a deja tourne une fois)
@@ -350,6 +352,7 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
          * savedFriends recoit un array correspondant aux amis coches via les
          * CheckBox de la RecyclerView
          */
+        HashMap<String, String> friends = FriendsListHelper.getFriends();
         ArrayList <String> savedFriends = FriendsListHelper.getPickedFriends();
         switch (v.getId()){
             case R.id.friends_show_activity_save_btn:{
@@ -357,6 +360,7 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
                     //Intent de retour vers EventSetup avec la liste des amis choisis
                     Intent intent = new Intent();
                     intent.putStringArrayListExtra("savedFriends", savedFriends);
+                    intent.putExtra("Friends_EMAIL", friends);
                     this.setResult(RESULT_OK, intent);
                     this.finish();
                     break;

@@ -4,6 +4,7 @@
     <string name ="auth_failed">Echec de l\'authentification </string>
     <string name ="emailpassword_status_fmt">Email User: %1$s(verified: %2$b)</string>
     <string name ="firebase_status_fmt">Firebase User: %s</string>
+    <string name="FirebaseErrorToast">Echec de l\'envoi au serveur</string>
     <string name ="signed_out">Signed Out</string>
     <string name="sign_in_button">Sign In</string>
     <string name = "signed_in_TV">Utilisateur enregistré avec succès, continuer</string>
@@ -52,5 +53,15 @@
     <string name="eventChooser_save">Sauvegarder</string>
     <string name="eventChooser_cancel">Annuler</string>
     <string name="eventListAdapter_type">Type d\'événement</string>
+    <!-- Insights activity-->
+    <string name="Insights_media">Medias</string>
+    <string name="Insights_Message">Messages</string>
+    <string name="Insights_Liens">Liens</string>
+    <string name="Insights_EventName">EventName</string>
+    <!--ContentDescription-->
+    <string name="Insights_background">background</string>
+    <string name="Insights_GroupInfo">GroupInfo</string>
+    <!--Notifications-->
+    <string name="notification_default">Invitation!</string>
 
 </resources>

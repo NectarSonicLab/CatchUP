@@ -12,14 +12,14 @@ import android.support.annotation.NonNull;
  * Schema SQL representant une association
  * entre deux autres entites: Event et RegisteredFriendsDB
  */
-@Entity(indices = {@Index("ref_event_ID"), @Index("ref_friend_email")},foreignKeys = {
+@Entity(indices = {@Index("ref_event_ID"), @Index("ref_friend_email")}/*,foreignKeys = {
         @ForeignKey(entity = EventDB.class,
         parentColumns = "eventID",
         childColumns = "ref_event_ID"),
         @ForeignKey(entity = RegisteredFriendsDB.class,
         parentColumns = "EMAIL",
         childColumns = "ref_friend_email")
-})
+}*/)
 public class Event_Friend_AssocDB {
 
     @PrimaryKey
@@ -33,8 +33,8 @@ public class Event_Friend_AssocDB {
 
 
     //Constructeurs
-    Event_Friend_AssocDB(){}
-    Event_Friend_AssocDB(String eventID, String Friend_PK){
+    public Event_Friend_AssocDB(){}
+    public Event_Friend_AssocDB(String eventID, String Friend_PK){
         this.ref_event_ID = eventID;
         this.ref_friend_email = Friend_PK;
     }

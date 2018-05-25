@@ -16,6 +16,7 @@ public class FindingFriendsRunnable implements Runnable {
     //FindingFriendsRunnable (La classe qui effectue la tache);
 
     //Definir les champs ici
+    Thread mThread = new Thread();
 
 
     @Override
@@ -24,5 +25,11 @@ public class FindingFriendsRunnable implements Runnable {
     * Definir le code à executer ici
      */
         android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+    }
+
+    public void send(){
+        FindingFriendsRunnable runnable = new FindingFriendsRunnable();
+        Thread test = new Thread (runnable);
+        test.start();
     }
 }

@@ -6,6 +6,8 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -17,7 +19,7 @@ import java.util.Date;
         //parentColumns = "EMAIL",
        // childColumns = "admin")
 //})
-public class EventDB {
+public class EventDB implements Serializable{
     @PrimaryKey
     @NonNull
     @ColumnInfo

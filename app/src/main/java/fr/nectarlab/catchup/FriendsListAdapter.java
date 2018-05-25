@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import fr.nectarlab.catchup.Database.RegisteredFriendsDB;
@@ -74,7 +75,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
                     if(isChecked){
                         Log.i("onCheckedChanged", "isChecked: "+isChecked+" UserEMAIL: "+choosenFriend.getEMAIL());
                         //Arraylist.add
-                        FriendsListHelper.addChoosenFriend(choosenFriend.getEMAIL());
+                        FriendsListHelper.addChoosenFriend(choosenFriend.getEMAIL(), choosenFriend.getUSERNAME());
                     }
                     else{
                         //ArrayList.remove
@@ -109,5 +110,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
             return mRegFriends.size();
         }
         else return 0;
+    }
+
+    public void getFriendsInfo(String email, String username){
+        HashMap <String, String> friendsListed = new HashMap<>();
+        friendsListed.put(email, username);
     }
 }
