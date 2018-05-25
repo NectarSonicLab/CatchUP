@@ -4,4 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="expandingFab">#2196F3</color>
+    <color name="darkPurple">#9B73C0</color>
+    <color name="lightPurple">#9997BF</color>
+    <color name="lightGreenAccent">#7FB2A3</color>
+    <color name="blackIsh">#475164</color>
 </resources>

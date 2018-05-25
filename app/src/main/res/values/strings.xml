@@ -63,5 +63,7 @@
     <string name="Insights_GroupInfo">GroupInfo</string>
     <!--Notifications-->
     <string name="notification_default">Invitation!</string>
+    <!--Welcome-->
+    <string name="Welcome_welcome_splashscreen">welcomeIMG</string>
 
 </resources>

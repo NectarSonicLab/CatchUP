@@ -146,9 +146,10 @@ public class SignUpActivity extends BaseActivity implements
                             myRef.child(user.getUid()).child("EMAIL").setValue(user.getEmail());
                             myRef.child(user.getUid()).child("USERNAME").setValue(getUsername());
                             //Insertion dans les SharedPref des memes elements pour avoir une copie locale
-                            editor.putString(SHAREDPREF_ID,user.getUid());
-                            editor.putString(SHAREDPREF_EMAIL, user.getEmail());
-                            editor.putString(SHAREDPREF_USERNAME, getUsername());
+                            editor.putString(SharedPrefUtil.SHAREDPREF_ID,user.getUid());
+                            editor.putString(SharedPrefUtil.SHAREDPREF_EMAIL, user.getEmail());
+                            editor.putString(SharedPrefUtil.SHAREDPREF_USERNAME, getUsername());
+                            editor.putBoolean(SharedPrefUtil.isACCOUNT_ON_TERMINAL, true);
                             editor.commit();
                         } else {
                             // If sign in fails, display a message to the user.
