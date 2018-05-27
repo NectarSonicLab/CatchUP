@@ -69,7 +69,9 @@ public class Insights extends Activity implements Serializable{
     private ChildEventListener mChildEventListener;
     private static Bitmap scaledBM;
     private static String contentUriToString;
-    private static Uri selectedImgUri;
+    private static Uri selectedImgUri, downloadUrl;
+    MediaListAdapter adapter;
+
 
 
     @Override
@@ -124,7 +126,7 @@ public class Insights extends Activity implements Serializable{
         super.onResume();
         //mStorageRef = mStorage.getReference("PHOTOS_FROM_EVENT: "+eventID);
         RecyclerView recyclerView = findViewById(R.id.Insights_recycler_rv);
-        final MediaListAdapter adapter = new MediaListAdapter(this);
+        adapter = new MediaListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this,2));
         //recyclerView.setLayoutManager(new GridLayoutManager(this,2, GridLayoutManager.VERTICAL, false));
@@ -155,55 +157,13 @@ public class Insights extends Activity implements Serializable{
             Log.i("Bitmap", "Pathname: "+contentUriToString);
             String userEmail = getUserEmail();
             //testing
-            /*
-            try {
-                bm = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImgUri);
-                scaledBM = Bitmap.createScaledBitmap(bm, 200, 200, true);
-            }
-            catch(IOException ioExc){}
-*/
-            /*
-             Envoi sur FirebaseStorage
-             */
-            mStorageRef = mStorage.getReference("PHOTOS_FROM_EVENT: "+eventID);
-            final StorageReference photoRef = mStorageRef.child(selectedImgUri.getLastPathSegment());
-            photoRef.putFile(selectedImgUri)
-                    .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            // When the image has successfully uploaded, we get its download URL
-                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                            // Set the download URL to the message box, so that the user can send it to the database
-                           // messageTxt.setText(downloadUrl.toString());
-                            Log.i("onSuccess", "success");
-                        }
-                    });
+            sendToStorage(mediaID, timeStamp, userEmail);
+            //Media mMedia = new Media(mediaID, timeStamp, selectedImgUri.toString(), userEmail, eventID);
+
             /*
              * TODO remplacer content par downloadURL
              */
-            Media mMedia = new Media(mediaID, timeStamp, contentUriToString, userEmail, eventID);
-            try{
-                /*
-                 * QuickFix pour voir si ca fonctionne
-                 * le probleme est que ca demande trop de memoire
-                 * Caused by: java.lang.OutOfMemoryError: Failed to allocate a 51840012 byte allocation with 16777216 free bytes and 37MB until OOM
-                 * remplacer par un insert dans la DB directement
-                 *
-                 *
-                 */
-                /*
-                 * TODO Envoi sur la firebaseDatabase (devra etre dans un Thread)
-                 */
-                registeredMedias.add(mMedia);
-                mDatabaseRef = mDatabase.getReference(ServerUtil.getMEDIA());
-                mDatabaseRef.child(mediaID).setValue(mMedia);
 
-            }
-            catch (NullPointerException npe){
-                if(registeredMedias==null){
-                    boolean isNull = true;
-                    Log.i(TAG, "npe registeredMedias is null "+isNull);
-                }
-            }
 
 
         }
@@ -234,46 +194,57 @@ public class Insights extends Activity implements Serializable{
         return scaledBM;
     }
 
-    public static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 4;
+    private void sendToStorage(final String mediaID, final String timeStamp, final String userEmail){
+         /*Envoi sur FirebaseStorage
+          * dans le dossier PHOTOS_FROM_EVENT(+ID de l'event en question)
+          * on rajoute un fils avec un nom unique (selectedImgUri==>pas 2 fois la meme photo
+          * dans ce dossier)
+          * Si ok on peut recuperer l'url
+          */
+        mStorageRef = mStorage.getReference("PHOTOS_FROM_EVENT: "+eventID);
+        final StorageReference photoRef = mStorageRef.child(selectedImgUri.getLastPathSegment());
+        photoRef.putFile(selectedImgUri)
+                .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // When the image has successfully uploaded, we get its download URL
+                        downloadUrl = taskSnapshot.getDownloadUrl();
+                        // Set the download URL to the message box, so that the user can send it to the database
+                        // messageTxt.setText(downloadUrl.toString());
+                        Log.i("onSuccess", "success:" +downloadUrl);
 
-        if (height > reqHeight || width > reqWidth) {
+                        Media mMedia = new Media(mediaID, timeStamp, downloadUrl.toString(), userEmail, eventID);
+                        adapter.setMedia(registeredMedias);
+                        try{
+                /*
+                 * QuickFix pour voir si ca fonctionne
+                 * le probleme est que ca demande trop de memoire
+                 * Caused by: java.lang.OutOfMemoryError: Failed to allocate a 51840012 byte allocation with 16777216 free bytes and 37MB until OOM
+                 * remplacer par un insert dans la DB directement
+                 *
+                 *
+                 */
+                /*
+                 * TODO Envoi sur la firebaseDatabase (devra etre dans un Thread)
+                 */
+                            registeredMedias.add(mMedia);
+                            mDatabaseRef = mDatabase.getReference(ServerUtil.getMEDIA());
+                            mDatabaseRef.child(mediaID).setValue(mMedia);
 
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
+                        }
+                        catch (NullPointerException npe){
+                            if(registeredMedias==null){
+                                boolean isNull = true;
+                                Log.i(TAG, "npe registeredMedias is null "+isNull);
+                            }
+                        }
 
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
+                    }
+                });
     }
 
-    public static Bitmap decodeSampledBitmapFromResource(String pathName,
-                                                         int reqWidth, int reqHeight) {
-
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        //options.inJustDecodeBounds = false;
-        //BitmapFactory.decodeResource(res, resId, options);
-        BitmapFactory.decodeFile(getSelectedImgUri());
-        Log.i("Bitmap", "Pathname: "+getSelectedImgUri());
-
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        // Decode bitmap with inSampleSize set
-        //options.inJustDecodeBounds = false;
-        //return BitmapFactory.decodeResource(res, resId, options);
-        return BitmapFactory.decodeFile(getSelectedImgUri());
+    public static Uri getURL(){
+        return downloadUrl;
     }
 
    public static String getSelectedImgUri (){

@@ -6,11 +6,14 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -24,6 +27,7 @@ public class MediaListAdapter extends RecyclerView.Adapter<MediaListAdapter.Medi
     private final String TAG = "MediaListAdapter";
     private List<Media> mMedia;
     private final LayoutInflater mInflater;
+    Context context;
 
 
 
@@ -45,6 +49,7 @@ public class MediaListAdapter extends RecyclerView.Adapter<MediaListAdapter.Medi
     @Override
     public MediaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = mInflater.inflate(R.layout.media_recyclerview_item, parent, false);
+        context = mInflater.getContext();
         return new MediaViewHolder(view);
     }
 
@@ -52,10 +57,14 @@ public class MediaListAdapter extends RecyclerView.Adapter<MediaListAdapter.Medi
     public void onBindViewHolder(MediaViewHolder holder, int position) {
         if(mMedia!=null){
             final Media current = mMedia.get(position);
-            Uri content = Uri.parse(current.getContenu());
+            Uri imgUrl = Insights.getURL();
+            current.setContenu(imgUrl.toString());
+            //holder.textView.setText(current.getContenu());
+            Log.i(TAG, "URL from Firebase: "+imgUrl.toString());
+            //Uri content = Uri.parse(current.getContenu());
             //holder.imageView.setImageURI(content);
-            holder.imageView.setImageBitmap(Insights.decodeSampledBitmapFromResource(Insights.getSelectedImgUri(), 500, 500));
-            //holder.imageView.setImageBitmap(Insights.getBitmap());//possible si current a un champ bitmap!
+            Glide.with(context)
+                 .load(current.getContenu()).into(holder.imageView);
         }
     }
 
@@ -74,7 +83,9 @@ public class MediaListAdapter extends RecyclerView.Adapter<MediaListAdapter.Medi
     @Override
     public int getItemCount() {
         if(mMedia!=null){
+            Log.i(TAG, "getItemCount()" +mMedia.size());
             return mMedia.size();
+
         }
         else{
         return 0;
