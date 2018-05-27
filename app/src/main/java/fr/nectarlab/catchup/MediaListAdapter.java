@@ -64,7 +64,7 @@ public class MediaListAdapter extends RecyclerView.Adapter<MediaListAdapter.Medi
             //Uri content = Uri.parse(current.getContenu());
             //holder.imageView.setImageURI(content);
             Glide.with(context)
-                 .load(current.getContenu()).into(holder.imageView);
+                 .load(current.getContenu()).into(holder.imageView);//
         }
     }
 
