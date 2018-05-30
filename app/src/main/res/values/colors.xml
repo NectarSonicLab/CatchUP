@@ -4,8 +4,18 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="expandingFab">#2196F3</color>
-    <color name="darkPurple">#9B73C0</color>
-    <color name="lightPurple">#9997BF</color>
-    <color name="lightGreenAccent">#7FB2A3</color>
+    <color name="darkPurple">#9b73c0</color>
+    <color name="lightPurple">#9997bf</color>
+    <color name="lightGreenAccent">#7fb2a3</color>
     <color name="blackIsh">#475164</color>
+    <color name= "myColorPrimary">#37474f</color>
+    <color name="myColorPrimaryDark">#102027</color>
+    <color name="myColorPrimaryLight">#62727b</color>
+    <color name="myColorSecondary">#ffeb3b</color>
+    <color name="myColorSecondaryDark">#c8b900</color>
+    <color name="myColorSecondaryLight">#ffff72</color>
+    <color name="textOnP">#ffffff</color>
+    <color name="textOnS">#000000</color>
+    <color name = "DarkmainBack">#E1E2E1</color>
+    <color name="mainBack">#E1E2E1</color>
 </resources>

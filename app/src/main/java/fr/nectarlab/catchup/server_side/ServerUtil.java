@@ -7,6 +7,7 @@ package fr.nectarlab.catchup.server_side;
 public class ServerUtil {
     private static final String FirebaseServer_Event = "EVENT";
     private static final String FirebaseServer_Event_Friend_Asso="FRIENDS LISTED BY EVENTS";
+    private static final String FirebaseServer_Message="MESSAGES";
     private static final String MEDIA ="MEDIA";
     private static final String ref_event_ID="ref_event_ID";
     private static final String ref_friend_email= "ref_friend_email";
@@ -69,5 +70,9 @@ public class ServerUtil {
 
     public static String getMEDIA() {
         return MEDIA;
+    }
+
+    public static String getFirebaseServer_Message() {
+        return FirebaseServer_Message;
     }
 }

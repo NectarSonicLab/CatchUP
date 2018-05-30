@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -14,26 +16,20 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="@color/colorPrimary"
+            android:background="@drawable/catchup_upblack"
+            app:contentScrim="@color/myColorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="exitUntilCollapsed|scroll"
-            android:background="@drawable/spectrol"
             app:toolbarId="@+id/toolbar">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"></android.support.v7.widget.Toolbar>
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/myColorPrimary"></android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
-
-    </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton2"
@@ -44,4 +40,11 @@
         android:focusable="true"
         app:fabSize="mini"
         app:srcCompat="@android:drawable/ic_menu_add" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/eventInfo_map_mv"
+        android:layout_width="match_parent"
+        android:layout_height="377dp"
+        android:layout_gravity="bottom"
+        tools:layout_editor_absoluteY="190dp" />
 </android.support.design.widget.CoordinatorLayout>

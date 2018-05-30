@@ -13,13 +13,13 @@ import android.support.annotation.NonNull;
  * Schema representant un objet Media (photo, fichier audio...) partage entre les utilisateurs
  * du meme evenement
  */
-@Entity (indices = {@Index("ref_user_EMAIL"), @Index("ref_event_ID")},foreignKeys = {
+@Entity (indices = {@Index("ref_user_EMAIL")/*, @Index("ref_event_ID")},foreignKeys = {
         @ForeignKey(entity = UserDB.class,
                 parentColumns = "EMAIL",
                 childColumns = "ref_user_EMAIL"),
         @ForeignKey(entity = EventDB.class,
                 parentColumns = "eventID",
-                childColumns = "ref_event_ID")
+                childColumns = "ref_event_ID")*/
             })
 //indices = {@Index("ref_user_EMAIL")})
 

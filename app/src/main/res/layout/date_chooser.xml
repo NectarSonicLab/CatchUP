@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TabHost
@@ -15,7 +16,8 @@
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@color/myColorPrimaryLight" />
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
@@ -31,14 +33,20 @@
                     <DatePicker
                         android:id="@+id/datePicker"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:calendarTextColor="@color/myColorPrimaryDark"
+                        android:headerMonthTextAppearance="@style/TextAppearance.AppCompat"
+                        android:yearListSelectorColor="@color/myColorPrimaryDark"
+                        tools:headerBackground="@color/myColorSecondaryDark" />
 
                     <Button
                         android:id="@+id/button2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:onClick="update"
-                        android:text="@string/dateChooser_saveDate" />
+                        android:text="@string/dateChooser_saveDate"
+                        android:textColor="@color/myColorPrimaryDark"
+                        tools:background="@color/myColorSecondary" />
                 </LinearLayout>
 
                 <LinearLayout

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <RadioGroup
@@ -10,12 +11,12 @@
 
         <RadioButton
             android:id="@+id/ec_resto_rb"
-            android:onClick="onRadioButtonClicked"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/eventChooser_resto"
+            android:layout_marginStart="80dp"
             android:layout_marginTop="80dp"
-            android:layout_marginStart="80dp"/>
+            android:onClick="onRadioButtonClicked"
+            android:text="@string/eventChooser_resto" />
 
         <RadioButton
             android:id="@+id/ec_expo_rb"
@@ -87,20 +88,23 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        android:text="@string/eventChooser_save"
         android:layout_below="@id/eventChooser_main_RG"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:onClick="saveChoice"
-        />
+        android:text="@string/eventChooser_save"
+        android:textColor="@color/myColorPrimaryDark"
+        tools:background="@color/myColorSecondary" />
+
     <Button
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:text="@string/eventChooser_cancel"
         android:layout_below="@id/eventChooser_main_RG"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
         android:onClick="cancelChoice"
-        />
+        android:text="@string/eventChooser_cancel"
+        android:textColor="@color/myColorPrimaryDark"
+        tools:background="@color/myColorSecondary" />
 </RelativeLayout>

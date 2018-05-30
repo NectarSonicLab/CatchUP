@@ -2,6 +2,7 @@ package fr.nectarlab.catchup.Database;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.arch.persistence.room.Query;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -41,6 +42,21 @@ public class AppRepository {
      */
     private EventDAO mEventDAO;
     private LiveData<List<EventDB>> mAllEvents;
+    /*
+     * Reference aux medias enregistres
+     * mMediaDAO est l'interface
+     * mAllMedias represente la liste des Medias
+     */
+    private MediaDAO mMediaDAO;
+    private LiveData<List<Media>> mAllMedias;
+
+    /*
+     * Reference aux medias enregistres
+     * mMessageDAO est l'interface
+     * mAllMessages represente la liste des messages
+     */
+    private MessageDAO mMessageDAO;
+    private LiveData<List<Message>> mAllMessages;
     private RegisteredUsersActivity_test mRegisteredUsersActivity_test;// = new RegisteredUsersActivity_test();
     static int numFriends;
     private getNumFriendsAsyncTask.ResponseListener mRresponseListener;
@@ -51,10 +67,14 @@ public class AppRepository {
 
     public AppRepository(Application application){
         AppDatabase appDatabase = AppDatabase.getInstance(application);
-        mRegisteredFriendsDAO = appDatabase.mRegisteredFriendsDAO();
-        mAllFriends = mRegisteredFriendsDAO.getAllFriends();
-        mEventDAO = appDatabase.mEventDAO();
-        mAllEvents = mEventDAO.getAllEvent();
+        this.mRegisteredFriendsDAO = appDatabase.mRegisteredFriendsDAO();
+        this.mAllFriends = mRegisteredFriendsDAO.getAllFriends();
+        this.mEventDAO = appDatabase.mEventDAO();
+        this.mAllEvents = mEventDAO.getAllEvent();
+        this.mMediaDAO = appDatabase.mMediaDAO();
+        this.mAllMedias = mMediaDAO.getAllMedias();
+        this.mMessageDAO = appDatabase.mMessageDAO();
+        this.mAllMessages = mMessageDAO.getAllMessages();
     }
 
     /*
@@ -65,13 +85,15 @@ public class AppRepository {
     }
 
     /*
-     * Getters pour recuperer la liste des objets amis et evenements
+     * Getters pour recuperer la liste des objets amis, medias et evenements
      */
 
     public LiveData<List<RegisteredFriendsDB>> getAllFriends(){
         return this.mAllFriends;
     }
     public LiveData<List<EventDB>> getAllEvents(){return this.mAllEvents;}
+    public LiveData<List<Media>> getAllMedias(){return this.mAllMedias;}
+    public LiveData<List<Message>> getAllMessages() {return this.mAllMessages;}
 
     /*
      * Methode appelant une asynTask pour inserer un nouvel ami dans la BD
@@ -85,6 +107,20 @@ public class AppRepository {
      */
     public void insertEvent(EventDB eventDB){
         new insertEventAsyncTask(mEventDAO).execute(eventDB);
+    }
+
+    /*
+     *Methode appelant une AsynkTask pour inserer un nouveau Media
+     */
+    public void insertMedia(Media media){
+        new insertMediaAsyncTask(mMediaDAO).execute(media);
+    }
+
+    /*
+     * Methode appelant une AsyncTask pour inserer un nouveau Message
+     */
+    public void insertMessage(Message message){
+        new insertMessageAsyncTask(mMessageDAO).execute(message);
     }
 
 
@@ -123,6 +159,32 @@ public class AppRepository {
         @Override
         protected Void doInBackground (final EventDB...params){//...params
             eventDAO.insert(params[0]);
+            return null;
+        }
+    }
+
+    /*
+     * AsyncTask appelee par la methode insertMedia()
+     */
+    private static class insertMediaAsyncTask extends AsyncTask<Media, Void, Void>{
+        private MediaDAO mMediaDAO;
+        insertMediaAsyncTask(MediaDAO dao){this.mMediaDAO = dao;}
+        @Override
+        protected Void doInBackground (final Media...params){
+            mMediaDAO.insert(params[0]);
+            return null;
+        }
+    }
+
+    /*
+     *AsyncTask appelee par la methode insertMessage()
+     */
+    private static class insertMessageAsyncTask extends  AsyncTask<Message, Void, Void>{
+        private MessageDAO mMessageDAO;
+        insertMessageAsyncTask(MessageDAO dao){this.mMessageDAO = dao;}
+        @Override
+        protected Void doInBackground (final Message ... params){
+            mMessageDAO.insert(params[0]);
             return null;
         }
     }

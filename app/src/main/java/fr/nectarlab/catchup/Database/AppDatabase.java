@@ -24,6 +24,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract FriendDao friendDao();//autre DAO a creer
     public abstract RegisteredFriendsDAO mRegisteredFriendsDAO();
     public abstract EventDAO mEventDAO();
+    public abstract MediaDAO mMediaDAO();
+    public abstract MessageDAO mMessageDAO();
     public abstract Event_Friend_AssocDAO mEvent_Friend_AssocDAO();
 
     /*

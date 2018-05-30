@@ -1,21 +1,34 @@
 package fr.nectarlab.catchup;
 
 import android.app.Activity;
+
+import android.app.ProgressDialog;
+
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +57,11 @@ import java.util.List;
 
 import fr.nectarlab.catchup.Database.EventDB;
 import fr.nectarlab.catchup.Database.Media;
+import fr.nectarlab.catchup.Database.Message;
+import fr.nectarlab.catchup.model.EventModel;
+import fr.nectarlab.catchup.model.MediaModel;
+import fr.nectarlab.catchup.model.MessageModel;
+import fr.nectarlab.catchup.server_side.FirebaseHelper;
 import fr.nectarlab.catchup.server_side.ServerUtil;
 
 /**
@@ -52,11 +70,14 @@ import fr.nectarlab.catchup.server_side.ServerUtil;
  * ChatRoom, media enregistres
  */
 
-public class Insights extends Activity implements Serializable{
+public class Insights extends AppCompatActivity implements Serializable{
     private TabHost mTabHost;
     private String TAG = "Insights";
     EventDB mEventDB;
     private Media mMedia;
+    private MediaModel mMediaModel;
+    private MessageModel mMessageModel;
+    private ArrayList<Message> messageArrayList;
     public ArrayList<Media> registeredMedias;
     private FirebaseStorage mStorage;
     private FirebaseDatabase mDatabase;
@@ -70,8 +91,13 @@ public class Insights extends Activity implements Serializable{
     private static Bitmap scaledBM;
     private static String contentUriToString;
     private static Uri selectedImgUri, downloadUrl;
+    private RecyclerView mediaRecyclerView, messageRecyclerView;
     MediaListAdapter adapter;
-
+    MessageListAdapter messageListAdapter;
+    private ProgressDialog mDialog;
+    private EditText messageEditText;
+    static SharedPreferences sharedPref;
+    Activity activity;
 
 
     @Override
@@ -82,9 +108,16 @@ public class Insights extends Activity implements Serializable{
         mEventDB = (EventDB)i.getSerializableExtra(IntentUtils.getEventAdapter_CurrentObject());
         eventID = mEventDB.getEventID();
         setContentView(R.layout.insights);
-
+        activity = this;
+        mDialog = new ProgressDialog(this);
+        adapter = new MediaListAdapter(this);
+        messageListAdapter = new MessageListAdapter(this);
 
         registeredMedias = new ArrayList<>();
+        messageArrayList = new ArrayList<>();
+        messageEditText = findViewById(R.id.messageTab_messageCompletion_et);
+
+        sharedPref  = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         Log.i(TAG, "onCreate: Debut");
         String ID = mEventDB.getEventID();
@@ -124,13 +157,68 @@ public class Insights extends Activity implements Serializable{
     @Override
     public void onResume(){
         super.onResume();
-        //mStorageRef = mStorage.getReference("PHOTOS_FROM_EVENT: "+eventID);
-        RecyclerView recyclerView = findViewById(R.id.Insights_recycler_rv);
-        adapter = new MediaListAdapter(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
-        //recyclerView.setLayoutManager(new GridLayoutManager(this,2, GridLayoutManager.VERTICAL, false));
-        adapter.setMedia(registeredMedias);
+        mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+                Log.i(TAG, tabId);
+                if(tabId.equals(getString(R.string.Insights_media))){
+                    mMediaModel = ViewModelProviders.of(Insights.this).get(MediaModel.class);
+                    mediaRecyclerView = findViewById(R.id.Insights_recycler_rv);
+                    //adapter = new MediaListAdapter(this);
+                    mediaRecyclerView.setAdapter(adapter);
+                    mediaRecyclerView.setLayoutManager(new GridLayoutManager(Insights.this,2));
+                    mMediaModel.getAllMedias().observe(Insights.this, new Observer<List<Media>>() {
+                        @Override
+                        public void onChanged(@Nullable List<Media> media) {
+                            adapter.setMedia(media);
+                        }
+                    });
+                }
+                if(tabId.equals(getString(R.string.Insights_Message))){
+                    mMessageModel = ViewModelProviders.of(Insights.this).get(MessageModel.class);
+                    messageRecyclerView = findViewById(R.id.Insights_messageRecycler_rv);
+                    messageRecyclerView.setAdapter(messageListAdapter);
+                    messageRecyclerView.setLayoutManager(new LinearLayoutManager(Insights.this));
+                    mMessageModel.getAllMessages().observe(Insights.this, new Observer<List<Message>>() {
+                        @Override
+                        public void onChanged(@Nullable List<Message> messages) {
+                            messageListAdapter.setMessages(messages);
+                        }
+                    });
+                    FirebaseHelper listener = new FirebaseHelper(mDatabase, mDatabaseRef);
+                    listener.MessageListener(mMessageModel);
+                }
+
+            }
+
+        });
+//        mMediaModel = ViewModelProviders.of(this).get(MediaModel.class);
+//        mediaRecyclerView = findViewById(R.id.Insights_recycler_rv);
+//        //adapter = new MediaListAdapter(this);
+//        mediaRecyclerView.setAdapter(adapter);
+//        mediaRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+//        mMediaModel.getAllMedias().observe(this, new Observer<List<Media>>() {
+//            @Override
+//            public void onChanged(@Nullable List<Media> media) {
+//                adapter.setMedia(media);
+//            }
+//        });
+
+//        mMessagetModel = ViewModelProviders.of(this).get(MessageModel.class);
+//        messageRecyclerView = findViewById(R.id.Insights_messageRecycler_rv);
+//        messageRecyclerView.setAdapter(messageListAdapter);
+//        messageRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        mMessagetModel.getAllMessages().observe(this, new Observer<List<Message>>() {
+//            @Override
+//            public void onChanged(@Nullable List<Message> messages) {
+//                messageListAdapter.setMessages(messages);
+//            }
+//        });
+
+
+
+
+
     }
     public String setMediaID (){
         mAuth = FirebaseAuth.getInstance();
@@ -142,32 +230,7 @@ public class Insights extends Activity implements Serializable{
         return ID;
     }
 
-    public void onActivityResult(int requestCode, int resCode, Intent data){
-        if(requestCode == RC_PHOTO_PICKER && resCode == RESULT_OK){
 
-
-            Date date = Calendar.getInstance().getTime();
-            DateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy, hh:mm:ss.SSS a");
-
-            selectedImgUri = data.getData();
-            String mediaID = setMediaID();
-            String timeStamp = formatter.format(date);
-            contentUriToString = selectedImgUri.getPath();
-
-            Log.i("Bitmap", "Pathname: "+contentUriToString);
-            String userEmail = getUserEmail();
-            //testing
-            sendToStorage(mediaID, timeStamp, userEmail);
-            //Media mMedia = new Media(mediaID, timeStamp, selectedImgUri.toString(), userEmail, eventID);
-
-            /*
-             * TODO remplacer content par downloadURL
-             */
-
-
-
-        }
-    }
     public String getUserEmail(){
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -182,12 +245,42 @@ public class Insights extends Activity implements Serializable{
         i.putExtra(IntentUtils.getEventAdapter_CurrentObject(), this.mEventDB);
         startActivity(i);
     }
-
+    /*
+     *
+     */
     public void pickPhoto(View v){
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/jpeg");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);
+    }
+
+    /*
+
+     */
+
+    public void onActivityResult(int requestCode, int resCode, Intent data){
+        if(requestCode == RC_PHOTO_PICKER && resCode == RESULT_OK){
+            String progressTitle=getString(R.string.InsightsProgressTitle)+" "+mEventDB.getEventName();
+            mDialog.setTitle(progressTitle);
+            mDialog.setMessage(getString(R.string.InsightsProgressMessage));
+            mDialog.show();
+            Date date = Calendar.getInstance().getTime();
+            DateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy, hh:mm:ss.SSS a");
+
+            selectedImgUri = data.getData();
+            String mediaID = setMediaID();
+            String timeStamp = formatter.format(date);
+            contentUriToString = selectedImgUri.getPath();
+
+            Log.i("Bitmap", "Pathname: "+contentUriToString);
+            String userEmail = getUserEmail();
+
+            sendToStorage(mediaID, timeStamp, userEmail);
+
+
+
+        }
     }
 
     public static Bitmap getBitmap(){
@@ -213,8 +306,11 @@ public class Insights extends Activity implements Serializable{
                         // messageTxt.setText(downloadUrl.toString());
                         Log.i("onSuccess", "success:" +downloadUrl);
 
+                        Log.i(TAG, registeredMedias.toString());
                         Media mMedia = new Media(mediaID, timeStamp, downloadUrl.toString(), userEmail, eventID);
-                        adapter.setMedia(registeredMedias);
+                        mMediaModel.insert(mMedia);
+                        mDialog.dismiss();
+
                         try{
                 /*
                  * QuickFix pour voir si ca fonctionne
@@ -227,7 +323,7 @@ public class Insights extends Activity implements Serializable{
                 /*
                  * TODO Envoi sur la firebaseDatabase (devra etre dans un Thread)
                  */
-                            registeredMedias.add(mMedia);
+
                             mDatabaseRef = mDatabase.getReference(ServerUtil.getMEDIA());
                             mDatabaseRef.child(mediaID).setValue(mMedia);
 
@@ -241,13 +337,48 @@ public class Insights extends Activity implements Serializable{
 
                     }
                 });
+
     }
 
-    public static Uri getURL(){
-        return downloadUrl;
+    public void sendMessage(View v){
+        FirebaseHelper helper = new FirebaseHelper(mDatabase, mDatabaseRef);
+        String messageID = helper.setUniqueID();
+        String userEmail = sharedPref.getString(SharedPrefUtil.SHAREDPREF_EMAIL, null);
+        String messageContent = messageEditText.getText().toString();
+        Date date = Calendar.getInstance().getTime();
+        DateFormat formatter = new SimpleDateFormat("EEEE, dd MMMM yyyy, hh:mm:ss.SSS a");
+        String timeStamp = formatter.format(date);
+        if(messageContent.isEmpty()){
+            Toast.makeText(this, R.string.messageVide, Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Message message = new Message(messageID, timeStamp, messageContent, userEmail, this.eventID);
+            messageArrayList.add(message);
+            messageArrayList.add(new Message("ID", timeStamp, "Other", "test", "eventID"));
+            messageListAdapter.setMessages(messageArrayList);
+            messageEditText.setText("");
+            hideKeyboardFrom(activity);
+
+            helper.sendMessageToFirebase(messageID, message);
+        }
     }
 
-   public static String getSelectedImgUri (){
-        return selectedImgUri.getPath();
-   }
+    /*
+     * Pour changer l'affichage en fonction de qui envoit
+     */
+    public static boolean whoIsSending(Message message){
+
+        String userEmail = sharedPref.getString(SharedPrefUtil.SHAREDPREF_EMAIL, null);
+        return message.getRef_user_EMAIL().equals(userEmail);
+    }
+
+    public static void hideKeyboardFrom(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 }

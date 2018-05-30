@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fr.nectarlab.catchup">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -13,27 +16,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="@string/placesAPI_key"/>
-        <activity android:name=".Welcome"
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/placesAPI_key" />
+
+
+        <activity
+            android:name=".Welcome"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUpActivity">
-        </activity>
-        <activity android:name=".RegisteredUsersActivity_test">
-        </activity>
-        <activity android:name=".Home"></activity>
-        <activity android:name=".EventSetup"></activity>
-        <activity android:name=".DateChooser"></activity>
-        <activity android:name=".EventChooser"></activity>
-        <activity android:name=".Insights"></activity>
-        <activity android:name=".EventInfo"></activity>
-
+        <activity android:name=".SignUpActivity"/>
+        <activity android:name=".RegisteredUsersActivity_test"/>
+        <activity android:name=".Home" />
+        <activity android:name=".EventSetup" />
+        <activity android:name=".DateChooser" />
+        <activity android:name=".EventChooser" />
+        <activity android:name=".Insights" />
+        <activity android:name=".EventInfo" />
     </application>
-
 
 </manifest>

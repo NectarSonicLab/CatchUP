@@ -6,9 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Process;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -44,6 +41,7 @@ import java.util.List;
 import fr.nectarlab.catchup.Database.EventDB;
 import fr.nectarlab.catchup.Database.RegisteredFriendsDB;
 import fr.nectarlab.catchup.model.EventModel;
+import fr.nectarlab.catchup.model.MediaModel;
 import fr.nectarlab.catchup.model.Users;
 
 
@@ -233,6 +231,7 @@ public class Home extends AppCompatActivity {
                             Log.i(TAG, "events en local: "+itemCount+", events sur serveur: "+serverEventCount);
                             if(serverEventCount>itemCount) {
                                 String eventID, admin, eventName, date, debutTime, eventType, location;
+                                double longitude, latitude;
                                 eventID = eventDB.getEventID();
                                 admin = eventDB.getAdmin();
                                 eventName = eventDB.getEventName();
@@ -240,7 +239,9 @@ public class Home extends AppCompatActivity {
                                 debutTime = eventDB.getDebutTime();
                                 eventType = eventDB.getEventType();
                                 location = eventDB.getLocation();
-                                EventDB cachedEvent = new EventDB(eventID, admin, eventName, date, debutTime, eventType, location);
+                                longitude = eventDB.getLongitude();
+                                latitude =  eventDB.getLatitude();
+                                EventDB cachedEvent = new EventDB(eventID, admin, eventName, date, debutTime, eventType, location, longitude, latitude);
                                 mEventModel.insert(cachedEvent);
                             }
                         }
@@ -280,6 +281,7 @@ public class Home extends AppCompatActivity {
 
         @Override
         public void run(){
+            final SharedPreferences sharedPref  = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
             Log.i(TAG, "CacheTaskForUserRetrieval() run()" );
             mAuth = FirebaseAuth.getInstance();
             FirebaseUser user = mAuth.getCurrentUser();
@@ -305,6 +307,10 @@ public class Home extends AppCompatActivity {
                             setUserNAME(username);
                             //On veut envoyer les infos de la requete dans les sharedPref pour sauvegarde locale
                             //pb les recupere apres l'affichage
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString(SharedPrefUtil.SHAREDPREF_EMAIL,mail);
+                            editor.putString(SharedPrefUtil.SHAREDPREF_USERNAME, username);
+                            editor.apply();
                         }
                         else{
                             Log.i(TAG, "onChildAdded NoUserRetrieved" );
@@ -343,7 +349,9 @@ public class Home extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
         mQuery.removeEventListener(mChildEventListener);
-        mQuery.removeEventListener(forUserRefChildListener);
+        if (forUserRefChildListener!=null) {
+            mQuery.removeEventListener(forUserRefChildListener);
+        }
     }
 
     @Override
@@ -365,31 +373,46 @@ public class Home extends AppCompatActivity {
         SharedPreferences sharedPref  = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         boolean isFreshlyInstalled = sharedPref.getBoolean(SharedPrefUtil.isACCOUNT_ON_TERMINAL, false);
 
+        //probleme l'affichage se fait alors que la requete n'a pas encore publie son resultat
+        String USERNAME = sharedPref.getString(SharedPrefUtil.SHAREDPREF_USERNAME, null);
+        String EMAIL = sharedPref.getString(SharedPrefUtil.SHAREDPREF_EMAIL, null);
+
         if(!isFreshlyInstalled){
-            //Recuperer les infos depuis firebase
+            //Si l'utilisateur a re-installe l'app alors recuperer les infos depuis firebase
             Log.i(TAG, "isFreshlyInstalled: "+isFreshlyInstalled+ " si false Query dans Firebase");
             //initialisation du runnable et du thread pour traiter ca en background
             CacheTaskForUserRetrieval taskForUserRetrieval= new CacheTaskForUserRetrieval();
             CacheFromFirebase loginRetrieval = new CacheFromFirebase(taskForUserRetrieval);
             loginRetrieval.start();
-            //on met a jour les infos retrouvees dans les sharedPref
+            //on met a jour les infos retrouvees depuis Firebase dans les sharedPref
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(SharedPrefUtil.SHAREDPREF_EMAIL,getUserEMAIL());
-            editor.putString(SharedPrefUtil.SHAREDPREF_USERNAME, getUserNAME());
-            if (getUserEMAIL()!=null &&getUserNAME()!=null){
+            //editor.putString(SharedPrefUtil.SHAREDPREF_EMAIL,getUserEMAIL());
+            //editor.putString(SharedPrefUtil.SHAREDPREF_USERNAME, getUserNAME());
+            if (EMAIL!=null && USERNAME!=null){
+                //Si on a bien recuperer les infos ne plus refaire l'operation
+                //en mettant un boolean dans SharedPref
                 //la requete vers Firebase ne tournera donc qu'une fois
                 editor.putBoolean(SharedPrefUtil.isACCOUNT_ON_TERMINAL, true);
             }
             editor.commit();
+            /*
+             Met a jour l'affichage dans le drawer en fonction des infos recuperees
+             */
+            ThreadUpdate update = new ThreadUpdate(tvUsername, tvEmail);
+            update.start();
         }
-        //probleme l'affichage se fait alors que la requete n'a pas encore publie son resultat
-        String USERNAME = sharedPref.getString(SharedPrefUtil.SHAREDPREF_USERNAME, "Key not saved");
-        String EMAIL = sharedPref.getString(SharedPrefUtil.SHAREDPREF_EMAIL, "Key not saved");
+
+        else{
+            tvEmail.setText(EMAIL);
+            tvUsername.setText(USERNAME);
+        }
+
+
         Log.i(TAG, "Shared USERNAME: "+USERNAME);
         Log.i(TAG, "Shared EMAIL: "+EMAIL);
+        Log.i(TAG, "Shared isFreshly "+isFreshlyInstalled);
 
-        ThreadUpdate update = new ThreadUpdate(tvUsername, tvEmail);
-        update.start();
+
         //tvUsername.setText(USERNAME);
         //tvEmail.setText(EMAIL);
     }
@@ -409,12 +432,18 @@ public class Home extends AppCompatActivity {
         public ThreadUpdate(TextView tv1, TextView tv2){
             this.tv1=tv1;
             this.tv2=tv2;
+
         }
         @Override
         public void run(){
             try {
+                Log.i(TAG, "ThreadUpdate(), inside run, before sleep");
+                /*
+                 * Temps de latance pour etre sur que la requete sur Firebase est terminee
+                 */
                 sleep(1000);
                 setTextInfo(tv1, tv2);
+                Log.i(TAG, "ThreadUpdate(), inside run, after sleep");
             }
             catch(InterruptedException IE){}
         }

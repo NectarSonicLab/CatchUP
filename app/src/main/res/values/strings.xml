@@ -1,21 +1,21 @@
 <resources>
     <string name="app_name">Catch UP</string>
     <string name="loading">Chargement</string>
-    <string name ="auth_failed">Echec de l\'authentification </string>
-    <string name ="emailpassword_status_fmt">Email User: %1$s(verified: %2$b)</string>
-    <string name ="firebase_status_fmt">Firebase User: %s</string>
+    <string name="auth_failed">Echec de l\'authentification </string>
+    <string name="emailpassword_status_fmt">Email User: %1$s(verified: %2$b)</string>
+    <string name="firebase_status_fmt">Firebase User: %s</string>
     <string name="FirebaseErrorToast">Echec de l\'envoi au serveur</string>
-    <string name ="signed_out">Signed Out</string>
+    <string name="signed_out">Signed Out</string>
     <string name="sign_in_button">Sign In</string>
-    <string name = "signed_in_TV">Utilisateur enregistré avec succès, continuer</string>
-    <string name ="User_EMAIL">Email: %s</string>
-    <string name ="User_USERNAME">Nom d\'utilisateur: %s</string>
-    <string name ="create_account_button">Create Account</string>
-    <string name = "sign_out_button">Sign Out</string>
-    <string name = "verify_email_button">Verify Email</string>
-    <string name = "username_hint">Username</string>
-    <string name ="email_hint">Email</string>
-    <string name ="password_hint">Password</string>
+    <string name="signed_in_TV">Utilisateur enregistré avec succès, continuer</string>
+    <string name="User_EMAIL">Email: %s</string>
+    <string name="User_USERNAME">Nom d\'utilisateur: %s</string>
+    <string name="create_account_button">Create Account</string>
+    <string name="sign_out_button">Sign Out</string>
+    <string name="verify_email_button">Verify Email</string>
+    <string name="username_hint">Username</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
     <string name="details">details</string>
     <string name="groups">Boite à souvenirs</string>
     <string name="properties">Propriétés</string>
@@ -27,8 +27,8 @@
     <string name="Tab1">Date</string>
     <string name="Tab2">Heure</string>
     <string name="eventSetup">Nom de l\'événement</string>
-    <string name ="eventSetup_PickPlace">Choisir un endroit</string>
-    <string name ="eventSetup_PickDate">Date et heure de rendez-vous</string>
+    <string name="eventSetup_PickPlace">Choisir un endroit</string>
+    <string name="eventSetup_PickDate">Date et heure de rendez-vous</string>
     <string name="eventSetup_DateHint">Veuillez choisir une date de RDV</string>
     <string name="eventSetup_hint">Adresse: inconnue</string>
     <string name="eventSetup_nameHint">Nom de l\'endroit: inconnu</string>
@@ -58,6 +58,10 @@
     <string name="Insights_Message">Messages</string>
     <string name="Insights_Liens">Liens</string>
     <string name="Insights_EventName">EventName</string>
+    <string name="InsightsProgressTitle">CatchUp: </string>
+    <string name="InsightsProgressMessage">Envoi des photos sur le serveur</string>
+    <string name="message_tab_et">Votre message...</string>
+    <string name="messageVide">Vous alliez envoyer un message vide...</string>
     <!--ContentDescription-->
     <string name="Insights_background">background</string>
     <string name="Insights_GroupInfo">GroupInfo</string>
@@ -65,5 +69,6 @@
     <string name="notification_default">Invitation!</string>
     <!--Welcome-->
     <string name="Welcome_welcome_splashscreen">welcomeIMG</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

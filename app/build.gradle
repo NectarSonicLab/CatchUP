@@ -10,8 +10,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        javaCompileOptions{
-            annotationProcessorOptions{
+        javaCompileOptions {
+            annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
@@ -56,16 +56,17 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
 }
 
-configurations.all{
+configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
         def requested = details.requested
-        if(requested.group == 'com.android.support'){
-            if(!requested.name.startsWith("multidex")){
-                details.useVersion'26.1.0'
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '26.1.0'
             }
         }
     }
 }
+
 
 
 

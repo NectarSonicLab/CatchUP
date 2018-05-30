@@ -1,9 +1,7 @@
 package fr.nectarlab.catchup;
 
 import android.Manifest;
-import android.app.Service;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -19,32 +17,21 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.FirebaseApp;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingService;
-import com.google.firebase.messaging.RemoteMessage;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import fr.nectarlab.catchup.Database.EventDB;
-import fr.nectarlab.catchup.Database.Event_Friend_AssocDB;
 import fr.nectarlab.catchup.model.EventModel;
-import fr.nectarlab.catchup.model.Friend;
-import fr.nectarlab.catchup.server_side.FirebaseFriendsByEvent;
 import fr.nectarlab.catchup.server_side.FirebaseHelper;
 import fr.nectarlab.catchup.server_side.ServerUtil;
 
@@ -65,9 +52,8 @@ public class EventSetup extends AppCompatActivity{
     private FirebaseAuth mAuth;
 
     private EventModel mEventModel;
-    String token;
-
-    //private boolean eventTypeSaved;
+    private LatLng coordinates;
+    private double longitude, latitude;
     ArrayList<String>pickedFriends;
     HashMap<String, String> registeredFriends;
     private TextView retrievePlace, retrieveName, retrieveEventType, retrieveDay, retrieveFriends, retrieveEventDescription;
@@ -132,6 +118,8 @@ public class EventSetup extends AppCompatActivity{
             Log.i(TAG, "onCreate savedAddress: "+b.getString("adresse"));
             retrieveName.setText(b.getString("nom"));
             Log.i(TAG, "onCreate savedPlace: "+b.getString("nom"));
+            longitude = b.getDouble("longitude");
+            latitude = b.getDouble ("latitude");
             //pour la date
             retrieveDay.setText(b.getString("date"));
             Log.i(TAG, "onCreate savedDate: "+b.getString("date"));
@@ -156,33 +144,29 @@ public class EventSetup extends AppCompatActivity{
     public void onResume(){
         super.onResume();
 
+        /*
+         * Tentative pour recuperer les amis par Events
+         * Si l'user fait partie de la requete alors lui notifier
+         */
         mReference = FirebaseDatabase.getInstance().getReference();
         String test = mReference.child(ServerUtil.getFirebaseServer_Event_Friend_Asso()).getKey();
         Log.i(TAG, "Reference au serveur: "+test);
         Query query = mReference.child(ServerUtil.getFirebaseServer_Event_Friend_Asso());
-        HashMap<String, String> userNameEmail = new HashMap<>();
-        HashMap<String, HashMap> listedFriends = new HashMap<>();
-        final FirebaseFriendsByEvent firebaseFriendsByEvent = new FirebaseFriendsByEvent(listedFriends, userNameEmail);
         if (mDatabase!=null)
             assert query != null;
 
             query.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    //String v = dataSnapshot.getChildren().iterator().next().getKey();
+
                     long nbChildren = dataSnapshot.getChildrenCount();
-                    Log.i(TAG, "onChildAdded: nbChilder: " + nbChildren);
-                    FirebaseFriendsByEvent friend = dataSnapshot.getValue(FirebaseFriendsByEvent.class);
+                    Log.i(TAG, "onChildAdded: nbChilden: " + nbChildren);
+
+                    //FriendsByEvent friend = dataSnapshot.getValue(FriendsByEvent.class);
                     for (DataSnapshot child: dataSnapshot.getChildren()) {
                         String newRef = child.getKey();
-
-                       //String v = dataSnapshot.getChildren().iterator().next().getKey();
-                      // String newRef = dataSnapshot.child(v).toString();
-                       Log.i(TAG, "onChildAdded: Friend's email: " + firebaseFriendsByEvent.getListedFriends());
-                      // Log.i(TAG, "onChildAdded: FirebaseFriends " + v);
                        Log.i(TAG, "onChildAdded: newRef: "+newRef);
                        Log.i(TAG, "onChildAdded: child: "+child);
-
                    }
                 }
 
@@ -222,8 +206,16 @@ public class EventSetup extends AppCompatActivity{
         b.putString("adresse", savedAddress);
         String savedPlaceName = (String) retrieveName.getText();
         b.putString ("nom", savedPlaceName);
+        if (null!=coordinates){
+            longitude = coordinates.longitude;
+            latitude = coordinates.latitude;
+        }
+        b.putDouble("longitude", longitude);
+        b.putDouble("latitude", latitude);
         Log.i(TAG, "onSave AddressSaved: "+savedAddress);
         Log.i(TAG, "onSave PlaceSaved: "+savedPlaceName);
+        Log.i(TAG, "onSave Longitude: "+longitude);
+        Log.i(TAG, "onSave Latitude: "+latitude);
 
         /*
          * Sauvegarde de la date
@@ -302,11 +294,14 @@ public class EventSetup extends AppCompatActivity{
         String choiceSaved;
         if(requestCode == PLACE_PICKER_REQUEST){
             if(resultCode == RESULT_OK){
+
                 Place place = PlacePicker.getPlace(this, data);
                 retrievePlace.setText(place.getAddress());
                 retrieveName.setText(place.getName());
+                coordinates = place.getLatLng();
                 Log.i(TAG, "Data from intent: "+place.getAddress());
                 Log.i(TAG, "Data from intent: "+place.getName());
+                Log.i(TAG, "Data from intent: "+place.getLatLng().toString());
             }
         }
         if(requestCode == DATE_PICKER_REQUEST){
@@ -397,7 +392,7 @@ public class EventSetup extends AppCompatActivity{
         String debutTime = "";//Gerer l'horaire
         String eventType = retrieveEventType.getText().toString();
         String location = retrievePlace.getText().toString();
-        EventDB myEvent = new EventDB(ID, email, eventName, date, debutTime,eventType, location);
+        EventDB myEvent = new EventDB(ID, email, eventName, date, debutTime,eventType, location, longitude, latitude);
         //Insertion dans la DB locale
         mEventModel.insert(myEvent);
         //sendNotification("Hey!!!", myEvent);

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "93c963fb8d6ae284ec38e7e51ca57883",
+    "identityHash": "d3a648dc554e467a0cb9313758fb094a",
     "entities": [
       {
         "tableName": "UserDB",
@@ -192,7 +192,7 @@
       },
       {
         "tableName": "EventDB",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventID` TEXT NOT NULL, `admin` TEXT, `eventName` TEXT, `date` TEXT, `debutTime` TEXT, `eventType` TEXT, `location` TEXT, PRIMARY KEY(`eventID`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventID` TEXT NOT NULL, `admin` TEXT, `eventName` TEXT, `date` TEXT, `debutTime` TEXT, `eventType` TEXT, `location` TEXT, `longitude` REAL NOT NULL, `latitude` REAL NOT NULL, PRIMARY KEY(`eventID`))",
         "fields": [
           {
             "fieldPath": "eventID",
@@ -235,6 +235,18 @@
             "columnName": "location",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "REAL",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -274,7 +286,7 @@
       },
       {
         "tableName": "Media",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mediaID` TEXT NOT NULL, `timeStamp` TEXT, `contenu` TEXT, `ref_user_EMAIL` TEXT, `ref_event_ID` TEXT, PRIMARY KEY(`mediaID`), FOREIGN KEY(`ref_user_EMAIL`) REFERENCES `UserDB`(`EMAIL`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ref_event_ID`) REFERENCES `EventDB`(`eventID`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mediaID` TEXT NOT NULL, `timeStamp` TEXT, `contenu` TEXT, `ref_user_EMAIL` TEXT, `ref_event_ID` TEXT, PRIMARY KEY(`mediaID`))",
         "fields": [
           {
             "fieldPath": "mediaID",
@@ -321,44 +333,13 @@
               "ref_user_EMAIL"
             ],
             "createSql": "CREATE  INDEX `index_Media_ref_user_EMAIL` ON `${TABLE_NAME}` (`ref_user_EMAIL`)"
-          },
-          {
-            "name": "index_Media_ref_event_ID",
-            "unique": false,
-            "columnNames": [
-              "ref_event_ID"
-            ],
-            "createSql": "CREATE  INDEX `index_Media_ref_event_ID` ON `${TABLE_NAME}` (`ref_event_ID`)"
           }
         ],
-        "foreignKeys": [
-          {
-            "table": "UserDB",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "ref_user_EMAIL"
-            ],
-            "referencedColumns": [
-              "EMAIL"
-            ]
-          },
-          {
-            "table": "EventDB",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "ref_event_ID"
-            ],
-            "referencedColumns": [
-              "eventID"
-            ]
-          }
-        ]
+        "foreignKeys": []
       },
       {
         "tableName": "Message",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`messageID` TEXT NOT NULL, `timeStamp` TEXT, `contenu` TEXT, `ref_user_EMAIL` TEXT, `ref_event_ID` TEXT, PRIMARY KEY(`messageID`), FOREIGN KEY(`ref_user_EMAIL`) REFERENCES `UserDB`(`EMAIL`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`ref_event_ID`) REFERENCES `EventDB`(`eventID`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`messageID` TEXT NOT NULL, `timeStamp` TEXT, `contenu` TEXT, `ref_user_EMAIL` TEXT, `ref_event_ID` TEXT, PRIMARY KEY(`messageID`))",
         "fields": [
           {
             "fieldPath": "messageID",
@@ -415,35 +396,12 @@
             "createSql": "CREATE  INDEX `index_Message_ref_event_ID` ON `${TABLE_NAME}` (`ref_event_ID`)"
           }
         ],
-        "foreignKeys": [
-          {
-            "table": "UserDB",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "ref_user_EMAIL"
-            ],
-            "referencedColumns": [
-              "EMAIL"
-            ]
-          },
-          {
-            "table": "EventDB",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "ref_event_ID"
-            ],
-            "referencedColumns": [
-              "eventID"
-            ]
-          }
-        ]
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"93c963fb8d6ae284ec38e7e51ca57883\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"d3a648dc554e467a0cb9313758fb094a\")"
     ]
   }
 }

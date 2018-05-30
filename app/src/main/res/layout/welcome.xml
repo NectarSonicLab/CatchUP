@@ -12,6 +12,6 @@
         android:layout_height="match_parent"
         android:contentDescription="@string/Welcome_welcome_splashscreen"
         android:scaleType="centerCrop"
-        android:src="@drawable/catchup_splashscreen_title" />
+        android:src="@drawable/catchup_splashscreenblack" />
 
 </android.support.constraint.ConstraintLayout>

@@ -11,14 +11,14 @@ import android.support.annotation.NonNull;
  * Message
  * Schema SQL representant un message echange entre utilisateurs au sein d'un meme evenement
  */
-@Entity(indices = {@Index("ref_user_EMAIL"), @Index("ref_event_ID")},foreignKeys = {
+@Entity(indices = {@Index("ref_user_EMAIL"), @Index("ref_event_ID")}/*,foreignKeys = {
         @ForeignKey(entity = UserDB.class,
                 parentColumns = "EMAIL",
                 childColumns = "ref_user_EMAIL"),
         @ForeignKey(entity = EventDB.class,
                 parentColumns = "eventID",
                 childColumns = "ref_event_ID")
-})
+}*/)
 
 public class Message {
     @PrimaryKey

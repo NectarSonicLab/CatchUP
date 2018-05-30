@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
     <EditText
         android:id="@+id/eventSetup_eventName_et"
@@ -11,17 +13,19 @@
         android:ems="10"
         android:hint="@string/eventSetup"
         android:inputType="text"
-        android:maxLength="35" />
+        android:maxLength="35"
+        android:textColor="@color/myColorPrimaryDark"/>
 
     <ImageButton
         android:id="@+id/eventSetup_placePicker_imgButton"
-        android:layout_below="@id/eventSetup_eventName_et"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:layout_below="@id/eventSetup_eventName_et"
         android:layout_marginStart="110dp"
         android:layout_marginTop="10dp"
+        android:onClick="pickPlace"
         android:src="@drawable/ic_pin_drop_black"
-        android:onClick="pickPlace"/>
+        android:background="@color/myColorSecondary" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,17 +50,15 @@
         android:hint="@string/eventSetup_hint"/>
 
 
-
-
     <ImageButton
         android:id="@+id/eventSetUp_datePicker_imgButton"
-        android:src="@drawable/ic_access_time_black"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="110dp"
         android:layout_marginTop="200dp"
         android:onClick="pickDate"
-        />
+        android:src="@drawable/ic_access_time_black"
+        android:background="@color/myColorSecondary" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -80,8 +82,9 @@
         android:layout_height="80dp"
         android:layout_marginStart="110dp"
         android:layout_marginTop="320dp"
+        android:onClick="chooseEventType"
         android:src="@drawable/ic_event_black"
-        android:onClick="chooseEventType"/>
+        android:background="@color/myColorSecondary" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -98,13 +101,14 @@
         android:id="@+id/eventSetup_eventType_tv"/>
 
     <ImageButton
+        android:id="@+id/eventSetUp_FriendsPicker_imgButton"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/ic_person_add_black"
         android:layout_marginStart="110dp"
         android:layout_marginTop="440dp"
         android:onClick="pickFriends"
-        android:id="@+id/eventSetUp_FriendsPicker_imgButton"/>
+        android:src="@drawable/ic_person_add_black"
+        android:background="@color/myColorSecondary" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -122,21 +126,25 @@
 
     <Button
         android:id="@+id/eventSetUp_saveEvent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:onClick="saveToDB"
         android:text="@string/eventSetup_save"
-        android:onClick="saveToDB"/>
+        android:textColor="@color/myColorPrimaryDark"
+        android:background="@color/myColorSecondary" />
 
     <Button
         android:id="@+id/eventSetUp_cancelEvent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="cancelEvent"
         android:text="@string/eventSetUp_cancel"
-        android:onClick="cancelEvent"/>
+        android:textColor="@color/myColorPrimaryDark"
+        android:background="@color/myColorSecondary" />
 
 
 </RelativeLayout>

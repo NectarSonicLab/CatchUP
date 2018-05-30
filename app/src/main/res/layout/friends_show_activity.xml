@@ -31,16 +31,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/myColorSecondary"
             android:onClick="saveEvent"
-            android:text="@string/FriendsPick_SavePickedFriends" />
+            android:text="@string/FriendsPick_SavePickedFriends"
+            android:textColor="@color/myColorPrimaryDark" />
 
         <Button
             android:id="@+id/friends_show_activity_cancel_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/myColorSecondary"
             android:onClick="saveEvent"
-            android:text="@string/FriendsPick_CancelPickedFriends" />
+            android:text="@string/FriendsPick_CancelPickedFriends"
+            android:textColor="@color/myColorPrimaryDark" />
     </LinearLayout>
 
 </LinearLayout>

@@ -7,6 +7,8 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -43,9 +45,15 @@ public class EventDB implements Serializable{
     @ColumnInfo
     private String location;
 
+    @ColumnInfo
+    private double longitude;
+
+    @ColumnInfo
+    private double latitude;
+
     //Constructeurs
     public EventDB(){}
-    public EventDB(@NonNull String eventID, String admin, String eventName, String date, String debutTime, String eventType, String location){
+    public EventDB(@NonNull String eventID, String admin, String eventName, String date, String debutTime, String eventType, String location, double longitude, double latitude){
         this.eventID = eventID;
         this.admin = admin;
         this.eventName = eventName;
@@ -53,10 +61,12 @@ public class EventDB implements Serializable{
         this.debutTime = debutTime;
         this.eventType = eventType;
         this.location = location;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
     @Override
     public String toString(){
-        String description = "Description: Id: "+this.eventID+" admin: "+this.admin+" eventName: "+this.eventName+" date: "+this.date+" debutTime: "+this.debutTime+" eventType: "+this.eventType+" location: "+this.location;
+        String description = "Description: Id: "+this.eventID+" admin: "+this.admin+" eventName: "+this.eventName+" date: "+this.date+" debutTime: "+this.debutTime+" eventType: "+this.eventType+" location: "+this.location+ " long: "+this.longitude+ " lat: "+this.latitude;
         return description;
     }
 
@@ -118,5 +128,21 @@ public class EventDB implements Serializable{
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 }

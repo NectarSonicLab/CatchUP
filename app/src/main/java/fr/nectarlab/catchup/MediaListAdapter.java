@@ -57,14 +57,18 @@ public class MediaListAdapter extends RecyclerView.Adapter<MediaListAdapter.Medi
     public void onBindViewHolder(MediaViewHolder holder, int position) {
         if(mMedia!=null){
             final Media current = mMedia.get(position);
-            Uri imgUrl = Insights.getURL();
-            current.setContenu(imgUrl.toString());
+            //Uri imgUrl = Insights.getURL();
+            //current.setContenu(imgUrl.toString());
             //holder.textView.setText(current.getContenu());
-            Log.i(TAG, "URL from Firebase: "+imgUrl.toString());
+            //Log.i(TAG, "URL from Firebase: "+imgUrl.toString());
             //Uri content = Uri.parse(current.getContenu());
             //holder.imageView.setImageURI(content);
-            Glide.with(context)
-                 .load(current.getContenu()).into(holder.imageView);//
+            //Glide.with(context)
+            //     .load(current.getContenu()).into(holder.imageView);//
+            GlideApp.with(context)
+                    .load(current.getContenu())
+                    .placeholder(R.drawable.catchup_splashscreen_small)
+                    .into(holder.imageView);
         }
     }
 
