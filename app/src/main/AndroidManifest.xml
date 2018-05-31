@@ -1,42 +1,40 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="fr.nectarlab.catchup">
+<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="fr.nectarlab.catchup">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+<uses-permission android:name="android.permission.READ_CONTACTS" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/placesAPI_key" />
+<permission android:name="fr.nectarlab.catchup.permission.MAPS_RECEIVE"
+    android:protectionLevel="signature" />
+
+<application android:allowBackup="true" android:icon="@mipmap/ic_launcher" android:label="@string/app_name"
+    android:roundIcon="@mipmap/ic_launcher_round" android:supportsRtl="true" android:theme="@style/AppTheme">
+    <meta-data android:name="com.google.android.geo.API_KEY" android:value="@string/google_maps_key" />
+
+    <meta-data android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
+    <activity android:name=".Welcome" android:noHistory="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+    <activity android:name=".SignUpActivity" />
+    <activity android:name=".RegisteredUsersActivity_test" />
+    <activity android:name=".Home" />
+    <activity android:name=".EventSetup" />
+    <activity android:name=".DateChooser" />
+    <activity android:name=".EventChooser" />
+    <activity android:name=".Insights" />
+    <activity android:name=".EventInfo" />
+    <activity android:name=".MapTest"></activity>
+    <activity android:name="fr.nectarlab.catchup.MapsActivity" android:label="@string/title_activity_maps">
 
 
-        <activity
-            android:name=".Welcome"
-            android:noHistory="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".SignUpActivity"/>
-        <activity android:name=".RegisteredUsersActivity_test"/>
-        <activity android:name=".Home" />
-        <activity android:name=".EventSetup" />
-        <activity android:name=".DateChooser" />
-        <activity android:name=".EventChooser" />
-        <activity android:name=".Insights" />
-        <activity android:name=".EventInfo" />
-    </application>
-
+    </activity>
+</application>
 </manifest>
