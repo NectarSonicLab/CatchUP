@@ -110,9 +110,9 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
          */
 
         //TODO plante à la premiere utilisation, la recherche de contacts se fait alors que l'user n'a pas repondu
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)!=PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String []{Manifest.permission.READ_CONTACTS}, 0 );
-        }
+//        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)!=PackageManager.PERMISSION_GRANTED){
+//            ActivityCompat.requestPermissions(this, new String []{Manifest.permission.READ_CONTACTS}, 0 );
+//        }
         //TODO Prevoir le cas ou l'user refuse la permission
         setContentView(R.layout.friends_show_activity);
         mRegFriendModel = ViewModelProviders.of(this).get(RegFriendsModel.class);
@@ -316,17 +316,6 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
         return names;
     }
 
-    /* Inutile>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    public void setFriendListener(int numFriends){
-        Log.i(TAG, "FriendListener :"+numFriends);
-        this.registeredFriends = numFriends;
-    }
-    public int getFriendListener(RegisteredUsersActivity_test RUA){
-        Log.i(TAG, "getFriendListener>>>: "+RUA.registeredFriends);
-        return RUA.registeredFriends;
-    }
-    */
-
     /*
      * Methode abstraite de l'interface ResponseListener
      * qui renvoit de l'AsyncTask (AppRepository getNumFriendsAsyncTask)
@@ -374,7 +363,6 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
                 this.finish();
             }
         }
-
     }
 }
 

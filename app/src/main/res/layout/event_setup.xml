@@ -3,148 +3,175 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+
     >
 
-    <EditText
-        android:id="@+id/eventSetup_eventName_et"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:ems="10"
-        android:hint="@string/eventSetup"
-        android:inputType="text"
-        android:maxLength="35"
-        android:textColor="@color/myColorPrimaryDark"/>
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        >
 
-    <ImageButton
-        android:id="@+id/eventSetup_placePicker_imgButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_below="@id/eventSetup_eventName_et"
-        android:layout_marginStart="110dp"
-        android:layout_marginTop="10dp"
-        android:onClick="pickPlace"
-        android:src="@drawable/ic_pin_drop_black"
-        android:background="@color/myColorSecondary" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/eventSetup_PickPlace"
-        android:layout_alignStart="@id/eventSetup_placePicker_imgButton"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="130dp"
-        android:layout_alignBaseline="@id/eventSetup_placePicker_imgButton"
-       />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/eventSetup_placePicker_imgButton"
-        android:id="@+id/eventSetup_retrieveName_tv"
-        android:hint="@string/eventSetup_nameHint"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/eventSetup_retrieveName_tv"
-        android:id="@+id/eventSetup_retrievePlace_tv"
-        android:hint="@string/eventSetup_hint"/>
+            >
 
+            <EditText
+                android:id="@+id/eventSetup_eventName_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:ems="10"
+                android:hint="@string/eventSetup"
+                android:inputType="text"
+                android:maxLength="35"
+                android:textColor="@color/myColorPrimaryDark"
+                />
 
-    <ImageButton
-        android:id="@+id/eventSetUp_datePicker_imgButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="110dp"
-        android:layout_marginTop="200dp"
-        android:onClick="pickDate"
-        android:src="@drawable/ic_access_time_black"
-        android:background="@color/myColorSecondary" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/eventSetup_PickDate"
-        android:layout_alignStart="@id/eventSetUp_datePicker_imgButton"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="250dp"
-        android:layout_alignBaseline="@id/eventSetUp_datePicker_imgButton"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/eventSetUp_datePicker_imgButton"
-        android:hint="@string/eventSetup_DateHint"
-        android:id="@+id/eventSetUp_day_tv"/>
+            <ImageButton
+                android:id="@+id/eventSetup_placePicker_imgButton"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_below="@id/eventSetup_eventName_et"
+                android:layout_marginStart="110dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/myColorSecondary"
+                android:onClick="pickPlace"
+                android:src="@drawable/ic_pin_drop_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/eventSetup_placePicker_imgButton"
+                android:layout_alignStart="@id/eventSetup_placePicker_imgButton"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="130dp"
+                android:text="@string/eventSetup_PickPlace" />
+
+            <TextView
+                android:id="@+id/eventSetup_retrieveName_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/eventSetup_placePicker_imgButton"
+                android:hint="@string/eventSetup_nameHint" />
+
+            <TextView
+                android:id="@+id/eventSetup_retrievePlace_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/eventSetup_retrieveName_tv"
+                android:hint="@string/eventSetup_hint" />
 
 
-    <ImageButton
-        android:id="@+id/eventSetUp_eventType_imgButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="110dp"
-        android:layout_marginTop="320dp"
-        android:onClick="chooseEventType"
-        android:src="@drawable/ic_event_black"
-        android:background="@color/myColorSecondary" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@id/eventSetUp_eventType_imgButton"
-        android:layout_alignBaseline="@id/eventSetUp_eventType_imgButton"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="370dp"
-        android:text="@string/eventSetup_chooseEvent"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/eventSetUp_eventType_imgButton"
-        android:hint="@string/eventSetup_eventHint"
-        android:id="@+id/eventSetup_eventType_tv"/>
+            <ImageButton
+                android:id="@+id/eventSetUp_datePicker_imgButton"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="110dp"
+                android:layout_marginTop="200dp"
+                android:background="@color/myColorSecondary"
+                android:onClick="pickDate"
+                android:src="@drawable/ic_access_time_black" />
 
-    <ImageButton
-        android:id="@+id/eventSetUp_FriendsPicker_imgButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="110dp"
-        android:layout_marginTop="440dp"
-        android:onClick="pickFriends"
-        android:src="@drawable/ic_person_add_black"
-        android:background="@color/myColorSecondary" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@id/eventSetUp_FriendsPicker_imgButton"
-        android:layout_alignBaseline="@id/eventSetUp_FriendsPicker_imgButton"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="490dp"
-        android:text="@string/eventSetup_pickFriends"/>
-    <TextView
-        android:id="@+id/eventSetUp_friendsPicked_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/eventSetUp_FriendsPicker_imgButton"
-        android:hint="@string/eventSetup_friendsHint"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/eventSetUp_datePicker_imgButton"
+                android:layout_alignStart="@id/eventSetUp_datePicker_imgButton"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="250dp"
+                android:text="@string/eventSetup_PickDate" />
 
-    <Button
-        android:id="@+id/eventSetUp_saveEvent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:onClick="saveToDB"
-        android:text="@string/eventSetup_save"
-        android:textColor="@color/myColorPrimaryDark"
-        android:background="@color/myColorSecondary" />
+            <TextView
+                android:id="@+id/eventSetUp_day_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/eventSetUp_datePicker_imgButton"
+                android:hint="@string/eventSetup_DateHint" />
 
-    <Button
-        android:id="@+id/eventSetUp_cancelEvent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="cancelEvent"
-        android:text="@string/eventSetUp_cancel"
-        android:textColor="@color/myColorPrimaryDark"
-        android:background="@color/myColorSecondary" />
+
+            <ImageButton
+                android:id="@+id/eventSetUp_eventType_imgButton"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="110dp"
+                android:layout_marginTop="320dp"
+                android:background="@color/myColorSecondary"
+                android:onClick="chooseEventType"
+                android:src="@drawable/ic_event_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/eventSetUp_eventType_imgButton"
+                android:layout_alignStart="@id/eventSetUp_eventType_imgButton"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="370dp"
+                android:text="@string/eventSetup_chooseEvent" />
+
+            <TextView
+                android:id="@+id/eventSetup_eventType_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/eventSetUp_eventType_imgButton"
+                android:hint="@string/eventSetup_eventHint" />
+
+            <ImageButton
+                android:id="@+id/eventSetUp_FriendsPicker_imgButton"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="110dp"
+                android:layout_marginTop="440dp"
+                android:background="@color/myColorSecondary"
+                android:onClick="pickFriends"
+                android:src="@drawable/ic_person_add_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/eventSetUp_FriendsPicker_imgButton"
+                android:layout_alignStart="@id/eventSetUp_FriendsPicker_imgButton"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="490dp"
+                android:text="@string/eventSetup_pickFriends" />
+
+            <TextView
+                android:id="@+id/eventSetUp_friendsPicked_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/eventSetUp_FriendsPicker_imgButton"
+                android:hint="@string/eventSetup_friendsHint" />
+
+            <Button
+                android:id="@+id/eventSetUp_saveEvent"
+                android:layout_below="@id/eventSetUp_friendsPicked_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:background="@color/myColorSecondary"
+                android:onClick="saveToDB"
+                android:text="@string/eventSetup_save"
+                android:textColor="@color/myColorPrimaryDark" />
+
+            <Button
+                android:id="@+id/eventSetUp_cancelEvent"
+                android:layout_below="@id/eventSetUp_friendsPicked_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@color/myColorSecondary"
+                android:onClick="cancelEvent"
+                android:text="@string/eventSetUp_cancel"
+                android:textColor="@color/myColorPrimaryDark" />
+        </RelativeLayout>
+
+    </ScrollView>
+
+
 
 
 </RelativeLayout>

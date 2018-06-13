@@ -62,6 +62,15 @@ public class AppRepository {
     private getNumFriendsAsyncTask.ResponseListener mRresponseListener;
 
     /*
+     * Reference aux amis par event
+     * mFriendAssoDAO est l'interface;
+     */
+    private Event_Friend_AssocDAO mFriendAssoDAO;
+    private LiveData<List<Event_Friend_AssocDB>> mAllFriendsByEvent;
+
+
+
+    /*
      * Constructeur public de la classe
      */
 
@@ -75,6 +84,8 @@ public class AppRepository {
         this.mAllMedias = mMediaDAO.getAllMedias();
         this.mMessageDAO = appDatabase.mMessageDAO();
         this.mAllMessages = mMessageDAO.getAllMessages();
+        this.mFriendAssoDAO = appDatabase.mEvent_Friend_AssocDAO();
+        this.mAllFriendsByEvent = mFriendAssoDAO.getAllFriendsInGroup();
     }
 
     /*
@@ -94,6 +105,8 @@ public class AppRepository {
     public LiveData<List<EventDB>> getAllEvents(){return this.mAllEvents;}
     public LiveData<List<Media>> getAllMedias(){return this.mAllMedias;}
     public LiveData<List<Message>> getAllMessages() {return this.mAllMessages;}
+    public LiveData<List<Event_Friend_AssocDB>> getmAllFriendsByEvent() {return this.mAllFriendsByEvent;}
+
 
     /*
      * Methode appelant une asynTask pour inserer un nouvel ami dans la BD
@@ -123,6 +136,12 @@ public class AppRepository {
         new insertMessageAsyncTask(mMessageDAO).execute(message);
     }
 
+   /*
+    * Methode appelant une AsyncTask pour inserer un nouvelle association Friend/Event
+    */
+   public void insertFriendEvent (Event_Friend_AssocDB eventFriendAssocDB){
+       new insertAssoc(mFriendAssoDAO).execute(eventFriendAssocDB);
+   }
 
     /*
      * Methode invoquant une asynkTask pour recuperer le nombre d'amis enregistres
@@ -158,6 +177,7 @@ public class AppRepository {
         insertEventAsyncTask(EventDAO dao){this.eventDAO = dao;}
         @Override
         protected Void doInBackground (final EventDB...params){//...params
+            Log.i(TAG, "insertEventAsyncTask: Insert()" );
             eventDAO.insert(params[0]);
             return null;
         }
@@ -185,6 +205,20 @@ public class AppRepository {
         @Override
         protected Void doInBackground (final Message ... params){
             mMessageDAO.insert(params[0]);
+            return null;
+        }
+    }
+
+    /*
+     *
+     */
+    private static class insertAssoc extends  AsyncTask<Event_Friend_AssocDB, Void, Void>{
+        private Event_Friend_AssocDAO assocDAO;
+        insertAssoc (Event_Friend_AssocDAO dao){this.assocDAO = dao;}
+        @Override
+        protected Void doInBackground (final Event_Friend_AssocDB ... params){
+            assocDAO.insert(params[0]);
+            Log.i(TAG, "insertAssoc: Insert()" );
             return null;
         }
     }
@@ -225,11 +259,25 @@ public class AppRepository {
             Log.i("GetNumFriendsAsyncTask", "onPostexecute: resultat: "+res);
         }
     }
+
+
     /*
      * Inutile
      */
     public RegisteredUsersActivity_test getmRegisteredUsersActivity_test() {
         return mRegisteredUsersActivity_test;
        // return RUA;
+    }
+
+    public MessageDAO getmMessageDAO() {
+        return mMessageDAO;
+    }
+
+    public MediaDAO getmMediaDAO() {
+        return mMediaDAO;
+    }
+
+    public Event_Friend_AssocDAO getmFriendAssoDAO() {
+        return mFriendAssoDAO;
     }
 }

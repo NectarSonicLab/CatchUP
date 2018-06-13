@@ -7,10 +7,12 @@
         <item name="colorPrimaryDark">@color/myColorPrimaryDark</item>
         <item name="colorAccent">@color/myColorSecondary</item>
         <item name="android:textColorPrimary">@color/textOnP</item>
-        <item name="android:colorForeground">@color/textOnP</item>
+        <item name="android:colorForeground">@color/textOnS</item>
         <item name="android:colorBackground">@color/DarkmainBack</item>
         <item name="android:textColorSecondary">@color/textOnS</item>
         <item name="android:windowBackground">@color/mainBack</item>
+        <item name="android:actionMenuTextColor">@color/textOnS</item>
+
         
     </style>
     <style name = "FriendsEmail">

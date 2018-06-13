@@ -19,4 +19,7 @@ public interface MessageDAO {
     void insert (Message message);
     @Query("SELECT * FROM Message")
     LiveData<List<Message>> getAllMessages();
+    @Query("SELECT * FROM Message WHERE ref_event_ID LIKE :Search")
+    LiveData<List<Message>> getAllMessagesForThatEvent (String Search);
+    //List<Message> getAllMessagesForThatEvent (String Search);
 }

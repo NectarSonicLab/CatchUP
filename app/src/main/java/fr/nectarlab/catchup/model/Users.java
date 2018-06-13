@@ -1,26 +1,26 @@
 package fr.nectarlab.catchup.model;
 
 /**
- * Non implante
+ * Modele de classe pour l'utilisateur
  */
 
 public class Users {
-    private String Id;
     private String EMAIL;
-    private String username;
+    private String USERNAME;
 
     public Users (){}
 
-    public Users (String mId, String mEmail){
-        this.Id = mId;
-        this.EMAIL = mEmail;
+    public Users (String Email, String Username){
+        this.EMAIL = Email;
+        this.USERNAME = Username;
     }
 
-    public String getEmail (){
+    public String getEMAIL() {
+
         return this.EMAIL;
     }
 
-    public String getId(){
-        return this.Id;
+    public String getUSERNAME() {
+        return this.USERNAME;
     }
 }

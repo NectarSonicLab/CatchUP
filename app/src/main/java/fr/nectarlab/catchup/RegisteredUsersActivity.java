@@ -111,7 +111,7 @@ public class RegisteredUsersActivity extends AppCompatActivity {
                 //Au lieu de Users utiliser l'objet FriendDB
                 Users u = dataSnapshot.getValue(Users.class);
                 if (u != null)
-                    Log.i("retrieveUsers_Found", ""+u.getEmail());
+                    Log.i("retrieveUsers_Found", ""+u.getEMAIL());
                 allUsers.add(u);
                 //Proceder a l'insertion dans la BD ici
             }

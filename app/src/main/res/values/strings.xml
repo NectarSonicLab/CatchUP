@@ -1,24 +1,32 @@
 <resources>
+    <!--Sign in Activity -->
     <string name="app_name">Catch UP</string>
     <string name="loading">Chargement</string>
     <string name="auth_failed">Echec de l\'authentification </string>
     <string name="emailpassword_status_fmt">Email User: %1$s(verified: %2$b)</string>
     <string name="firebase_status_fmt">Firebase User: %s</string>
     <string name="FirebaseErrorToast">Echec de l\'envoi au serveur</string>
-    <string name="signed_out">Signed Out</string>
-    <string name="sign_in_button">Sign In</string>
+    <string name="signed_out">Déconnecté</string>
+    <string name="sign_in_button">Se Connecter</string>
     <string name="signed_in_TV">Utilisateur enregistré avec succès, continuer</string>
     <string name="User_EMAIL">Email: %s</string>
     <string name="User_USERNAME">Nom d\'utilisateur: %s</string>
-    <string name="create_account_button">Create Account</string>
-    <string name="sign_out_button">Sign Out</string>
-    <string name="verify_email_button">Verify Email</string>
-    <string name="username_hint">Username</string>
+    <string name="create_account_button">Créer un compte</string>
+    <string name="sign_out_button">Se déconnecter</string>
+    <string name="verify_email_button">Vérifier l\'email</string>
+    <string name="username_hint">Nom d\'utilisateur</string>
     <string name="email_hint">Email</string>
-    <string name="password_hint">Password</string>
+    <string name="password_hint">Mot de passe</string>
+    <!-- Home Activity -->
     <string name="details">details</string>
     <string name="groups">Boite à souvenirs</string>
-    <string name="properties">Propriétés</string>
+    <string name="properties">Déconnexion</string>
+    <string name="Home_CatchUpEvents">CatchUp: Evénements</string>
+    <string name="isAdmin_true">Administrateur</string>
+    <string name="isAdmin_false">Invité</string>
+    <string name="signOut">Vous êtes maintenant déconnecté, à bientôt!</string>
+
+    <!--EventSetup-->
     <string name="ajouterEvenement">Ajouter un évènement</string>
     <string name="locationauth">L\'app a besoin des donnees GPS pour pouvoir proposer des points de RDV a vos amis</string>
     <string name="SharedPrefUSERNAME_KEY">User_USERNAME</string>
@@ -53,6 +61,7 @@
     <string name="eventChooser_save">Sauvegarder</string>
     <string name="eventChooser_cancel">Annuler</string>
     <string name="eventListAdapter_type">Type d\'événement</string>
+    <string name="eventSetupFalseSave">Oops! Avez-vous renseigné tous les champs?</string>
     <!-- Insights activity-->
     <string name="Insights_media">Medias</string>
     <string name="Insights_Message">Messages</string>
@@ -70,5 +79,17 @@
     <!--Welcome-->
     <string name="Welcome_welcome_splashscreen">welcomeIMG</string>
     <string name="title_activity_maps">Map</string>
-
+    <!--EventInfo-->
+    <string name="eventInfoDescription">eventDescription</string>
+    <string name="eventInfoLocation">eventLocation</string>
+    <string name="eventInfoDate">eventDate</string>
+    <string name="eventInfoType">eventType</string>
+    <string name="eventFriendInfo">Amis Invités</string>
+    <!--Notification-->
+    <string name="contentTitle">CatchUp: Vous avez été invités à un nouvel événement!</string>
+    <string name="contentText">Clickez pour plus d\'infos</string>
+    <string name="channel_name">CatchUp Notification Channel</string>
+    <string name="channel_description">Invitations</string>
+    <!--MemoryBox-->
+    <string name="photoItem">photoItem</string>
 </resources>

@@ -11,6 +11,8 @@ public class IntentUtils {
     private static String EventAdapter_DisplayEventType = "DISPLAY_EVENT_TYPE";
     private final static int NOTIFICATION_SENDER_REQ_CODE=0;
     private final static String NOTIFICATION_SENDER_INTENT_KEY="INVITATION";
+    private final static String PENDING_INTENT_EVENT_KEY="PENDING_INTENT_EVENT_KEY";
+    public final static int PICK_CONTACT_PHOTO= 1;
 
     public static String getEventAdapter_displayName() {
         return EventAdapter_displayName;
@@ -34,5 +36,13 @@ public class IntentUtils {
 
     public static String getNotificationSenderIntentKey() {
         return NOTIFICATION_SENDER_INTENT_KEY;
+    }
+
+    public static String getPendingIntentEventKey() {
+        return PENDING_INTENT_EVENT_KEY;
+    }
+
+    public static int getPickContactPhoto() {
+        return PICK_CONTACT_PHOTO;
     }
 }

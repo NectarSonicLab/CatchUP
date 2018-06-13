@@ -14,6 +14,7 @@ public class SharedPrefUtil {
     final static String SHAREDPREF_EMAIL = "User_EMAIL";
     final static String SHAREDPREF_USERNAME = "User_USERNAME";
     final static String isACCOUNT_ON_TERMINAL = "isACCOUNT_ON_TERMINAL";
+    final static String SHAREDPREF_PROFILE_PICTURE = "User_PROFILE_PICTURE";
 
 
     private SharedPreferences sharedPref;
@@ -35,4 +36,7 @@ public class SharedPrefUtil {
         return SHAREDPREF_USERNAME;
     }
 
+    public static String getSharedprefProfilePicture() {
+        return SHAREDPREF_PROFILE_PICTURE;
+    }
 }

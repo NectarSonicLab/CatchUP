@@ -28,4 +28,7 @@ public class MediaModel extends AndroidViewModel{
 
     public LiveData<List<Media>> getAllMedias(){return allMedias;}
 
+    public AppRepository getmRepository() {
+        return mRepository;
+    }
 }

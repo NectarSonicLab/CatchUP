@@ -20,4 +20,6 @@ public interface MediaDAO {
     void insert (Media media);
     @Query("SELECT * FROM Media")
     LiveData<List<Media>> getAllMedias();
+    @Query("SELECT * FROM Media WHERE ref_event_ID LIKE :Search")
+    LiveData<List<Media>> getAllMediasForThatEvent (String Search);
 }

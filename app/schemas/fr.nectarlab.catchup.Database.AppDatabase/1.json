@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d3a648dc554e467a0cb9313758fb094a",
+    "identityHash": "3f3af9ebe37c7f1ecd90699ce8999975",
     "entities": [
       {
         "tableName": "UserDB",
@@ -149,11 +149,11 @@
       },
       {
         "tableName": "Event_Friend_AssocDB",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ref_event_ID` TEXT NOT NULL, `ref_friend_email` TEXT NOT NULL, PRIMARY KEY(`ref_event_ID`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `ref_friend_email` TEXT NOT NULL, `USERNAME` TEXT, `ref_event_ID` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
-            "fieldPath": "ref_event_ID",
-            "columnName": "ref_event_ID",
+            "fieldPath": "id",
+            "columnName": "id",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -162,11 +162,23 @@
             "columnName": "ref_friend_email",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "USERNAME",
+            "columnName": "USERNAME",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ref_event_ID",
+            "columnName": "ref_event_ID",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "ref_event_ID"
+            "id"
           ],
           "autoGenerate": false
         },
@@ -401,7 +413,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"d3a648dc554e467a0cb9313758fb094a\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3f3af9ebe37c7f1ecd90699ce8999975\")"
     ]
   }
 }

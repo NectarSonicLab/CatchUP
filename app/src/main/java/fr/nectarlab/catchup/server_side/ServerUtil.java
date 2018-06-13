@@ -19,6 +19,11 @@ public class ServerUtil {
     private static final String DATE="date";
     private static final String DEBUT_TIME="debutTime";
     private static final String LOCATION="location";
+    private static final String IS_NOTIFICATION_CONSUMED="IS_NOTIFICATION_CONSUMED";
+    private static final String IS_INVITE_PENDING="IS_INVITE_PENDING";
+    private static final String userEmailByEvent="EMAIL";
+    private static final String userNameByEvent="USERNAME";
+
 
     public static String getFirebaseServer_Event() {
         return FirebaseServer_Event;
@@ -74,5 +79,21 @@ public class ServerUtil {
 
     public static String getFirebaseServer_Message() {
         return FirebaseServer_Message;
+    }
+
+    public static String getIsNotificationConsumed() {
+        return IS_NOTIFICATION_CONSUMED;
+    }
+
+    public static String getIsInvitePending() {
+        return IS_INVITE_PENDING;
+    }
+
+    public static String getUserEmailByEvent() {
+        return userEmailByEvent;
+    }
+
+    public static String getUserNameByEvent() {
+        return userNameByEvent;
     }
 }

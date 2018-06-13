@@ -10,7 +10,7 @@ import android.widget.TabHost;
 
 /**
  * DateChooser
- * Activite repondant a un Intent
+ * Activite repondant a un Intent lance par EventSetup.java
  * Elle doit renvoyer sous la forme de String le jour, le mois et l'annee choisie pour l'evenement
  */
 
@@ -50,7 +50,7 @@ public class DateChooser extends AppCompatActivity implements DatePicker.OnDateC
     }
 
 
-    /*
+    /**
      * Methode de l'interface OnDateChangeListener
      * Rien de particulier ici
      */
@@ -63,6 +63,11 @@ public class DateChooser extends AppCompatActivity implements DatePicker.OnDateC
 
     /*
      * Retour a l'activite appelante avec la date choisie
+     */
+
+    /**
+     * Renvoie a EventSetup.java le choix de l'utilisateur
+     * @param v La View (bouton "sauvegarder")
      */
     public void update (View v){
         year = mDatePicker.getYear();

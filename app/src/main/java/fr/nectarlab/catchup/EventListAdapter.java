@@ -32,15 +32,16 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
      * necessaires a l'affichage
      */
     class EventsViewHolder extends RecyclerView.ViewHolder implements Serializable {
-        TextView displayName, displayDate, displayNbFriends;
+        TextView displayName, displayDate, displayNbFriends, displayStatus;
         ImageButton dots;
 
         private EventsViewHolder(View itemView) {
             super(itemView);
             this.displayName = itemView.findViewById(R.id.eventItem_name);
             this.displayDate = itemView.findViewById(R.id.eventItem_date);
-            this.displayNbFriends = itemView.findViewById(R.id.eventItem_nbFriends);//a modifier, initialement pour montrer le nb d'amis
+            this.displayNbFriends = itemView.findViewById(R.id.eventItem_nbFriends);//a modifier, initialement pour montrer le nb d'amis, remplace par eventType
             this.dots = itemView.findViewById(R.id.eventItem_dots_iv);
+            this.displayStatus = itemView.findViewById(R.id.eventItem_status);
         }
     }
 
@@ -70,6 +71,12 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
             holder.displayName.setText(current.getEventName());
             holder.displayDate.setText(current.getDate());
             holder.displayNbFriends.setText(current.getEventType());
+            if(!Home.isAdmin(current)){
+                holder.displayStatus.setText(R.string.isAdmin_false);
+            }
+            else{
+                holder.displayStatus.setText(R.string.isAdmin_true);
+            }
             holder.dots.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

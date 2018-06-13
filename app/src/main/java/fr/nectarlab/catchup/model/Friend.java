@@ -5,22 +5,38 @@ package fr.nectarlab.catchup.model;
  */
 
 public class Friend extends Users {
-    private String Id;
     private String EMAIL;
+    private String USERNAME;
+    private boolean IS_NOTIFICATION_CONSUMED;
+    private boolean IS_INVITE_PENDING;
 
     public Friend(){}
 
-    public Friend(String mId, String mEmail) {
-        super(mId, mEmail);
-        this.Id = mId;
-        this.EMAIL = mEmail;
+    public Friend(String email, String username, boolean isNotificationConsumed, boolean isInvitePending) {
+        super(email, username);
+        this.EMAIL = email;
+        this.USERNAME = username;
+        this.IS_NOTIFICATION_CONSUMED = isNotificationConsumed;
+        this.IS_INVITE_PENDING = isInvitePending;
     }
 
-    public String getEmail (){
+
+
+    @Override
+    public String getEMAIL() {
         return this.EMAIL;
     }
 
-    public String getId(){
-        return this.Id;
+    @Override
+    public String getUSERNAME() {
+        return this.USERNAME;
+    }
+
+    public boolean getIS_NOTIFICATION_CONSUMED() {
+        return this.IS_NOTIFICATION_CONSUMED;
+    }
+
+    public boolean getIS_INVITE_PENDING() {
+        return this.IS_INVITE_PENDING;
     }
 }

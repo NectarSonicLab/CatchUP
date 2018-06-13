@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+
     >
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,7 +18,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/myColorPrimary"></android.support.v7.widget.Toolbar>
+            android:background="@color/myColorPrimary"
+            ></android.support.v7.widget.Toolbar>
 
 
         <ScrollView
@@ -52,7 +54,7 @@
             app:elevation="8dp"
             app:pressedTranslationZ="12dp"
             android:src="@drawable/ic_group_black_24dp"
-            android:backgroundTint="@color/expandingFab"
+            android:backgroundTint="@color/myColorSecondaryDark"
             android:visibility="invisible"/>
         <TextView
             android:id="@+id/home_fabGroupDescription_fab"
@@ -98,5 +100,6 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:menu="@menu/drawer_view"
-        app:headerLayout="@layout/nav_header"/>
+        app:headerLayout="@layout/nav_header"
+        app:itemTextColor="@color/textOnS"/>
 </android.support.v4.widget.DrawerLayout>

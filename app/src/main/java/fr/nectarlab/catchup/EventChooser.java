@@ -10,7 +10,7 @@ import android.widget.RadioGroup;
 
 /**
  * EventChooser
- * Activite repondant a un Intent
+ * Activite repondant a un Intent envoye par EventSetup.java
  * Doit renvoyer le type d'evenement choisi (Resto, Expo, Concert...)
  */
 
@@ -27,12 +27,13 @@ public class EventChooser extends AppCompatActivity {
         mRadioGroup = findViewById(R.id.eventChooser_main_RG);
         mRadioGroup.getCheckedRadioButtonId();
     }
-    /**
-     * Bouton pour sauvegarder lequel des RB est choisi et le renvoyer a l'activite appelante
-     */
 
-    /*
-     * Methode pour recuperer l'info selon le bouton coche
+
+
+    /**
+     * methode pour recuperer l'info selon le bouton coche
+     * @param v
+     *
      */
     public void onRadioButtonClicked(View v){
         switch (v.getId()){
@@ -93,17 +94,29 @@ public class EventChooser extends AppCompatActivity {
                 break;
         }
     }
+
+    /**
+     * Setter pour le champ "choice"
+     * @param event le texte correspondant au RadioButton choisi
+     */
     private void setChoice(String event){
         Log.i(TAG, "setChoice: "+event);
         this.choice = event;
     }
 
+    /**
+     * Getter pour le champ "choice"
+     * @return le champ "choice"
+     */
     private String getChoice (){
         return this.choice;
     }
 
-    /*
-     * Retour a l'activite appelante avec le choix final
+
+
+    /**
+     *  Retour a l'activite appelante avec le choix final
+     * @param v La View correspondant au bouton "Sauvegarder"
      */
     public void saveChoice (View v){
         String savedChoice = getChoice();
@@ -113,8 +126,10 @@ public class EventChooser extends AppCompatActivity {
         finish();
     }
 
-    /*
+
+    /**
      * L'utilisateur annule son choix
+     * @param v La View correspondant au bouton "Annuler"
      */
     public void cancelChoice(View v){
         finish();

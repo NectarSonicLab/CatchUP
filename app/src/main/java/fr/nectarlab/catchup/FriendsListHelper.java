@@ -9,15 +9,18 @@ import java.util.HashMap;
  * Permet de determiner quels amis ont ete choisis dans l'activite de creation d'invitation
  * Classe appelee par FriendsListAdapter.onBindViewHolder
  * Stock dans un array la liste des amis choisis. Sera finalement renvoye dans un Intent
- * a l'activite appelante de RegisteredUsersActivity_test
+ * a l'activite appelante : RegisteredUsersActivity_test
  */
 public class FriendsListHelper {
     private static final String TAG = "FriendsListHelper";
     private static ArrayList<String> pickedFriends = new ArrayList<String>();
     private static HashMap <String, String> friends = new HashMap<String, String>();
 
-    /*
-     * Logique pour dynamiquement remplir un array en fonction des checkBox cochees
+    /**
+     * addChoosenFriend: Logique pour dynamiquement remplir un array en fonction des checkBox cochees
+     * chaque checkBox correspondant a un ami utilisant l'app
+     * @param newFriend l'email de cet ami
+     * @param username l'username de cet ami
      */
     public static void addChoosenFriend(String newFriend, String username){
         pickedFriends.add(newFriend);
@@ -26,6 +29,10 @@ public class FriendsListHelper {
         Log.i(TAG, "addChosenHASH"+friends);
     }
 
+    /**
+     * removeChoosenFriend: utilise quand on decoche
+     * @param newFriend l'email de cet ami a retirer de l'array
+     */
     public static void removeChoosenFriend(String newFriend){
         if(pickedFriends.size()>0) {
             for (int i = 0;i<pickedFriends.size(); i++){
