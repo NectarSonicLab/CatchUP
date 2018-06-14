@@ -36,7 +36,7 @@ public class NotificationFromEvent extends Activity {
 
     public void setNotificationContent(String eventID){
         NotificationManager nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        Log.i(TAG, "setNotificationContent: Start");
+        Log.i(TAG, "setNotificationContent()");
 
         Intent i  = new Intent (context, Invitation.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

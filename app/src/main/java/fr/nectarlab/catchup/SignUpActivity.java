@@ -39,7 +39,7 @@ import com.google.firebase.database.DatabaseError;
 public class SignUpActivity extends BaseActivity implements
         View.OnClickListener {
 
-    private static final String TAG = "EmailPassword";
+    private static final String TAG = "SignUpActivity";
     private final String SHAREDPREF_ID = "User_ID";
     private final String SHAREDPREF_EMAIL = "User_EMAIL";
     private final String SHAREDPREF_USERNAME = "User_USERNAME";
@@ -59,6 +59,7 @@ public class SignUpActivity extends BaseActivity implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emailpassword);
 
@@ -102,6 +103,7 @@ public class SignUpActivity extends BaseActivity implements
     @Override
     public void onStart() {
         super.onStart();
+        Log.i(TAG, "onStart");
         // Check if user is signed in (non-null) and update UI accordingly.
         mAuth.addAuthStateListener(mAuthListener);
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -114,13 +116,13 @@ public class SignUpActivity extends BaseActivity implements
     @Override
     public void onStop() {
         super.onStop();
+        Log.i(TAG, "onStop");
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 
     private void createAccount(String email, String password) {
-
         Log.d(TAG, "createAccount:" + email);
         if (!validateForm()) {
             return;
@@ -210,9 +212,9 @@ public class SignUpActivity extends BaseActivity implements
     }
 
     private void sendEmailVerification() {
+        Log.i(TAG, "sendEmailVerification()");
         // Disable button
         findViewById(R.id.verify_email_button).setEnabled(false);
-
         // Send verification email
         // [START send_email_verification]
         final FirebaseUser user = mAuth.getCurrentUser();
@@ -240,6 +242,7 @@ public class SignUpActivity extends BaseActivity implements
     }
 
     private boolean validateForm() {
+        Log.i(TAG, "validateForm()");
         boolean valid = true;
 
         String username = mUsernameField.getText().toString();
@@ -270,6 +273,7 @@ public class SignUpActivity extends BaseActivity implements
     }
 
     private void updateUI(FirebaseUser user) {
+        Log.i(TAG, "updateUI()");
         hideProgressDialog();
         if (user != null) {
             mStatusTextView.setText(getString(R.string.emailpassword_status_fmt,
@@ -297,6 +301,7 @@ public class SignUpActivity extends BaseActivity implements
 
     @Override
     public void onClick(View v) {
+        Log.i(TAG, "onClick()");
         int i = v.getId();
         if (i == R.id.email_create_account_button) {
             createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
@@ -310,6 +315,7 @@ public class SignUpActivity extends BaseActivity implements
     }
 
     public void goToHome(View v){
+        Log.i(TAG, "goToHome()");
         Intent i = new Intent(this, Home.class);
         startActivity(i);
     }

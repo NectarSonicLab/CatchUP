@@ -1,41 +1,40 @@
 package fr.nectarlab.catchup;
 
 import android.app.Activity;
-
 import android.app.ProgressDialog;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
+
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
+
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
 import android.util.Log;
+
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Adapter;
+
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -46,9 +45,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -59,15 +55,15 @@ import java.util.List;
 
 import fr.nectarlab.catchup.CacheTasks.MediaCacheTask;
 import fr.nectarlab.catchup.CacheTasks.MessageCacheTask;
-import fr.nectarlab.catchup.Database.AppDatabase;
 import fr.nectarlab.catchup.Database.EventDB;
 import fr.nectarlab.catchup.Database.Media;
 import fr.nectarlab.catchup.Database.MediaDAO;
 import fr.nectarlab.catchup.Database.Message;
 import fr.nectarlab.catchup.Database.MessageDAO;
-import fr.nectarlab.catchup.model.EventModel;
+
 import fr.nectarlab.catchup.model.MediaModel;
 import fr.nectarlab.catchup.model.MessageModel;
+
 import fr.nectarlab.catchup.server_side.FirebaseHelper;
 import fr.nectarlab.catchup.server_side.ServerUtil;
 
@@ -118,6 +114,7 @@ public class Insights extends AppCompatActivity implements Serializable {
     @Override
     public void onCreate(Bundle b) {
         super.onCreate(b);
+        Log.i(TAG, "onCreate: Debut");
         /*
          * On recupere l'intent passe depuis l'activite Home
          * en extra l'intent contient l'objet event qui va alimenter les Views
@@ -141,7 +138,7 @@ public class Insights extends AppCompatActivity implements Serializable {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        Log.i(TAG, "onCreate: Debut");
+
         String ID = mEventDB.getEventID();
         Log.i(TAG, "onCreate ID de l'event: " + ID);
 
@@ -180,6 +177,7 @@ public class Insights extends AppCompatActivity implements Serializable {
     @Override
     public void onResume() {
         super.onResume();
+        Log.i(TAG, "Resume: Debut");
         /*
          * Mise en place des deux adapters correspondants aux deux tab du TabHost
          * Medias et Message.
@@ -235,6 +233,7 @@ public class Insights extends AppCompatActivity implements Serializable {
 
     @Override
     public void onPause(){
+        Log.i(TAG, "onPause: Debut");
         super.onPause();
         filtered.removeObservers(this);
         test.removeObservers(this);
@@ -248,6 +247,7 @@ public class Insights extends AppCompatActivity implements Serializable {
      * @return l'identifiant unique (String)
      */
     public String setMediaID() {
+        Log.i(TAG, "setMediaID()");
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         String userId = user.getUid();
@@ -263,6 +263,7 @@ public class Insights extends AppCompatActivity implements Serializable {
      * @return l'email de l'utilisateur (String)
      */
     public String getUserEmail() {
+        Log.i(TAG, "getUserEmail()");
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         String userEmail = user.getEmail();
@@ -274,6 +275,7 @@ public class Insights extends AppCompatActivity implements Serializable {
      * @param v L'icone servant a lancer la nouvelle activite
      */
     public void ShowGroupInfo(View v) {
+        Log.i(TAG, "ShowGroupInfo()");
         Intent i = new Intent(this, EventInfo.class);
         i.putExtra(IntentUtils.getEventAdapter_CurrentObject(), this.mEventDB);
         startActivity(i);
@@ -285,6 +287,7 @@ public class Insights extends AppCompatActivity implements Serializable {
      * @param v L'icone servant a lancer l'intent
      */
     public void pickPhoto(View v) {
+        Log.i(TAG, "pickPhoto()");
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/jpeg");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
@@ -296,6 +299,7 @@ public class Insights extends AppCompatActivity implements Serializable {
      * via sendToFirebase. Lance un dialogue pendant tout le processus
      */
     public void onActivityResult(int requestCode, int resCode, Intent data) {
+        Log.i(TAG, "onActivityResult()");
         if (requestCode == RC_PHOTO_PICKER && resCode == RESULT_OK) {
             String progressTitle = getString(R.string.InsightsProgressTitle) + " " + mEventDB.getEventName();
             mDialog.setTitle(progressTitle);
@@ -326,6 +330,7 @@ public class Insights extends AppCompatActivity implements Serializable {
      * @param userEmail l'email de l'user
      */
     private void sendToStorage(final String mediaID, final String timeStamp, final String userEmail) {
+        Log.i(TAG, "sendToStorage()");
          /*Envoi de Medias sur FirebaseStorage
           * dans le dossier PHOTOS_FROM_EVENT(+ID de l'event en question)
           * on rajoute un fils avec un nom unique (selectedImgUri==>pas 2 fois la meme photo
@@ -380,6 +385,7 @@ public class Insights extends AppCompatActivity implements Serializable {
      * @param v
      */
     public void sendMessage(View v) {
+        Log.i(TAG, "sendMessage()");
         FirebaseHelper helper = new FirebaseHelper(mDatabase, mDatabaseRef);
         String messageID = helper.setUniqueID();
         String userEmail = sharedPref.getString(SharedPrefUtil.SHAREDPREF_EMAIL, null);
@@ -425,6 +431,7 @@ public class Insights extends AppCompatActivity implements Serializable {
      * @return les messages pour cet event precis
      */
     private LiveData fetchData() {
+        Log.i(TAG, "fetchData()");
         mMessageModel = new MessageModel(this.getApplication());
         final MessageDAO mDAO = mMessageModel.getmRepository().getmMessageDAO();
         final LiveData<List<Message>> filterMessages = mDAO.getAllMessagesForThatEvent(eventID);
@@ -436,6 +443,7 @@ public class Insights extends AppCompatActivity implements Serializable {
      * @return les medias pour cet event precis
      */
     private LiveData classifyMedias(){
+        Log.i(TAG, "classifyMedias()");
         mMediaModel = new MediaModel(this.getApplication());
         final MediaDAO mediaDAO = mMediaModel.getmRepository().getmMediaDAO();
         final LiveData<List<Media>> filteredMedias = mediaDAO.getAllMediasForThatEvent(eventID);

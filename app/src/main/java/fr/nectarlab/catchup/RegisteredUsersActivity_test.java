@@ -101,41 +101,8 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
             Log.i(TAG, "SavedBoolean: hasRanOnce value "+hasRanOnce);
         }
 
-        /**
-        *READ_CONTACTS fait partie des "dangerous permissions", elle doit explicitement etre
-         * demandee a l'utilisateur. Nous faisons donc une "request permission".
-         * Peut etre explicitee (avant la "requestPermissions()") avec la methode
-         * shouldShowRequestPermissionRationale() qui propose un explication a l'user sur le
-         * besoin de cette permission.
-         */
-
-        //TODO plante à la premiere utilisation, la recherche de contacts se fait alors que l'user n'a pas repondu
-//        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)!=PackageManager.PERMISSION_GRANTED){
-//            ActivityCompat.requestPermissions(this, new String []{Manifest.permission.READ_CONTACTS}, 0 );
-//        }
-        //TODO Prevoir le cas ou l'user refuse la permission
         setContentView(R.layout.friends_show_activity);
         mRegFriendModel = ViewModelProviders.of(this).get(RegFriendsModel.class);
-
-
-        /*
-         * Logique pour adapter le layout en fonction des Friends enrgistres dans la DB
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final FriendsListAdapter adapter = new FriendsListAdapter(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-        mRegFriendModel = ViewModelProviders.of(this).get(RegFriendsModel.class);
-        //mRegFriendModel.getNumFriends();//lance la requete pour obtenir le nombre d'amis enregistres
-        mRegFriendModel.getAllFriends().observe(this, new Observer<List<RegisteredFriendsDB>>(){
-            @Override
-            public void onChanged(@Nullable final List<RegisteredFriendsDB> mRegisteredFriendsDB){
-                Log.i(TAG, "onChanged");
-                adapter.setFriends(mRegisteredFriendsDB);
-            }
-        });
-         */
 
         /*
          * Reference aux Users inscrits dans Firebase
@@ -329,6 +296,7 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
     }
     //Setter pour le champ registeredFriends
     public void setRegisteredFriends(int value){
+        Log.i(TAG, "setRegisteredFriends");
         this.registeredFriends = value;
     }
 
@@ -337,6 +305,7 @@ public class RegisteredUsersActivity_test extends AppCompatActivity implements g
      * les amis invites pour l'evenement
      */
     public void saveEvent(View v){
+        Log.i(TAG, "saveEvent()");
         /*
          * savedFriends recoit un array correspondant aux amis coches via les
          * CheckBox de la RecyclerView

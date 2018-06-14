@@ -43,6 +43,7 @@ public class MessageCacheTask extends Thread {
         mQuery.addChildEventListener(listener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.i(TAG, "onChildAdded()");
                 Message message = dataSnapshot.getValue(Message.class);
                 if(null != message){
                     Log.i(TAG, "new message found using MessageCacheTask: "+message.getContenu());
@@ -81,18 +82,21 @@ public class MessageCacheTask extends Thread {
     private class Register extends Thread{
         private MessageModel messageModel;
         private Message message;
+
         protected Register(MessageModel model, Message message){
             this.messageModel = model;
             this.message = message;
         }
         @Override
         public void run(){
-            Log.i(TAG, "Register: run()");
+            Log.i(TAG, "(classRegister): run()");
+
             this.messageModel.insert(message);
         }
     }
 
     public void unregisterListener(){
+        Log.i(TAG, "(classRegister): unregisterListener()");
         if(null != this.listener){
             mQuery.removeEventListener(this.listener);
         }

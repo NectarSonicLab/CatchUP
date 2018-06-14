@@ -107,7 +107,7 @@ public class EventInfo extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap gMap) {
         //On recupere la longitude latitude pour creer une nouvelle coordonnee pour la carte
-
+        Log.i(TAG, "onMapReady()");
         longitude = mEventDB.getLongitude();
         latitude = mEventDB.getLatitude();
         googleMap = gMap;
@@ -123,7 +123,7 @@ public class EventInfo extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onResume(){
         super.onResume();
-
+        Log.i(TAG, "onResume()");
         FriendEventListAdapter adapter = new FriendEventListAdapter(this);
         this.assocEventModel = ViewModelProviders.of(this).get(FriendAssocEventModel.class);
         RecyclerView recyclerView = findViewById(R.id.eventInfo_recycler);
@@ -131,15 +131,13 @@ public class EventInfo extends FragmentActivity implements OnMapReadyCallback {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         getFriends wait = new getFriends(this, filteredFriends, adapter);
         wait.start();
-
-
-
     }
 
     /*
     * Methode pour filtrer les medias par event
     */
     private LiveData classifiedFriends(){
+        Log.i(TAG, "classifiedFriends()");
         assocEventModel = new FriendAssocEventModel(this.getApplication());
         final Event_Friend_AssocDAO assocDAO= assocEventModel.getmRepository().getmFriendAssoDAO();
         final LiveData<List<Event_Friend_AssocDB>> filtered = assocDAO.getFriendsInGroup(mEventDB.getEventID());
@@ -158,7 +156,7 @@ public class EventInfo extends FragmentActivity implements OnMapReadyCallback {
         }
         @Override
         public void run(){
-
+            Log.i(TAG, "(class getFriends) run()");
             try{
                 filter = classifiedFriends();
                 sleep(200);
@@ -171,7 +169,9 @@ public class EventInfo extends FragmentActivity implements OnMapReadyCallback {
                     }
                 });
             }
-            catch (Exception e){}
+            catch (Exception e){
+                Log.i(TAG, "Exception raised in (class getFriends) run()");
+            }
         }
     }
 

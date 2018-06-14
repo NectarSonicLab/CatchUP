@@ -27,6 +27,7 @@ public class MediaCacheTask extends Thread {
     private int serverCount, localCount;
     private MediaModel mMediaModel;
     private Query mQuery;
+
     public MediaCacheTask (String id, ChildEventListener eventListener, int serverCount, int mediaCount, MediaModel mediaModel){
         this.eventID = id;
         this.listener = eventListener;
@@ -43,6 +44,7 @@ public class MediaCacheTask extends Thread {
         mQuery.addChildEventListener(listener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.i(TAG, "onChildAdded()");
                 Media media = dataSnapshot.getValue(Media.class);
                 if(null!=media){
                     Log.i(TAG, "new media found using MediaCacheTask: "+media.getContenu());
@@ -90,12 +92,14 @@ public class MediaCacheTask extends Thread {
         }
         @Override
         public void run(){
+            Log.i(TAG, "(classRegister) run()");
             Log.i(TAG, "Register: run()");
             this.mediaModel.insert(media);
         }
     }
 
     public void unregisterListener(){
+        Log.i(TAG, "(classRegister) unregisterListener()");
        if(null != this.listener){
             mQuery.removeEventListener(this.listener);
         }

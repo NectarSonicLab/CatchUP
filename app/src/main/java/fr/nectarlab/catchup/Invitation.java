@@ -23,6 +23,7 @@ public class Invitation extends Activity {
     private DatabaseReference mReference;
     @Override
     public void onCreate(Bundle b){
+        Log.i(TAG, "onCreate");
         super.onCreate(b);
         this.setContentView(R.layout.invitation);
         /*
@@ -38,6 +39,7 @@ public class Invitation extends Activity {
 
     @Override
     public void onResume(){
+        Log.i(TAG, "onResume");
         super.onResume();
         FirebaseHelper helper = new FirebaseHelper(mDatabase, mReference);
         if(null!=extraEventID) {
@@ -47,11 +49,14 @@ public class Invitation extends Activity {
 
     @Override
     public void onPause(){
+        Log.i(TAG, "onPause");
         super.onPause();
 
     }
     @Override
     public void onBackPressed(){
+        super.onBackPressed();
+        Log.i(TAG, "onBackPressed");
         this.finish();
     }
 }

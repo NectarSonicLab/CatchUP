@@ -109,6 +109,7 @@ public class EventChooser extends AppCompatActivity {
      * @return le champ "choice"
      */
     private String getChoice (){
+        Log.i(TAG, "getChoice()");
         return this.choice;
     }
 
@@ -119,6 +120,7 @@ public class EventChooser extends AppCompatActivity {
      * @param v La View correspondant au bouton "Sauvegarder"
      */
     public void saveChoice (View v){
+        Log.i(TAG, "saveChoice()");
         String savedChoice = getChoice();
         Intent i = new Intent();
         i.putExtra("eventChoosen", savedChoice);
@@ -132,6 +134,7 @@ public class EventChooser extends AppCompatActivity {
      * @param v La View correspondant au bouton "Annuler"
      */
     public void cancelChoice(View v){
+        Log.i(TAG, "cancelChoice()");
         finish();
     }
 }

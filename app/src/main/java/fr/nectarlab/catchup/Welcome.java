@@ -45,10 +45,12 @@ public class Welcome extends Activity {
         Intent i;
         if(this.user==null){
             i = new Intent (this, SignUpActivity.class);
+            Log.i(TAG, "Redirection: user==null");
             startActivity(i);
         }
         else{
             i = new Intent (this, Home.class);
+            Log.i(TAG, "Redirection: user!=null");
             startActivity(i);
         }
     }

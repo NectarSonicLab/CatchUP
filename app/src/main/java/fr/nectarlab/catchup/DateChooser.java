@@ -24,6 +24,7 @@ public class DateChooser extends AppCompatActivity implements DatePicker.OnDateC
 
     @Override
     public void onCreate(Bundle b){
+        Log.i(TAG, "onCreate: start");
         super.onCreate(b);
         setContentView(R.layout.date_chooser);
 
@@ -41,12 +42,13 @@ public class DateChooser extends AppCompatActivity implements DatePicker.OnDateC
 
         mTabHost.addTab(tab1);
         mTabHost.addTab(tab2);
-
+        Log.i(TAG, "onCreate: end");
     }
     @Override
     public void onResume(){
+        Log.i(TAG, "onResume: start");
         super.onResume();
-
+        Log.i(TAG, "onResume: end");
     }
 
 
@@ -56,6 +58,7 @@ public class DateChooser extends AppCompatActivity implements DatePicker.OnDateC
      */
     @Override
     public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        Log.i(TAG, "onDateChanged()");
         Log.i(TAG, "Year picked: "+year);
         Log.i(TAG, "Month picked: "+monthOfYear);
         Log.i (TAG, "Day picked: "+dayOfMonth);
@@ -70,6 +73,7 @@ public class DateChooser extends AppCompatActivity implements DatePicker.OnDateC
      * @param v La View (bouton "sauvegarder")
      */
     public void update (View v){
+        Log.i(TAG, "update()");
         year = mDatePicker.getYear();
         month = mDatePicker.getMonth();
         dayOfMonth = mDatePicker.getDayOfMonth();

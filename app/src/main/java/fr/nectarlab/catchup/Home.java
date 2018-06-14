@@ -1,15 +1,13 @@
 package fr.nectarlab.catchup;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
+
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.media.Image;
+
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,7 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.TaskStackBuilder;
+
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -27,16 +25,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
+
 import android.util.Log;
-import android.view.Menu;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.HeaderViewListAdapter;
+
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,11 +53,7 @@ import java.util.List;
 import fr.nectarlab.catchup.BackgroundTasks.ConnectivitySupervisor;
 import fr.nectarlab.catchup.Database.EventDB;
 import fr.nectarlab.catchup.Database.RegisteredFriendsDB;
-
 import fr.nectarlab.catchup.model.EventModel;
-import fr.nectarlab.catchup.model.MediaModel;
-import fr.nectarlab.catchup.model.Users;
-import fr.nectarlab.catchup.notfication.NotificationFromEvent;
 import fr.nectarlab.catchup.server_side.FirebaseHelper;
 
 
@@ -237,6 +230,7 @@ public class Home extends AppCompatActivity {
 
     @Override
     public void onRestoreInstanceState (Bundle b){
+        Log.i(TAG, "onRestoreInstanceState: Debut");
         if(b!=null){
         isFabOpen=b.getBoolean(IS_FAB_OPEN);
         }
@@ -246,11 +240,13 @@ public class Home extends AppCompatActivity {
     @Override
     public void onPause(){
         super.onPause();
+        Log.i(TAG, "onPause: Debut");
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
+        Log.i(TAG, "onOptionsItemSelected()");
         switch (item.getItemId()){
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
@@ -278,6 +274,7 @@ public class Home extends AppCompatActivity {
     *
     */
     public void openMemoryBox(){
+        Log.i(TAG, "openMemoryBox()");
         startActivity(new Intent (this, MemoryBox.class));
     }
 
@@ -297,6 +294,7 @@ public class Home extends AppCompatActivity {
      */
     public void fabPressed (View v){
         if (isFabOpen){
+            Log.i(TAG, "fabPressed(): isFabOpen: "+isFabOpen);
             mFabExpand.setVisibility(View.INVISIBLE);
             mFabExpand.startAnimation(fabClose);
             fabDescription.setVisibility(View.INVISIBLE);
@@ -306,13 +304,13 @@ public class Home extends AppCompatActivity {
 
         }
         else{
+            Log.i(TAG, "fabPressed(): isFabOpen: "+isFabOpen);
             mFabExpand.setVisibility(View.VISIBLE);
             mFabExpand.startAnimation(fabOpen);
             fabDescription.setVisibility(View.VISIBLE);
             fabDescription.startAnimation(fabOpen);
             mFabMain.startAnimation(fabRClock);
             isFabOpen = true;
-
         }
     }
 
@@ -321,11 +319,14 @@ public class Home extends AppCompatActivity {
      * @param v le second button rendu visible par fabPressed()
      */
     public void launchEventCreation(View v){
+        Log.i(TAG, "launchEventCreation()");
         Intent i = new Intent (this, EventSetup.class);
         startActivity(i);
     }
 
-
+/**
+ * ************************************************************************************************A deporter dans une autre classe
+ */
     /**
      * CacheFromFirebase: Classe interne etendant Thread
      * son role principale est de recuperer les events
@@ -352,7 +353,7 @@ public class Home extends AppCompatActivity {
         }
         @Override
         public void run(){
-            Log.i(TAG, "Runnable run()");
+            Log.i(TAG, "(CacheTask) run()");
             mAuth = FirebaseAuth.getInstance();
             FirebaseUser user = mAuth.getCurrentUser();
             try{
@@ -508,6 +509,7 @@ public class Home extends AppCompatActivity {
      */
     @Override
     public void onDestroy(){
+        Log.i(TAG, "onDestroy()");
         super.onDestroy();
         this.unregisterReceiver(receiver);
         mQuery.removeEventListener(mChildEventListener);
@@ -523,6 +525,7 @@ public class Home extends AppCompatActivity {
      */
     @Override
     public void onBackPressed(){
+        Log.i(TAG, "onBackPressed()");
         this.finish();
     }
 
@@ -533,6 +536,7 @@ public class Home extends AppCompatActivity {
      */
     @Override
     public void onActivityResult (int reqCode, int resCode, Intent data){
+        Log.i(TAG, "onActivityResult()");
         switch (reqCode){
             case IntentUtils.PICK_CONTACT_PHOTO:{
                 if (RESULT_OK == resCode){
@@ -562,6 +566,7 @@ public class Home extends AppCompatActivity {
      * de profile de l'usager
      */
     public void changeProfilePicture(View v){
+        Log.i(TAG, "changeProfilePicture()");
         //Ouvrir une nouvelle activite par intent implicite
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI);
         i.setType("image/*");
@@ -589,6 +594,7 @@ public class Home extends AppCompatActivity {
      * via la classe CacheFromFirebase et le Runnable CacheTaskForUserRetrieval
      */
     private void setUserInfo(){
+        Log.i(TAG, "setUserInfo()");
         mNavigationView = findViewById(R.id.nav_view);
         View mHeaderView = mNavigationView.getHeaderView(0);
         /*
@@ -677,6 +683,7 @@ public class Home extends AppCompatActivity {
      * @param tvUsername la View contenant l'username dans le DrawerLayout
      */
     private void setTextInfo(final TextView tvEmail, final TextView tvUsername){
+        Log.i(TAG, "setTextInfo()");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

@@ -62,6 +62,7 @@ public class EventSetup extends AppCompatActivity{
     @Override
     public void onCreate (Bundle b){
         super.onCreate(b);
+        Log.i(TAG, "onCreate");
         /*
          * Remise a zero de la liste d'amis (statique) sauvegardee puis renvoyee a cette activite
          * sinon s'incremente a chaque instanciation de l'activite RegisteredUsersActivity
@@ -127,6 +128,7 @@ public class EventSetup extends AppCompatActivity{
     @Override
     public void onResume(){
         super.onResume();
+        Log.i(TAG, "onResume: debut");
         checkSaveStatus();
         }
 
@@ -191,6 +193,7 @@ public class EventSetup extends AppCompatActivity{
      */
 
     public void pickPlace(View v){
+        Log.i(TAG, "PickPlace()");
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
         try{
@@ -210,6 +213,7 @@ public class EventSetup extends AppCompatActivity{
      * @param v: Bouton qui lance l'intent vers DateChooser.class
      */
     public void pickDate(View v){
+        Log.i(TAG, "PickDate()");
         Intent i = new Intent(this, DateChooser.class);
         startActivityForResult(i, DATE_PICKER_REQUEST);
     }
@@ -221,6 +225,7 @@ public class EventSetup extends AppCompatActivity{
      * @param v: Bouton qui lance l'intent vers EventChooser.class
      */
     public void chooseEventType(View v){
+        Log.i(TAG, "chooseEventType()");
         Intent i = new Intent (this, EventChooser.class);
         startActivityForResult(i, EVENT_TYPE_REQUEST);
     }
@@ -230,6 +235,15 @@ public class EventSetup extends AppCompatActivity{
      * @param v Bouton qui lance l'intent vers RegisteredUsersActivity_test.class
      */
     public void pickFriends (View v){
+        Log.i(TAG, "pickFriends()");
+        /**
+         *READ_CONTACTS fait partie des "dangerous permissions", elle doit explicitement etre
+         * demandee a l'utilisateur. Nous faisons donc une "request permission".
+         * Peut en plus etre explicitee (avant la "requestPermissions()") avec la methode
+         * shouldShowRequestPermissionRationale() qui propose un explication a l'user sur le
+         * besoin de cette permission.
+         */
+
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)!=PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String []{Manifest.permission.READ_CONTACTS}, 0 );
         }
@@ -247,6 +261,7 @@ public class EventSetup extends AppCompatActivity{
      */
     @Override
     public void onActivityResult (int requestCode, int resultCode, Intent data){
+        Log.i(TAG, "onActivityResult()");
         int mYear;
         int mMonth;
         int mDay;
@@ -346,6 +361,7 @@ public class EventSetup extends AppCompatActivity{
      * @return l'identifiant unique
      */
     public String setEventID (){
+        Log.i(TAG, "setEventID()");
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         String userId = user.getUid();
@@ -361,6 +377,7 @@ public class EventSetup extends AppCompatActivity{
      * @param v Bouton "Sauvegarder"
      */
     public void saveToDB (View v){
+        Log.i(TAG, "saveToDB()");
         //S'assurer que tous les champs soient remplis
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -392,6 +409,7 @@ public class EventSetup extends AppCompatActivity{
     }
 
     private boolean checkSaveStatus(){
+        Log.i(TAG, "checkSaveStatus()");
         String hint = getString(R.string.eventSetup);
         boolean isAllChecked =false;
         Log.i(TAG, "Hint: "+hint+"  EditText: "+retrieveEventDescription.getText().toString());
@@ -416,6 +434,7 @@ public class EventSetup extends AppCompatActivity{
      * @param v Bouton "Annuler"
      */
     public void cancelEvent(View v){
+        Log.i(TAG, "cancelEvent()");
         finish();
     }
 
@@ -483,6 +502,7 @@ public class EventSetup extends AppCompatActivity{
      * @param ID l'identifiant de l'evenement
      */
     public void sendToFirebase(EventDB eventDB, String ID){
+        Log.i(TAG, "sendToFirebase(Event)");
         FirebaseHelper firebaseHelper = new FirebaseHelper(mDatabase);
         FirebaseDatabase firebaseDB = firebaseHelper.getmDatabase();
         if (firebaseDB!=null) {
@@ -503,6 +523,7 @@ public class EventSetup extends AppCompatActivity{
      * @param pickedFriends les amis choisis (! pas utilise)
      */
     public void sendToFirebase(String ID, ArrayList<String> pickedFriends){
+        Log.i(TAG, "sendToFirebase(Friends)");
         FirebaseHelper firebaseHelper = new FirebaseHelper(mDatabase);
         FirebaseDatabase firebaseDB = firebaseHelper.getmDatabase();
         if (null!=firebaseDB){
