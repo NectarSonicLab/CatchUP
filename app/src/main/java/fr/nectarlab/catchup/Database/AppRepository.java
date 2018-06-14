@@ -280,4 +280,8 @@ public class AppRepository {
     public Event_Friend_AssocDAO getmFriendAssoDAO() {
         return mFriendAssoDAO;
     }
+
+    public EventDAO getmEventDAO() {
+        return mEventDAO;
+    }
 }

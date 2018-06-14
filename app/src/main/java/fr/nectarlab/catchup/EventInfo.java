@@ -117,7 +117,7 @@ public class EventInfo extends FragmentActivity implements OnMapReadyCallback {
         LatLng eventLocation = new LatLng(latitude, longitude);
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(eventLocation));
-        googleMap.addMarker(new MarkerOptions().position(eventLocation).title(mEventDB.getEventName()));
+        googleMap.addMarker(new MarkerOptions().position(eventLocation).title(mEventDB.getEventName())).showInfoWindow();
     }
 
     @Override

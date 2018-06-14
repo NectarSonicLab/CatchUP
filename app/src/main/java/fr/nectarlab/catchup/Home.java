@@ -1,6 +1,8 @@
 package fr.nectarlab.catchup;
 
 
+import android.*;
+import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 
@@ -8,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +21,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -48,6 +53,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.io.File;
 import java.util.List;
 
 import fr.nectarlab.catchup.BackgroundTasks.ConnectivitySupervisor;
@@ -261,7 +267,9 @@ public class Home extends AppCompatActivity {
                     Uri uri = Uri.parse(path);
                     Log.i(TAG, "profilePicturePath: "+path);
                     //Insertion du Thumbnail avec glide
-                    Glide.with(this).load(uri).apply(RequestOptions.circleCropTransform()).into(contactPicture);
+                    //Glide.with(this).load(uri).apply(RequestOptions.circleCropTransform()).into(contactPicture);
+                    float size = 0.1f;
+                    Glide.with(this).load(uri).thumbnail(size).apply(RequestOptions.circleCropTransform()).into(contactPicture);
                 }
                 return true;
         }
@@ -543,7 +551,10 @@ public class Home extends AppCompatActivity {
                     //On vient de recuperer une photo pour mettre a jour la photo de profile
                     ImageView contactPicture = findViewById(R.id.quickContactBadge);
                     final Uri path = data.getData();
-                    Glide.with(this).load(path).apply(RequestOptions.circleCropTransform()).into(contactPicture);
+                    Log.i(TAG, "onActivityResult() path: "+path);
+                    //Glide.with(this).load(path).apply(RequestOptions.circleCropTransform()).into(contactPicture);
+                    float size = 0.1f;
+                    Glide.with(this).load(path).thumbnail(size).apply(RequestOptions.circleCropTransform()).into(contactPicture);
                     //On stock l'uri dans les sharedPref
                     try {
                         String pathToPicture = path.toString();
@@ -566,12 +577,19 @@ public class Home extends AppCompatActivity {
      * de profile de l'usager
      */
     public void changeProfilePicture(View v){
+        final int MY_PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 2;
         Log.i(TAG, "changeProfilePicture()");
-        //Ouvrir une nouvelle activite par intent implicite
-        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI);
-        i.setType("image/*");
-        startActivityForResult(i, IntentUtils.getPickContactPhoto());
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+            // No explanation needed; request the permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    MY_PERMISSION_REQUEST_READ_EXTERNAL_STORAGE);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED) {
+            //Ouvrir une nouvelle activite par intent implicite
+            Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI);
+            i.setType("image/*");
+            startActivityForResult(i, IntentUtils.getPickContactPhoto());
+        }
     }
 
 

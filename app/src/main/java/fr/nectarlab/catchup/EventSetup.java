@@ -247,10 +247,13 @@ public class EventSetup extends AppCompatActivity{
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)!=PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String []{Manifest.permission.READ_CONTACTS}, 0 );
         }
-        else{Intent i = new Intent (this, RegisteredUsersActivity_test.class);
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)==PackageManager.PERMISSION_GRANTED){
+            Intent i = new Intent (this, RegisteredUsersActivity_test.class);
             startActivityForResult(i, FRIENDS_PICKER_REQUEST);
         }
-
+//        else{Intent i = new Intent (this, RegisteredUsersActivity_test.class);
+//            startActivityForResult(i, FRIENDS_PICKER_REQUEST);
+//        }
     }
 
     /**
@@ -388,7 +391,7 @@ public class EventSetup extends AppCompatActivity{
         String date = retrieveDay.getText().toString();
         String debutTime = "";//Gerer l'horaire
         String eventType = retrieveEventType.getText().toString();
-        String location = retrievePlace.getText().toString();
+        String location = retrieveName.getText().toString()+": "+retrievePlace.getText().toString();
         EventDB myEvent = new EventDB(ID, email, eventName, date, debutTime,eventType, location, longitude, latitude);
         //Insertion dans la DB locale
         if(checkSaveStatus()) {

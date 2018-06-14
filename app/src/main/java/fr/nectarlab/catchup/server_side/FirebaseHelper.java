@@ -326,8 +326,8 @@ public class FirebaseHelper {
                              * QuickFix l'inclure directement dans les evenements
                              */
                             mEventModel = new EventModel(application);
+                            Log.i(TAG, "toString "+retrievedEvent.toString());
                             mEventModel.insert(retrievedEvent);
-                            //TODO dans Invitation.class faire une requete particuliere pour cette event
                         }
                         else{
                             Log.i(TAG, "nothing found");

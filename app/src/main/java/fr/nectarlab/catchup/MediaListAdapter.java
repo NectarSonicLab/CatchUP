@@ -67,6 +67,7 @@ public class MediaListAdapter extends RecyclerView.Adapter<MediaListAdapter.Medi
             //     .load(current.getContenu()).into(holder.imageView);//
             GlideApp.with(context)
                     .load(current.getContenu())
+                    .thumbnail(0.5f)
                     .placeholder(R.drawable.catchup_splashscreen_small)
                     .into(holder.imageView);
         }

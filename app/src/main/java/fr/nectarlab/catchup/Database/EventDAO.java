@@ -20,5 +20,7 @@ public interface EventDAO {
     void insert (EventDB event);
     @Query("SELECT * FROM EventDB ORDER BY eventName ASC")
     LiveData<List<EventDB>> getAllEvent();
+    @Query("SELECT * FROM EventDB WHERE eventID LIKE :Search")
+    LiveData<List<EventDB>> getParticularEvent(String Search);
 
 }

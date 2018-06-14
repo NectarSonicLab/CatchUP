@@ -34,4 +34,8 @@ public class EventModel extends AndroidViewModel {
     public LiveData<List<EventDB>> getAllEvents(){
         return allEvents;
     }
+
+    public AppRepository getmRepository() {
+        return mRepository;
+    }
 }

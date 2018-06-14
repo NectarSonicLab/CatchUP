@@ -92,4 +92,7 @@
     <string name="channel_description">Invitations</string>
     <!--MemoryBox-->
     <string name="photoItem">photoItem</string>
+    <!--Invitation-->
+    <string name="Invitation">Vous avez été invité!</string>
+    <string name="continuer">Continuez</string>
 </resources>

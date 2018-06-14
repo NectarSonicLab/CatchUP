@@ -1,11 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Invitation class" />
-</android.support.constraint.ConstraintLayout>
+        android:text="@string/Invitation"
+        android:layout_gravity="center_horizontal"
+        android:textSize="36sp"/>
+
+    <TextView
+        android:id="@+id/Invitation_amin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        />
+
+    <TextView
+        android:id="@+id/Invitation_eventName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+         />
+    <TextView
+        android:id="@+id/Invitation_debutTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        />
+    <TextView
+        android:id="@+id/Invitation_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/continuer"
+        android:textColor="@color/textOnS"
+        android:onClick="Continue"/>
+
+</LinearLayout>
