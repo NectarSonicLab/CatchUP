@@ -106,6 +106,7 @@ public class Insights extends AppCompatActivity implements Serializable {
     LiveData<List<Message>> test;
     private MediaCacheTask mediaCacheTask;
     private MessageCacheTask messageCacheTask;
+    private FirebaseHelper listener;
 
     //Activity activity;
     MessageDAO messageDAO;
@@ -225,7 +226,7 @@ public class Insights extends AppCompatActivity implements Serializable {
                     });
                     //On cree une instance de FirebaseHelper qui va ecouter les messages recus
                     //pour cette evenement pour les stocker en DB locale
-        FirebaseHelper listener = new FirebaseHelper(mDatabase, mDatabaseRef);
+        listener = new FirebaseHelper(mDatabase, mDatabaseRef);
         listener.MessageListener(mMessageModel, eventID);
 
 
@@ -239,6 +240,7 @@ public class Insights extends AppCompatActivity implements Serializable {
         test.removeObservers(this);
         mediaCacheTask.unregisterListener();
         messageCacheTask.unregisterListener();
+        listener.removeListener();
     }
 
 
@@ -398,8 +400,10 @@ public class Insights extends AppCompatActivity implements Serializable {
         } else {
             Message message = new Message(messageID, timeStamp, messageContent, userEmail, this.eventID);
             messageArrayList.add(message);
+            //Pour tester uniquement
             messageArrayList.add(new Message("ID", timeStamp, "Other", "test", "eventID"));
             messageListAdapter.setMessages(messageArrayList);
+            //
             messageEditText.setText("");
             hideKeyboardFrom(this);
 

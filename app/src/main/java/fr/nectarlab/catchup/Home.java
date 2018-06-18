@@ -1,7 +1,6 @@
 package fr.nectarlab.catchup;
 
 
-import android.*;
 import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -53,7 +52,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-import java.io.File;
 import java.util.List;
 
 import fr.nectarlab.catchup.BackgroundTasks.ConnectivitySupervisor;
@@ -90,6 +88,7 @@ public class Home extends AppCompatActivity {
     private String userEMAIL, userNAME;
     private final String IS_FAB_OPEN="isFabOpen";
     static SharedPreferences sharedPref;
+    private FirebaseHelper helper;
 
 
 
@@ -97,28 +96,16 @@ public class Home extends AppCompatActivity {
     public void onCreate (Bundle b){
         super.onCreate(b);
         Log.i(TAG, "onCreate: Debut");
-        setContentView(R.layout.home);
+        setContentView(fr.nectarlab.catchup.R.layout.home);
         setTitle(R.string.Home_CatchUpEvents);
 
         //Lancement du broadcast filter qui ecoute l'etat de la connexion internet
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        receiver = new ConnectivitySupervisor();
+        receiver = new ConnectivitySupervisor();///////////////////////////////////////////////pas utile dans cette activite
         this.registerReceiver(receiver, filter);
 
-        //Mise en place de l'adapteur qui gere la RecyclerView comprenant tous les evenements (amins/invites)
-        mEventModel = ViewModelProviders.of(this).get(EventModel.class);
-        RecyclerView recyclerView = findViewById(R.id.eventRecycler_RV);
-        final EventListAdapter adapter = new EventListAdapter(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mEventModel.getAllEvents().observe(this, new Observer<List<EventDB>>() {
-            @Override
-            public void onChanged(@Nullable List<EventDB> eventDBS) {
-                adapter.setEvents(eventDBS);
-                itemCount = adapter.getItemCount();
-                Log.i(TAG, "onCreate: itemCount: "+itemCount);
-            }
-        });
+
+
 
         //Reference au drawerLayout et a ses options de menu
         mDrawerLayout = findViewById(R.id.drawer_layout);
@@ -207,6 +194,20 @@ public class Home extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+        //Mise en place de l'adapteur qui gere la RecyclerView comprenant tous les evenements (amins/invites)
+        mEventModel = ViewModelProviders.of(this).get(EventModel.class);
+        RecyclerView recyclerView = findViewById(R.id.eventRecycler_RV);
+        final EventListAdapter adapter = new EventListAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mEventModel.getAllEvents().observe(this, new Observer<List<EventDB>>() {
+            @Override
+            public void onChanged(@Nullable List<EventDB> eventDBS) {
+                adapter.setEvents(eventDBS);
+                itemCount = adapter.getItemCount();
+                Log.i(TAG, "onCreate: itemCount: "+itemCount);
+            }
+        });
         Log.i(TAG, "onResume: Debut");
         setUserInfo();
         CacheTask task = new CacheTask();
@@ -216,7 +217,7 @@ public class Home extends AppCompatActivity {
         FirebaseUser user = mAuth.getCurrentUser();
         try {
             String email = user.getEmail();
-            FirebaseHelper helper = new FirebaseHelper(this.mDatabase, this.databaseReference);
+            helper = new FirebaseHelper(this.mDatabase, this.databaseReference);
             helper.amIInvited(email, this);
         }
         catch (NullPointerException e){
@@ -247,6 +248,7 @@ public class Home extends AppCompatActivity {
     public void onPause(){
         super.onPause();
         Log.i(TAG, "onPause: Debut");
+        helper.removeListener();
     }
 
 
@@ -524,6 +526,7 @@ public class Home extends AppCompatActivity {
         if (forUserRefChildListener!=null) {
             mQuery.removeEventListener(forUserRefChildListener);
         }
+        mEventModel.getAllEvents().removeObservers(this);
     }
 
 

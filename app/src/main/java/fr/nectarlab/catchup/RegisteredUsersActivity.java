@@ -14,6 +14,7 @@ import android.util.Log;
 
 import fr.nectarlab.catchup.BackgroundTasks.FindingFriendsRunnable;
 import fr.nectarlab.catchup.Database.AppDatabase;
+import fr.nectarlab.catchup.R;
 import fr.nectarlab.catchup.model.Users;
 
 import com.google.firebase.database.ChildEventListener;

@@ -4,10 +4,6 @@ package fr.nectarlab.catchup;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import fr.nectarlab.catchup.Database.EventDB;
 
 /**
  *

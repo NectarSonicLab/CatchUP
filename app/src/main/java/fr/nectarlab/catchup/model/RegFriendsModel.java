@@ -3,7 +3,6 @@ package fr.nectarlab.catchup.model;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
-import android.util.Log;
 
 import java.util.List;
 

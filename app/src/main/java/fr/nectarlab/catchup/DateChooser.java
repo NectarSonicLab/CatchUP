@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TabHost;
 
+import fr.nectarlab.catchup.R;
+
 /**
  * DateChooser
  * Activite repondant a un Intent lance par EventSetup.java

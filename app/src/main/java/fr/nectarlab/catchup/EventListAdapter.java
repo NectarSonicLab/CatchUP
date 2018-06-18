@@ -77,6 +77,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
             else{
                 holder.displayStatus.setText(R.string.isAdmin_true);
             }
+
             holder.dots.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

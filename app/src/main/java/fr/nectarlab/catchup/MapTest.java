@@ -13,6 +13,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import fr.nectarlab.catchup.R;
+
 
 /**
  * Created by ThomasPiaczinski on 30/05/18.

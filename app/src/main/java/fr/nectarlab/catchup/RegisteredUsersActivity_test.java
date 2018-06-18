@@ -1,21 +1,14 @@
 package fr.nectarlab.catchup;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.Application;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,16 +29,11 @@ import java.util.List;
 
 import fr.nectarlab.catchup.Database.AppDatabase;
 
-import fr.nectarlab.catchup.Database.AppRepository;
-import fr.nectarlab.catchup.Database.RegisteredFriendsDAO;
 import fr.nectarlab.catchup.Database.RegisteredFriendsDB;
-import fr.nectarlab.catchup.Database.ResponseListener;
 import fr.nectarlab.catchup.model.RegFriendsModel;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static fr.nectarlab.catchup.Database.AppRepository.getNumFriendsAsyncTask;
-
-import static java.security.AccessController.getContext;
 
 
 /**

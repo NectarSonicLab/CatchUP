@@ -1,12 +1,8 @@
 package fr.nectarlab.catchup;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -17,8 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import android.view.View;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -26,9 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.DatabaseError;
+
+import fr.nectarlab.catchup.server_side.ServerUtil;
 
 
 /**
@@ -142,11 +135,11 @@ public class SignUpActivity extends BaseActivity implements
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
-                            DatabaseReference myRef = mDatabase.getReference("Users");//Creer le repertoire Users s'il n'existe pas
+                            DatabaseReference myRef = mDatabase.getReference(ServerUtil.getFirebaseServer_Users());//Creer le repertoire Users s'il n'existe pas
                             //Insertion dans firebase de element recuperes
                             myRef.child(user.getUid());
-                            myRef.child(user.getUid()).child("EMAIL").setValue(user.getEmail());
-                            myRef.child(user.getUid()).child("USERNAME").setValue(getUsername());
+                            myRef.child(user.getUid()).child(ServerUtil.getFirebaseServer_UserEmail()).setValue(user.getEmail());
+                            myRef.child(user.getUid()).child(ServerUtil.getFirebaseServer_UserUsername()).setValue(getUsername());
                             //Insertion dans les SharedPref des memes elements pour avoir une copie locale
                             editor.putString(SharedPrefUtil.SHAREDPREF_ID,user.getUid());
                             editor.putString(SharedPrefUtil.SHAREDPREF_EMAIL, user.getEmail());

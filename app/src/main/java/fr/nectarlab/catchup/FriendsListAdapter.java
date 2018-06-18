@@ -1,6 +1,5 @@
 package fr.nectarlab.catchup;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,12 +10,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import fr.nectarlab.catchup.Database.RegisteredFriendsDB;
-import fr.nectarlab.catchup.model.RegFriendsModel;
 
 /**
  * FriendsListAdapter

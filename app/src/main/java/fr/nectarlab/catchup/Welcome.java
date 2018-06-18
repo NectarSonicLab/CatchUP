@@ -26,7 +26,9 @@ public class Welcome extends Activity {
         FirebaseAuth mAuth;
         this.setContentView(R.layout.welcome);
         this.screen = findViewById(R.id.Welcome_image_img);
+        //Recuperation d'une instance de FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
+        //Recuperation de l'utilisateur au sens Firebase (null si inexistant0
         this.user = mAuth.getCurrentUser();
         Exec executor = new Exec (this, new Splash(this, this.user, this.screen));
         executor.start();
@@ -41,6 +43,10 @@ public class Welcome extends Activity {
     }
 
 
+    /**
+     * Redirection: Lance par un Intent soit SignUpAcivity, soit Home en fonction de user
+     * @param user l'usager Firebase, si null: il n'est pas sur le serveur
+     */
     private void Redirection (FirebaseUser user){
         Intent i;
         if(this.user==null){
@@ -55,6 +61,9 @@ public class Welcome extends Activity {
         }
     }
 
+    /**
+     * Affiche sur le UI Thread un 'splash Screen'
+     */
     private class Exec extends Thread {
         Activity activity;
         Runnable runnable;

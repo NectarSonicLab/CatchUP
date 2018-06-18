@@ -2,18 +2,10 @@ package fr.nectarlab.catchup.Database;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Query;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Process;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import fr.nectarlab.catchup.RegisteredUsersActivity_test;
 

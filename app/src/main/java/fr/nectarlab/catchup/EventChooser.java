@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import fr.nectarlab.catchup.R;
+
 /**
  * EventChooser
  * Activite repondant a un Intent envoye par EventSetup.java
