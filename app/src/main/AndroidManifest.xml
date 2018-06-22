@@ -37,22 +37,16 @@ package="fr.nectarlab.catchup">
     <activity android:name=".SignUpActivity" android:noHistory="true"/>
     <activity android:name=".RegisteredUsersActivity_test" />
     <activity android:name=".Home" />
-    <activity android:name=".EventSetup" >
-
-    </activity>
+    <activity android:name=".EventSetup" />
     <activity android:name=".MemoryBox"/>
     <activity android:name=".DateChooser" />
     <activity android:name=".EventChooser" />
     <activity android:name=".Insights" />
     <activity android:name=".EventInfo" />
-    <activity android:name=".MapTest"/>
     <activity android:name=".Invitation"
         android:launchMode="singleTask"
         android:taskAffinity=""
-        android:excludeFromRecents="true"/>
-    <activity android:name="fr.nectarlab.catchup.MapsActivity" android:label="@string/title_activity_maps">
-
-
+        android:excludeFromRecents="true">
     </activity>
 </application>
 </manifest>
